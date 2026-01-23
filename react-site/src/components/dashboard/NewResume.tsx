@@ -1,6 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
 import { storageService } from '@/services/storage'
-import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 
 export function NewResume() {

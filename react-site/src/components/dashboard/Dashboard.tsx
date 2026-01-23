@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { storageService, CVData } from '@/services/storage'
+import { storageService } from '@/services/storage'
+import type { CVData } from '@/services/storage'
 import { NewResume } from './NewResume'
 import { FileActions } from './FileActions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
