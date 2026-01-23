@@ -9,6 +9,6 @@ if (!rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <div>React is working! Hello World</div>
-    </StrictMode>,
+    </StrictMode>
   )
 }
