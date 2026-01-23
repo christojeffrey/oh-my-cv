@@ -19,6 +19,8 @@ export const cvDataAtom = atom({
     projects: [],
     certifications: [],
   },
+  markdown: '# Your Resume\n\nStart writing in markdown...',
+  css: '/* Custom styles */\nbody { font-family: Arial, sans-serif; }'
 })
 
 // Style/theme atom
