@@ -8,7 +8,7 @@ import { Github } from 'lucide-react'
 
 export function Header() {
   // Simple language switch - for now just English
-  const currentLang = 'en'
+  // const currentLang = 'en' // Not used yet
   const languages = [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },

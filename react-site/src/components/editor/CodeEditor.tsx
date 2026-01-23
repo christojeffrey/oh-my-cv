@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { useAtom } from 'jotai'
 import { cvDataAtom } from '@/atoms'
 import Editor from '@monaco-editor/react'

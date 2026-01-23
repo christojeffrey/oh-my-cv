@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useAtom } from 'jotai'
-import { cvDataAtom, styleAtom } from '@/atoms'
+import { cvDataAtom } from '@/atoms'
 import { Markdown } from '@/components/shared/Markdown'
 import { Button } from '@/components/ui/button'
 import { ZoomIn, ZoomOut, Maximize2, Maximize } from 'lucide-react'
 
 export function Preview() {
   const [cvData] = useAtom(cvDataAtom)
-  const [styles] = useAtom(styleAtom)
+  // const [styles] = useAtom(styleAtom) // Not used yet
   const [scale, setScale] = useState(1)
 
   const zoomIn = () => setScale(prev => prev * 1.1)

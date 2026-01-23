@@ -1,4 +1,4 @@
 import { atom } from 'jotai'
 
-// Dark mode atom
-export const darkModeAtom = atom(false)
+// Dark mode atom - 'light' | 'dark' | 'system'
+export const darkModeAtom = atom<'light' | 'dark' | 'system'>('system')

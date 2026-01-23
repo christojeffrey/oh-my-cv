@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
 import { cvDataAtom } from '@/atoms'
@@ -17,7 +17,7 @@ function Editor() {
   const [cvData, setCvData] = useAtom(cvDataAtom)
   const [isLoading, setIsLoading] = useState(true)
 
-  useState(() => {
+  useEffect(() => {
     const loadResume = async () => {
       const resume = await storageService.getResume(id)
       if (resume) {
@@ -25,8 +25,8 @@ function Editor() {
       } else {
         // Initialize with default
         setCvData({
-          personal: { name: '', email: '', phone: '' },
-          sections: {},
+          personal: { name: '', email: '', phone: '', location: '', website: '', linkedin: '', github: '' },
+          sections: { summary: '', experience: [], education: [], skills: [], projects: [], certifications: [] },
           markdown: '# Your Resume\n\nStart writing...',
           css: '/* Custom CSS */'
         })

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Sun, Moon, Monitor } from 'lucide-react'
 
 export function ToggleDark() {
-  const [darkMode, setDarkMode] = useAtom(darkModeAtom)
+  const [darkMode, setDarkMode] = useAtom(darkModeAtom) as [string, (value: string) => void]
 
   const modes = [
     { value: 'light', icon: Sun },
