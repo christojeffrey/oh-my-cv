@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { storageService } from '@/services/storage'
+import { toast } from '@/services/toast'
 import { Button } from '@/components/ui/button'
 import { Save, Upload } from 'lucide-react'
 
@@ -12,6 +13,7 @@ export function FileActions({ onUpdate }: FileActionsProps) {
 
   const exportToJSON = () => {
     storageService.exportToJSON()
+    toast.export()
   }
 
   const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,24 +23,32 @@ export function FileActions({ onUpdate }: FileActionsProps) {
     setIsImporting(true)
     try {
       const content = await file.text()
-      await storageService.importFromJson(content)
-      onUpdate()
+      const success = await storageService.importFromJson(content)
+      toast.import(success)
+      if (success) {
+        onUpdate()
+      }
     } catch (error) {
       console.error('Import failed:', error)
+      toast.error('Import failed')
     } finally {
       setIsImporting(false)
+      event.target.value = ''
     }
   }
 
   return (
+
     <div className="flex gap-2">
-      <Button onClick={exportToJSON}>
+      <Button
+        onClick={exportToJSON}
+        variant="secondary"
+      >
         <Save className="w-4 h-4 mr-1" />
-        Save As
+        Save as...
       </Button>
       <Button
         variant="outline"
-        className="bg-neutral-800 hover:bg-neutral-800/90 focus:ring-neutral-800/40 dark:bg-secondary dark:hover:bg-background dark:focus:ring-secondary/40"
         disabled={isImporting}
       >
         <label className="cursor-pointer flex items-center">

@@ -1,106 +1,155 @@
-import { useState, useEffect } from 'react'
-import { useAtom } from 'jotai'
-import { cvDataAtom, resumeStyleAtom } from '@/atoms'
-import { Markdown } from '@/components/shared/Markdown'
-import { Button } from '@/components/ui/button'
-import { ZoomIn, ZoomOut, Maximize2, Maximize } from 'lucide-react'
-import { injectCss } from '@/utils/dynamic-css'
+import { useState, useEffect } from "react";
+import { useAtom } from "jotai";
+import { cvDataAtom } from "@/atoms";
+import { markdownService } from "@/utils/markdown";
+import { Button } from "@/components/ui/button";
+import { ZoomIn, ZoomOut, Maximize2, Maximize } from "lucide-react";
+import { injectCss } from "@/utils/dynamic-css";
+import { useSmartPages } from "@ohmycv/react-smart-pages";
+import { Zoom } from "@ohmycv/react-zoom";
+
+const PAPER_SIZES: Record<string, { w: number; h: number }> = {
+  A4: { w: 210, h: 297 },
+  letter: { w: 216, h: 279 },
+  legal: { w: 216, h: 356 }
+};
+
+const MM_TO_PX = 3.779527559055; // 96 DPI
 
 export function Preview() {
-  const [cvData] = useAtom(cvDataAtom)
-  const [style] = useAtom(resumeStyleAtom)
-  const [scale, setScale] = useState(1)
+  const [cvData] = useAtom(cvDataAtom);
+  const [scale, setScale] = useState(1);
 
+  const size = PAPER_SIZES[cvData.styles.paper] || PAPER_SIZES.A4;
+  const widthPx = size.w * MM_TO_PX;
+  const heightPx = size.h * MM_TO_PX;
+
+  // Render markdown to HTML
+  const html = markdownService.renderMarkdown(cvData.markdown || "");
+
+  // Inject toolbar styles
   useEffect(() => {
-    // Inject the resume CSS on component mount
-    injectCss('resume-editor', cvData.css);
-
-    // Apply dynamic styles based on customization settings
-    const styleElement = document.getElementById('dynamic-styles')
-    if (styleElement && style) {
-      styleElement.textContent = `
-        .resume-preview {
-          margin: ${style.marginV || 50}px ${style.marginH || 45}px;
-          line-height: ${style.lineHeight || 1.3};
-          font-size: ${style.fontSize || 15}px;
-        }
-        .resume-preview h2,
-        .resume-preview h3 {
-          margin-bottom: ${style.paragraphSpace || 5}px;
-        }
-        .resume-preview .resume-header h1 {
-          color: ${style.themeColor || '#377bb5'};
-          margin-bottom: 20px;
-          text-align: center;
-        }
-        .resume-preview .resume-header {
-          text-align: center;
-          margin-bottom: 30px;
-        }
-        .resume-preview .resume-header-item:not(.no-separator)::after {
-          content: " | ";
-          margin: 0 8px;
-        }
-        .resume-preview h2 {
-          border-bottom: 1px solid ${style.themeColor || '#377bb5'};
-          padding-bottom: 5px;
-          margin-bottom: 10px;
-        }
-        .resume-preview h3 {
-          margin-top: 20px;
-        }
-        .resume-preview ul {
-          list-style-type: circle;
-          padding-left: 20px;
-        }
-        .resume-preview ol {
-          list-style-type: decimal;
-          padding-left: 20px;
-        }
-        .resume-preview li {
-          margin-bottom: 5px;
-        }
-        .resume-preview p {
-          margin-bottom: 10px;
-        }
-        .resume-preview strong {
-          font-weight: bold;
-        }
-        .resume-preview em {
-          font-style: italic;
-        }
-      `
+    const toolbarStyles = `
+      .resume-content {
+        line-height: ${cvData.styles.lineHeight};
+        font-size: ${cvData.styles.fontSize}px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 40px;
+      }
+      [data-scope="react-smart-pages"][data-part="page"] {
+        box-sizing: border-box;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        background-color: white;
+      }
+      .resume-content p,
+      .resume-content li {
+        margin-bottom: ${cvData.styles.paragraphSpace}px;
+      }
+      .resume-content h2,
+      .resume-content h3 {
+        margin-bottom: ${cvData.styles.paragraphSpace}px;
+      }
+      .resume-content .resume-header h1 {
+        color: ${cvData.styles.themeColor};
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .resume-content .resume-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .resume-content .resume-header-item:not(.no-separator)::after {
+        content: " | ";
+        margin: 0 8px;
+      }
+      .resume-content h2 {
+        border-bottom: 1px solid ${cvData.styles.themeColor};
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+      }
+      .resume-content h3 {
+        margin-top: 20px;
+      }
+      .resume-content ul {
+        list-style-type: circle;
+        padding-left: 20px;
+      }
+      .resume-content ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+      }
+      .resume-content li {
+        margin-bottom: 5px;
+      }
+      .resume-content p {
+        margin-bottom: 10px;
+      }
+      .resume-content strong {
+        font-weight: bold;
+      }
+      .resume-content em {
+        font-style: italic;
+      }
+    `;
+    const styleElement = document.getElementById("preview-toolbar-styles");
+    if (styleElement) {
+      styleElement.textContent = toolbarStyles;
+    } else {
+      const newStyleElement = document.createElement("style");
+      newStyleElement.id = "preview-toolbar-styles";
+      newStyleElement.textContent = toolbarStyles;
+      document.head.appendChild(newStyleElement);
     }
+  }, [cvData.styles]);
 
-    // Cleanup function
-    return () => {
-      // Don't remove CSS on unmount as it might be needed elsewhere
+  // Use smart pages for pagination
+  const { containerRef } = useSmartPages(
+    html,
+    { width: size.w, height: heightPx },
+    {
+      top: cvData.styles.marginV,
+      bottom: Math.max(cvData.styles.marginV - 10, 10),
+      left: cvData.styles.marginH,
+      right: cvData.styles.marginH
+    },
+    {
+      throttle: 200,
+      beforeRender: async () => {
+        // Inject CSS
+        injectCss(
+          "resume-editor",
+          cvData.css.replace(/vue-smart-pages/g, "react-smart-pages")
+        );
+      }
     }
-  }, [cvData.css, style])
+  );
 
-  const zoomIn = () => setScale(prev => prev * 1.1)
-  const zoomOut = () => setScale(prev => prev / 1.1)
-  const fitWidth = () => setScale(0.8) // Basic fit
-  const fitHeight = () => setScale(0.6) // Basic fit
+  const zoomIn = () => setScale((prev) => prev * 1.1);
+  const zoomOut = () => setScale((prev) => prev / 1.1);
+  const fitWidth = () => setScale(0.8);
+  const fitHeight = () => setScale(0.6);
 
   return (
-    <div className="relative h-full bg-secondary border-4 border-secondary overflow-hidden">
-      <div
-        className="h-full overflow-auto"
-        style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }}
-      >
-        <div
-          className="bg-white dark:bg-gray-900 p-8 min-h-full shadow-lg resume-preview"
-          style={{
-            fontFamily: style?.fontEN?.name || 'Arial, sans-serif'
-          }}
-        >
-          <style id="dynamic-styles"></style>
-          <Markdown content={cvData.markdown || '# Your Resume\n\nWrite your markdown here...'} />
-        </div>
-      </div>
+    <div className="relative h-full bg-secondary overflow-hidden">
 
-      <div className="absolute bottom-4 left-4 bg-blue-500 text-white rounded-full shadow-lg flex">
+      <Zoom scale={scale} className="h-full">
+        <div className="h-full overflow-auto flex justify-center p-8">
+          <div
+            ref={containerRef}
+            className="resume-content"
+            style={{
+              width: `${widthPx}px`,
+              fontFamily: cvData.styles.fontEN?.fontFamily || "Arial, sans-serif"
+            }}
+          />
+        </div>
+      </Zoom>
+
+      <div className="absolute bottom-4 left-4 bg-blue-500 text-white rounded-full shadow-lg flex z-10">
         <Button
           variant="ghost"
           size="sm"
@@ -135,5 +184,5 @@ export function Preview() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

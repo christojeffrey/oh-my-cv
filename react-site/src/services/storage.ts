@@ -1,30 +1,65 @@
-// Storage service using localforage
-import localforage from 'localforage'
+import localforage from "localforage";
 
-export interface CVData {
-  id: string
-  name: string
-  data: any
-  createdAt: Date
-  updatedAt: Date
+export interface Font {
+  name: string;
+  fontFamily?: string;
+}
+
+export interface ResumeStyles {
+  marginV: number;
+  marginH: number;
+  lineHeight: number;
+  paragraphSpace: number;
+  themeColor: string;
+  fontCJK: Font;
+  fontEN: Font;
+  fontSize: number;
+  paper: "A4" | "letter" | "legal";
+}
+
+export interface DbResume {
+  id: number;
+  name: string;
+  markdown: string;
+  css: string;
+  styles: ResumeStyles;
+  created_at: Date;
+  updated_at: Date;
 }
 
 class StorageService {
-  private store = localforage.createInstance({
-    name: 'oh-my-cv',
-    storeName: 'resumes'
-  })
+  private readonly store = localforage.createInstance({
+    name: "oh-my-cv",
+    storeName: "resumes"
+  });
 
-  async createResume(): Promise<CVData | null> {
+  private readonly VERSION = "0.1.1";
+
+  async getResumes(): Promise<DbResume[]> {
     try {
-      const id = Date.now().toString()
-      const resume: CVData = {
+      const keys = await this.store.keys();
+      const resumes: DbResume[] = [];
+      for (const key of keys) {
+        const item = await this.store.getItem<DbResume>(String(key));
+        if (item) {
+          resumes.push(item);
+        }
+      }
+      return resumes;
+    } catch (error) {
+      console.error("Failed to get resumes:", error);
+      return [];
+    }
+  }
+
+  async createResume(data?: Partial<DbResume>): Promise<DbResume | null> {
+    try {
+      const id = Date.now();
+      const now = new Date();
+      const resume: DbResume = {
         id,
-        name: 'Untitled Resume',
-        data: {
-          personal: { name: '', email: '', phone: '', location: '', website: '', linkedin: '', github: '' },
-          sections: { summary: '', experience: [], education: [], skills: [], projects: [], certifications: [] },
-          markdown: `---
+        name: "Untitled Resume",
+        markdown: `---
 name: Haha Ha
 header:
   - text: |
@@ -128,12 +163,13 @@ B.Eng. in Salad Engineering
 
 **Tools and Frameworks:** GrillHub, PanFlow, TensorFork, SpiceNet, $\\LaTeX$
 
-**Languages:** Chinese (native), English (proficient)`,
-          css: `/* Backbone CSS for Resume Template 1 */
+**Languages:** Chinese (native), English (proficient)
+`,
+        css: `/* Backbone CSS for Resume Template 1 */
 
 /* Basic */
 
-.resume-preview [data-scope="vue-smart-pages"][data-part="page"] {
+.resume-content [data-scope="react-smart-pages"][data-part="page"] {
   background-color: white;
   color: black;
   text-align: justify;
@@ -143,109 +179,109 @@ B.Eng. in Salad Engineering
   hyphens: auto;
 }
 
-.resume-preview p,
-.resume-preview li,
-.resume-preview dl {
+.resume-content p,
+.resume-content li,
+.resume-content dl {
   margin: 0;
 }
 
 /* Headings */
 
-.resume-preview h1,
-.resume-preview h2,
-.resume-preview h3 {
+.resume-content h1,
+.resume-content h2,
+.resume-content h3 {
   font-weight: bold;
 }
 
-.resume-preview h1 {
+.resume-content h1 {
   font-size: 2.13em;
 }
 
-.resume-preview h2,
-.resume-preview h3 {
+.resume-content h2,
+.resume-content h3 {
   margin-bottom: 5px;
   font-size: 1.2em;
 }
 
-.resume-preview h2 {
+.resume-content h2 {
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
 
 /* Lists */
 
-.resume-preview ul,
-.resume-preview ol {
+.resume-content ul,
+.resume-content ol {
   padding-left: 1.5em;
   margin: 0.2em 0;
 }
 
-.resume-preview ul {
+.resume-content ul {
   list-style-type: circle;
 }
 
-.resume-preview ol {
+.resume-content ol {
   list-style-type: decimal;
 }
 
 /* Definition Lists */
 
-.resume-preview dl {
+.resume-content dl {
   display: flex;
 }
 
-.resume-preview dl dt,
-.resume-preview dl dd:not(:last-child) {
+.resume-content dl dt,
+.resume-content dl dd:not(:last-child) {
   flex: 1;
 }
 
 /* Tex */
 
-.resume-preview :not(span.katex-display) > span.katex {
+.resume-content :not(span.katex-display) > span.katex {
   font-size: 1em !important;
 }
 
 /* SVG & Images */
 
-.resume-preview svg.iconify {
+.resume-content svg.iconify {
   vertical-align: -0.2em;
 }
 
-.resume-preview img {
+.resume-content img {
   max-width: 100%;
 }
 
 /* Header */
 
-.resume-preview .resume-header {
+.resume-content .resume-header {
   text-align: center;
 }
 
-.resume-preview .resume-header h1 {
+.resume-content .resume-header h1 {
   text-align: center;
   line-height: 1;
   margin-bottom: 8px;
 }
 
-.resume-preview .resume-header-item:not(.no-separator)::after {
+.resume-content .resume-header-item:not(.no-separator)::after {
   content: " | ";
 }
 
 /* Citations */
 
-.resume-preview [data-scope="cross-ref"][data-part="definitions"] {
+.resume-content [data-scope="cross-ref"][data-part="definitions"] {
   padding-left: 1.2em;
 }
 
-.resume-preview [data-scope="cross-ref"][data-part="definition"] p {
+.resume-content [data-scope="cross-ref"][data-part="definition"] p {
   margin-left: 0.5em;
 }
 
-.resume-preview [data-scope="cross-ref"][data-part="definition"]::marker {
+.resume-content [data-scope="cross-ref"][data-part="definition"]::marker {
   content: attr(data-label);
 }
 
-.resume-preview [data-scope="cross-ref"][data-part="reference"] {
+.resume-content [data-scope="cross-ref"][data-part="reference"] {
   font-size: 100%;
   top: 0;
 }
@@ -253,97 +289,170 @@ B.Eng. in Salad Engineering
 /* Dark & print mode */
 /* You might want to comment out the following lines if you change the background or text color. */
 
-.dark .resume-preview [data-scope="vue-smart-pages"][data-part="page"] {
+.dark .resume-content [data-scope="react-smart-pages"][data-part="page"] {
   background-color: hsl(213, 12%, 15%);
   color: hsl(216, 12%, 84%);
 }
 
 @media print {
-  .dark .resume-preview [data-scope="vue-smart-pages"][data-part="page"] {
+  .dark .resume-content [data-scope="react-smart-pages"][data-part="page"] {
     background-color: white;
     color: black;
   }
-}`
+}
+`,
+        styles: {
+          marginV: 50,
+          marginH: 45,
+          lineHeight: 1.3,
+          paragraphSpace: 5,
+          themeColor: "#377bb5",
+          fontCJK: {
+            name: "华康宋体",
+            fontFamily: "HKST"
+          },
+          fontEN: {
+            name: "Minion Pro"
+          },
+          fontSize: 15,
+          paper: "A4"
         },
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-      await this.store.setItem(id, resume)
-      return resume
+        created_at: now,
+        updated_at: now,
+        ...data
+      };
+      await this.store.setItem(String(id), resume);
+      return resume;
     } catch (error) {
-      console.error('Failed to create resume:', error)
-      return null
+      console.error("Failed to create resume:", error);
+      return null;
     }
   }
 
-  async getResume(id: string): Promise<CVData | null> {
+  async updateResume(
+    id: number,
+    data: Partial<DbResume>,
+    newUpdateTime = true
+  ): Promise<DbResume | null> {
     try {
-      return await this.store.getItem(id)
-    } catch (error) {
-      console.error('Failed to get resume:', error)
-      return null
-    }
-  }
-
-  async updateResume(id: string, data: Partial<CVData>): Promise<void> {
-    try {
-      const existing = await this.getResume(id)
+      const existing = await this.getResume(id);
       if (existing) {
-        const updated = { ...existing, ...data, updatedAt: new Date() }
-        await this.store.setItem(id, updated)
+        const updated = {
+          ...existing,
+          ...data,
+          updated_at: newUpdateTime ? new Date() : existing.updated_at
+        };
+        await this.store.setItem(String(id), updated);
+        return updated;
       }
+      return null;
     } catch (error) {
-      console.error('Failed to update resume:', error)
+      console.error("Failed to update resume:", error);
+      return null;
     }
   }
 
-  async deleteResume(id: string): Promise<void> {
+  async deleteResume(id: number): Promise<DbResume | null> {
     try {
-      await this.store.removeItem(id)
+      const existing = await this.getResume(id);
+      await this.store.removeItem(String(id));
+      return existing;
     } catch (error) {
-      console.error('Failed to delete resume:', error)
+      console.error("Failed to delete resume:", error);
+      return null;
     }
   }
 
-  async listResumes(): Promise<CVData[]> {
+  async getResume(id: number): Promise<DbResume | null> {
     try {
-      const keys = await this.store.keys()
-      const resumes = await Promise.all(
-        keys.map(key => this.store.getItem(key))
-      )
-      return resumes.filter(Boolean) as CVData[]
+      return await this.store.getItem<DbResume>(String(id));
     } catch (error) {
-      console.error('Failed to list resumes:', error)
-      return []
+      console.error("Failed to get resume:", error);
+      return null;
+    }
+  }
+
+  async duplicateResume(id: number): Promise<DbResume | null> {
+    try {
+      const original = await this.getResume(id);
+      if (!original) return null;
+
+      const newResume = await this.createResume({
+        name: original.name + " Copy",
+        markdown: original.markdown,
+        css: original.css,
+        styles: { ...original.styles }
+      });
+      return newResume;
+    } catch (error) {
+      console.error("Failed to missing resume:", error);
+      return null;
     }
   }
 
   async exportToJSON(): Promise<void> {
     try {
-      const resumes = await this.listResumes()
-      const dataStr = JSON.stringify(resumes, null, 2)
-      const dataBlob = new Blob([dataStr], { type: 'application/json' })
-      const url = URL.createObjectURL(dataBlob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = 'oh-my-cv-backup.json'
-      link.click()
-      URL.revokeObjectURL(url)
+      const resumes = await this.getResumes();
+      const data: Record<number, Omit<DbResume, "id" | "created_at" | "updated_at">> = {};
+      for (const resume of resumes) {
+        const { id, created_at, updated_at, ...rest } = resume;
+        data[id] = rest;
+      }
+
+      const json = {
+        version: this.VERSION,
+        data
+      };
+
+      const dataStr = JSON.stringify(json, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "ohmycv_data.json";
+      link.click();
+      URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export:', error)
+      console.error("Failed to export:", error);
     }
   }
 
-  async importFromJson(jsonStr: string): Promise<void> {
+  async importFromJson(content: string): Promise<boolean> {
     try {
-      const resumes: CVData[] = JSON.parse(jsonStr)
-      for (const resume of resumes) {
-        await this.store.setItem(resume.id, resume)
+      const json = JSON.parse(content);
+
+      // Validate version
+      if (json.version !== this.VERSION) {
+        console.warn(
+          "Import data version mismatch:",
+          json.version,
+          "expected:",
+          this.VERSION
+        );
+        return false;
       }
+
+      // Import resumes
+      const resumes: Record<
+        number,
+        Omit<DbResume, "id" | "created_at" | "updated_at">
+      > = json.data || {};
+      for (const [id, resumeData] of Object.entries(resumes)) {
+        const resume: DbResume = {
+          id: Date.now() + Number.parseInt(id),
+          ...resumeData,
+          created_at: new Date(),
+          updated_at: new Date()
+        };
+        await this.store.setItem(String(resume.id), resume);
+      }
+
+      return true;
     } catch (error) {
-      console.error('Failed to import:', error)
+      console.error("Failed to import:", error);
+      return false;
     }
   }
 }
 
-export const storageService = new StorageService()
+export const storageService = new StorageService();

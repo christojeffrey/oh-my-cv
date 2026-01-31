@@ -1,17 +1,17 @@
-// Markdown processing with full oh-my-cv pipeline
-import { markdownService } from '@/utils/markdown'
+import { markdownService } from "@/utils/markdown";
 
 interface MarkdownProps {
-  content: string
+  content: string;
+  className?: string;
 }
 
-export function Markdown({ content }: MarkdownProps) {
-  const html = markdownService.renderResume(content)
+export function Markdown({ content, className = "" }: MarkdownProps) {
+  const html = markdownService.renderMarkdown(content);
 
   return (
     <div
-      className="prose prose-sm max-w-none resume-content"
+      className={`resume-content ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
-  )
+  );
 }
