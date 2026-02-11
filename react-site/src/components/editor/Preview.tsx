@@ -1,31 +1,51 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 import { cvDataAtom } from "@/atoms";
 import { markdownService } from "@/utils/markdown";
 import { Button } from "@/components/ui/button";
 import { ZoomIn, ZoomOut, Maximize2, Maximize } from "lucide-react";
 import { injectCss } from "@/utils/dynamic-css";
+import { PAPER_SIZES, MM_TO_PX } from "@/constants";
 import { useSmartPages } from "@ohmycv/react-smart-pages";
 import { Zoom } from "@ohmycv/react-zoom";
-
-const PAPER_SIZES: Record<string, { w: number; h: number }> = {
-  A4: { w: 210, h: 297 },
-  letter: { w: 216, h: 279 },
-  legal: { w: 216, h: 356 }
-};
-
-const MM_TO_PX = 3.779527559055; // 96 DPI
 
 export function Preview() {
   const [cvData] = useAtom(cvDataAtom);
   const [scale, setScale] = useState(1);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const size = PAPER_SIZES[cvData.styles.paper] || PAPER_SIZES.A4;
   const widthPx = size.w * MM_TO_PX;
   const heightPx = size.h * MM_TO_PX;
 
-  // Render markdown to HTML
-  const html = markdownService.renderMarkdown(cvData.markdown || "");
+  // Measure container for fit calculations
+  useEffect(() => {
+    const updateContainerSize = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.clientWidth);
+        setContainerHeight(containerRef.current.clientHeight);
+      }
+    };
+
+    updateContainerSize();
+    window.addEventListener("resize", updateContainerSize);
+    return () => window.removeEventListener("resize", updateContainerSize);
+  }, []);
+
+  // Auto-fit width on mount and when paper size changes
+  useEffect(() => {
+    if (containerWidth > 0) {
+      // Account for padding (p-8 = 32px on each side = 64px total)
+      const availableWidth = containerWidth - 64;
+      const fitScale = availableWidth / widthPx;
+      setScale(fitScale);
+    }
+  }, [containerWidth, widthPx, heightPx]);
+
+  // Render resume markdown to HTML (includes front matter header parsing)
+  const html = markdownService.renderResume(cvData.markdown || "");
 
   // Inject toolbar styles
   useEffect(() => {
@@ -107,7 +127,7 @@ export function Preview() {
   }, [cvData.styles]);
 
   // Use smart pages for pagination
-  const { containerRef } = useSmartPages(
+  const { containerRef: pagesContainerRef } = useSmartPages(
     html,
     { width: size.w, height: heightPx },
     {
@@ -130,16 +150,26 @@ export function Preview() {
 
   const zoomIn = () => setScale((prev) => prev * 1.1);
   const zoomOut = () => setScale((prev) => prev / 1.1);
-  const fitWidth = () => setScale(0.8);
-  const fitHeight = () => setScale(0.6);
+  const fitWidth = () => {
+    if (containerWidth > 0) {
+      const availableWidth = containerWidth - 64;
+      setScale(availableWidth / widthPx);
+    }
+  };
+  const fitHeight = () => {
+    if (containerHeight > 0) {
+      const availableHeight = containerHeight - 64;
+      setScale(availableHeight / heightPx);
+    }
+  };
 
   return (
-    <div className="relative h-full bg-secondary overflow-hidden">
+    <div ref={containerRef} className="relative h-full bg-secondary overflow-hidden">
 
       <Zoom scale={scale} className="h-full">
         <div className="h-full overflow-auto flex justify-center p-8">
           <div
-            ref={containerRef}
+            ref={pagesContainerRef}
             className="resume-content"
             style={{
               width: `${widthPx}px`,

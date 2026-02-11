@@ -1,11 +1,11 @@
-// Paper sizes
+// Paper sizes (height includes buffer for pagination calculations)
 export const PAPER_SIZES: Record<string, { w: number; h: number }> = {
-  A4: { w: 210, h: 297 },
-  letter: { w: 216, h: 279 },
-  legal: { w: 216, h: 356 }
+  A4: { w: 210, h: 297 + 2 }, // Height includes 2mm buffer
+  letter: { w: 215.9, h: 279.4 + 3 }, // Height includes 3mm buffer
+  legal: { w: 215.9, h: 355.6 }
 };
 
-export const MM_TO_PX = 0.264583;
+export const MM_TO_PX = 3.78;
 
 // Colors
 export const PRESET_COLORS = [

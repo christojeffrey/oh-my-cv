@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PAPER_SIZES, MM_TO_PX, type Font } from "@/constants";
 import { useSmartPages } from "@ohmycv/react-smart-pages";
-import { Zoom } from "@ohmycv/react-zoom";
 
 interface ResumeCardProps {
   resume: DbResume;
@@ -45,13 +44,14 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
   const widthPx = size.w * MM_TO_PX;
   const heightPx = size.h * MM_TO_PX;
 
-  // Render markdown to HTML
-  const html = markdownService.renderMarkdown(resume.markdown || "");
+  // Render resume markdown to HTML (includes front matter header parsing)
+  const html = markdownService.renderResume(resume.markdown || "");
 
   // Use smart pages for pagination - show first page only
+  // Note: useSmartPages expects width in mm, height in px (matching vue-smart-pages behavior)
   const { containerRef } = useSmartPages(
     html,
-    { width: size.w, height: size.h },
+    { width: size.w, height: heightPx },
     {
       top: styles.marginV,
       bottom: Math.max(styles.marginV - 10, 10),
@@ -179,16 +179,25 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
   }
 
   return (
-    <div className="w-56 group/card">
-      <div className="h-80 relative">
+    <div className="w-56 group/card flex flex-col items-center">
+      <div className="h-80 relative flex items-center justify-center w-full">
 
-        <Zoom scale={SCALE_FACTOR} className="origin-top-left">
+        <div
+          className="resume-card-wrapper border rounded-md flex items-center justify-center mx-auto bg-white dark:bg-gray-900"
+          style={{
+            width: '210px',
+            height: '297px',
+            overflow: 'hidden'
+          }}
+        >
           <div
-            className="resume-card border rounded-md overflow-hidden cursor-pointer peer relative bg-white dark:bg-gray-900"
+            className="resume-card cursor-pointer peer shrink-0"
             onClick={handleEdit}
             style={{
               width: `${widthPx}px`,
-              height: `${heightPx}px`
+              height: `${heightPx}px`,
+              transform: `scale(${SCALE_FACTOR})`,
+              transformOrigin: 'center center'
             }}
           >
             {/* Hide all pages except the first one */}
@@ -200,13 +209,15 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
             <div
               id={`resume-preview-${resume.id}`}
               ref={containerRef}
-              className="resume-content h-full w-full"
+              className="resume-content"
               style={{
-                fontFamily: styles.fontEN?.fontFamily || "Arial, sans-serif"
+                fontFamily: styles.fontEN?.fontFamily || "Arial, sans-serif",
+                width: `${widthPx}px`,
+                height: `${heightPx}px`
               }}
             />
           </div>
-        </Zoom>
+        </div>
 
         <DropdownMenu open={showActions} onOpenChange={setShowActions}>
           <DropdownMenuTrigger asChild>
@@ -231,7 +242,7 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
         </DropdownMenu>
       </div>
 
-      <div className="mt-2 px-2">
+      <div className="mt-2 px-2 text-center">
         <p className="text-sm font-medium truncate">{resume.name}</p>
         <p className="text-xs text-muted-foreground">
           Updated: {new Date(resume.updated_at).toLocaleDateString()}

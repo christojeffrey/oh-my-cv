@@ -65,6 +65,7 @@ header {
 
 .workspace {
   height: calc(100vh - 48px);
+  height: calc(100dvh - 48px);
 }
 
 /* Icons in resumes */
@@ -215,4 +216,10 @@ svg.iconify {
 /* Panel container */
 .pane-container {
   height: 100%;
+}
+
+/* Size fit utility (matches UnoCSS size-fit) */
+.size-fit {
+  width: fit-content;
+  height: fit-content;
 }
