@@ -1,14 +1,15 @@
-import { Link } from "@tanstack/react-router";
-import { BrandName } from "@/components/shared/BrandName";
-import { Logo } from "@/components/shared/Logo";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Palette, Globe, Smartphone } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Globe, Palette, Smartphone, Sparkles } from "lucide-react";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
+import { BrandName } from "@/components/shared/BrandName.tsx";
+import { Logo } from "@/components/shared/Logo.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 const FEATURES = [
   {
     icon: Sparkles,
     title: "Write in Markdown",
-    items: ["Real-time preview with smooth editing", "Export to PDF with one click"]
+    items: ["Real-time preview with smooth editing", "Export to PDF with one click"],
   },
   {
     icon: Palette,
@@ -16,8 +17,8 @@ const FEATURES = [
     items: [
       "Theme colors, fonts, margins, and more",
       "Pick from 1000+ Google Fonts",
-      "Add custom CSS"
-    ]
+      "Add custom CSS",
+    ],
   },
   {
     icon: Smartphone,
@@ -25,12 +26,12 @@ const FEATURES = [
     items: [
       "PWA - install to your home screen",
       "Your data stays in your browser",
-      "No tracking, no ads"
-    ]
-  }
+      "No tracking, no ads",
+    ],
+  },
 ];
 
-export function LandingPage() {
+function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <header className="flex items-center justify-between px-4 h-12 border-b bg-background/95 backdrop-blur">
@@ -40,7 +41,7 @@ export function LandingPage() {
         </Link>
 
         <div className="flex items-center gap-4 h-full">
-          <Button variant="ghost" size="sm" className="h-8" asChild>
+          <Button variant="ghost" size="sm" className="h-8" asChild={true}>
             <a
               href="https://github.com/Renovamen/oh-my-cv"
               target="_blank"
@@ -66,7 +67,7 @@ export function LandingPage() {
           <Button
             size="lg"
             className="h-12 px-8 text-base bg-slate-900 hover:bg-slate-800 text-white"
-            asChild
+            asChild={true}
           >
             <Link to="/">
               Get Started
@@ -89,10 +90,7 @@ export function LandingPage() {
               </div>
               <ul className="space-y-2">
                 {feature.items.map((item, itemIndex) => (
-                  <li
-                    key={itemIndex}
-                    className="flex items-start text-muted-foreground text-sm"
-                  >
+                  <li key={itemIndex} className="flex items-start text-muted-foreground text-sm">
                     <span className="mr-2 text-primary">•</span>
                     <span>{item}</span>
                   </li>
@@ -120,3 +118,14 @@ export function LandingPage() {
     </div>
   );
 }
+
+export const Route = createFileRoute("/landing")({
+  component: () => (
+    <ErrorBoundary>
+      <LandingPage />
+    </ErrorBoundary>
+  ),
+});
+
+// Export LandingPage for reuse if needed
+export { LandingPage };
