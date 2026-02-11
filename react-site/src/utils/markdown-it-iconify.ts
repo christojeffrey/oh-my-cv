@@ -1,9 +1,13 @@
 // Simple markdown-it plugin to support Iconify-like syntax
 // Usage: :iconify-iconset:icon-name: or common emoji shortcuts
 
-export default function MarkdownItIconify(md: any) {
+import type MarkdownIt from "markdown-it";
+
+export default function MarkdownItIconify(md: MarkdownIt) {
+  type Token = MarkdownIt.Token;
+
   // Simple icon renderer for common icons
-  const iconifyRender = (tokens: any[], idx: number) => {
+  const iconifyRender = (tokens: Token[], idx: number) => {
     const token = tokens[idx];
     const content = token.attrGet("content") || "";
 
@@ -19,7 +23,7 @@ export default function MarkdownItIconify(md: any) {
       ":globe:": "🌍",
       ":home:": "🏠",
       ":calendar:": "📅",
-      ":download:": "⬇️"
+      ":download:": "⬇️",
     };
 
     for (const [key, emoji] of Object.entries(iconMap)) {
@@ -33,7 +37,7 @@ export default function MarkdownItIconify(md: any) {
 
   md.renderer.rules.icon = iconifyRender;
   md.inline.ruler.push(iconifyRender, {
-    alt: []
+    alt: [],
   });
 
   return md;

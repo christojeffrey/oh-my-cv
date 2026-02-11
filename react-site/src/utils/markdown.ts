@@ -1,12 +1,11 @@
+import { FrontMatterParser } from "@ohmycv/front-matter";
+import MarkdownItCite from "@ohmycv/markdown-it-cross-ref";
+import MarkdownItKatex from "@ohmycv/markdown-it-katex";
+import MarkdownItLatexCmds from "@ohmycv/markdown-it-latex-cmds";
 import MarkdownIt from "markdown-it";
-// @ts-ignore - Types will be fixed in plan 01-06
 import MarkdownItDeflist from "markdown-it-deflist";
 import LinkAttributes from "markdown-it-link-attributes";
-import MarkdownItKatex from "@ohmycv/markdown-it-katex";
-import MarkdownItCite from "@ohmycv/markdown-it-cross-ref";
-import MarkdownItLatexCmds from "@ohmycv/markdown-it-latex-cmds";
-import { FrontMatterParser } from "@ohmycv/front-matter";
-import { sanitizeHtml } from "./dompurify";
+import { sanitizeHtml } from "./dompurify.ts";
 // import MarkdownItIconify from "./markdown-it-iconify";
 
 export interface ResumeHeaderItem {
@@ -27,26 +26,26 @@ export class MarkdownService {
   constructor() {
     this.md = this.setupMarkdownIt();
     this.frontMatterParser = new FrontMatterParser<ResumeFrontMatter>({
-      errorBehavior: "last"
+      errorBehavior: "last",
     });
   }
 
   private setupMarkdownIt(): MarkdownIt {
     const md = new MarkdownIt({
-      html: true
+      html: true,
     });
 
-    md.use(MarkdownItDeflist as any);
-    md.use(MarkdownItKatex as any);
-    md.use(MarkdownItCite as any);
-    md.use(MarkdownItLatexCmds as any);
-    // md.use(MarkdownItIconify as any);
-    md.use(LinkAttributes as any, {
+    md.use(MarkdownItDeflist);
+    md.use(MarkdownItKatex);
+    md.use(MarkdownItCite);
+    md.use(MarkdownItLatexCmds);
+    // md.use(MarkdownItIconify);
+    md.use(LinkAttributes, {
       matcher: (link: string) => /^https?:\/\//.test(link),
       attrs: {
         target: "_blank",
-        rel: "noopener"
-      }
+        rel: "noopener",
+      },
     });
 
     return md;
@@ -106,7 +105,7 @@ export class MarkdownService {
         .map((item, i, array) =>
           this.renderHeaderItem(item, i !== array.length - 1 && !array[i + 1].newLine)
         )
-        .join("\n")
+        .join("\n"),
     ].join("");
 
     return `<div class="resume-header">${content}</div>`;

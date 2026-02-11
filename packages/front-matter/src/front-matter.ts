@@ -1,5 +1,6 @@
 // Adapted from and improved upon https://github.com/jxson/front-matter
 
+import process from "node:process";
 import * as yamlParser from "js-yaml";
 
 const OPTIONAL_BYTE_ORDER_MARK = "\\ufeff?";
@@ -47,7 +48,7 @@ export interface FrontMatterOptions {
   errorBehavior?: "last" | "empty" | "error";
 }
 
-export class FrontMatterParser<T = { [key: string]: any }> {
+export class FrontMatterParser<T = Record<string, unknown>> {
   private options: FrontMatterOptions;
   private _lastFrontMatter: T = {} as T;
 
@@ -59,7 +60,7 @@ export class FrontMatterParser<T = { [key: string]: any }> {
   private _emptyResults = (body: string) => ({
     frontMatter: {} as T,
     body,
-    bodyBegin: 1
+    bodyBegin: 1,
   });
 
   /**
@@ -93,7 +94,7 @@ export class FrontMatterParser<T = { [key: string]: any }> {
     return {
       frontMatterString,
       body,
-      bodyBegin
+      bodyBegin,
     };
   }
 
@@ -139,8 +140,7 @@ export class FrontMatterParser<T = { [key: string]: any }> {
 
     if (lines[0] && /= yaml =|---/.test(lines[0])) {
       return this._parse(content);
-    } else {
-      return this._emptyResults(content);
     }
+    return this._emptyResults(content);
   }
 }
