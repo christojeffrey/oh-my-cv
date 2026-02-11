@@ -39,22 +39,13 @@
       "complexity": {
         "recommended": true
       },
-      "correctness": {
-        "recommended": true
-      },
+      "correctness": "error",
       "performance": {
         "recommended": true
       },
-      "security": {
-        "recommended": true
-      },
-      "style": {
-        "recommended": true,
-        "noNonNullAssertion": "warn"
-      },
-      "suspicious": {
-        "recommended": true
-      }
+      "security": "error",
+      "style": "warn",
+      "suspicious": "warn"
     }
   },
   "javascript": {
