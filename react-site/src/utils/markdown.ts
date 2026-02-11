@@ -1,4 +1,5 @@
 import MarkdownIt from "markdown-it";
+// @ts-ignore - Types will be fixed in plan 01-06
 import MarkdownItDeflist from "markdown-it-deflist";
 import LinkAttributes from "markdown-it-link-attributes";
 import MarkdownItKatex from "@ohmycv/markdown-it-katex";
