@@ -1,11 +1,11 @@
 import MarkdownIt from "markdown-it";
-// @ts-ignore
 import MarkdownItDeflist from "markdown-it-deflist";
 import LinkAttributes from "markdown-it-link-attributes";
 import MarkdownItKatex from "@ohmycv/markdown-it-katex";
 import MarkdownItCite from "@ohmycv/markdown-it-cross-ref";
 import MarkdownItLatexCmds from "@ohmycv/markdown-it-latex-cmds";
 import { FrontMatterParser } from "@ohmycv/front-matter";
+import { sanitizeHtml } from "./dompurify";
 // import MarkdownItIconify from "./markdown-it-iconify";
 
 export interface ResumeHeaderItem {
@@ -52,7 +52,8 @@ export class MarkdownService {
   }
 
   public renderMarkdown(md: string): string {
-    return this.md.render(md);
+    const dirtyHtml = this.md.render(md);
+    return sanitizeHtml(dirtyHtml);
   }
 
   /**
