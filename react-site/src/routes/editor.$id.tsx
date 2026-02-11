@@ -1,18 +1,18 @@
-
-import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtom } from "jotai";
-import { cvDataAtom } from "@/atoms";
-import { storageService } from "@/services/storage";
-import { CodeEditor } from "@/components/editor/CodeEditor";
-import { Preview } from "@/components/editor/Preview";
-import { EditorSidebar } from "@/components/editor/EditorSidebar";
-import { ResizeHandle } from "@/components/editor/ResizeHandle";
-import { Button } from "@/components/ui/button";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import { cvDataAtom } from "@/atoms/index.ts";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
+import { CodeEditor } from "@/components/editor/CodeEditor.tsx";
+import { EditorSidebar } from "@/components/editor/EditorSidebar.tsx";
+import { Preview } from "@/components/editor/Preview.tsx";
+import { ResizeHandle } from "@/components/editor/ResizeHandle.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { storageService } from "@/services/storage.ts";
 
 export const Route = createFileRoute("/editor/$id")({
-  component: Editor
+  component: Editor,
 });
 
 function Editor() {
@@ -29,7 +29,7 @@ function Editor() {
 
     const loadResume = async () => {
       try {
-        const resume = await storageService.getResume(parseInt(id));
+        const resume = await storageService.getResume(Number.parseInt(id));
         if (resume) {
           setCvData({
             markdown: resume.markdown,
@@ -44,15 +44,15 @@ function Editor() {
               themeColor: "#377bb5",
               fontCJK: {
                 name: "华康宋体",
-                fontFamily: "HKST"
+                fontFamily: "HKST",
               },
               fontEN: {
-                name: "Minion Pro"
+                name: "Minion Pro",
               },
               fontSize: 15,
-              paper: "A4"
+              paper: "A4",
             },
-            loaded: true
+            loaded: true,
           });
         } else {
           setIsLoading(false);
@@ -69,7 +69,7 @@ function Editor() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" />
       </div>
     );
   }
@@ -79,48 +79,47 @@ function Editor() {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-2">Resume not found</h2>
-          <p className="text-muted-foreground">
-            The resume you're looking for doesn't exist.
-          </p>
+          <p className="text-muted-foreground">The resume you're looking for doesn't exist.</p>
         </div>
       </div>
     );
   }
 
-
   return (
-    <div className="flex flex-col h-screen relative">
-      <div className="absolute top-3 right-4 z-50 flex gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 w-8 px-0 bg-background/50 backdrop-blur border shadow-sm hover:bg-background"
-          onClick={() => setIsToolbarOpen(!isToolbarOpen)}
-          title={isToolbarOpen ? "Close Toolbar" : "Open Toolbar"}
-        >
-          {isToolbarOpen ? (
-            <PanelRightClose className="h-4 w-4" />
-          ) : (
-            <PanelRightOpen className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
-
-      <div className="flex flex-1 overflow-hidden pt-[var(--header-height)]">
-        {/* Left panel - Code Editor */}
-        <div className="flex-1 border-r flex flex-col relative min-w-0">
-          <ResizeHandle direction="horizontal" />
-          <CodeEditor />
+    <ErrorBoundary>
+      <div className="flex flex-col h-screen relative">
+        <div className="absolute top-3 right-4 z-50 flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 px-0 bg-background/50 backdrop-blur border shadow-sm hover:bg-background"
+            onClick={() => setIsToolbarOpen(!isToolbarOpen)}
+            title={isToolbarOpen ? "Close Toolbar" : "Open Toolbar"}
+          >
+            {isToolbarOpen ? (
+              <PanelRightClose className="h-4 w-4" />
+            ) : (
+              <PanelRightOpen className="h-4 w-4" />
+            )}
+          </Button>
         </div>
 
-        {/* Right panel - Preview */}
-        <div className="flex-1 flex-col flex-1 min-w-0">
-          <Preview />
-        </div>
+        <div className="flex flex-1 overflow-hidden pt-[var(--header-height)]">
+          {/* Left panel - Code Editor */}
+          <div className="flex-1 border-r flex flex-col relative min-w-0">
+            <ResizeHandle direction="horizontal" />
+            <CodeEditor />
+          </div>
 
-        {/* Right toolbar - EditorSidebar */}
-        <EditorSidebar isOpen={isToolbarOpen} />
+          {/* Right panel - Preview */}
+          <div className="flex-1 flex-col flex-1 min-w-0">
+            <Preview />
+          </div>
+
+          {/* Right toolbar - EditorSidebar */}
+          <EditorSidebar isOpen={isToolbarOpen} />
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }
