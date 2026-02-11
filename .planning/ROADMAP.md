@@ -33,11 +33,16 @@ Decimal phases appear between their surrounding integers in numeric order.
 3. TypeScript catches all type errors at compile time
 4. Code follows consistent linting and formatting rules
 5. Vue/Nuxt site and Vue-specific packages are removed
-   **Plans**: TBD
+   **Plans**: 6 plans
 
 Plans:
 
-- [ ] 01-01: TBD
+- [ ] 01-01: React 19 upgrade + Vue removal (SEC-01, SEC-08)
+- [ ] 01-02: DOMPurify XSS protection (SEC-02)
+- [ ] 01-03: ErrorBoundary components + React 19 handlers (SEC-03, SEC-04)
+- [ ] 01-04: TypeScript strict mode + Biome configuration (SEC-05, SEC-07)
+- [ ] 01-05: Wrap routes in error boundaries (SEC-03, SEC-04)
+- [ ] 01-06: Remove @ts-ignore/any types (SEC-06)
 
 ### Phase 2: Core Editor
 
@@ -118,7 +123,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase                     | Plans Complete | Status      | Completed |
 | ------------------------- | -------------- | ----------- | --------- |
-| 1. Foundation             | 0/TBD          | Not started | -         |
+| 1. Foundation             | 0/6            | Not started | -         |
 | 2. Core Editor            | 0/TBD          | Not started | -         |
 | 3. Editor Enhancements    | 0/TBD          | Not started | -         |
 | 4. Quality & Optimization | 0/TBD          | Not started | -         |
