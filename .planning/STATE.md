@@ -36,6 +36,7 @@ Progress: [████░░░░░░] 67%
 - Trend: N/A (insufficient data)
 
 _Updated after each plan completion_
+| Phase 01-foundation P06 | 11 min | 4 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -53,6 +54,9 @@ Recent decisions affecting current work:
 - [Phase 1, Plan 02]: @ts-ignore restored for markdown-it-deflist to allow build success (planned fix in plan 01-06)
 - [Phase 1, Plan 04]: Biome linter configured with correctness and security as errors, style and suspicious as warnings
 - [Phase 1, Plan 04]: Existing Biome linting errors (283 errors, 680 warnings) documented as technical debt for future resolution
+- [Phase 01-foundation]: Created local type declarations for markdown-it plugins instead of using as any — @types packages don't exist for markdown-it-deflist, markdown-it-link-attributes, and @ohmycv/* plugins
+- [Phase 01-foundation]: Use unknown instead of any for uncertain types — Maintains type safety while allowing dynamic checking with type guards
+- [Phase 01-foundation]: Keep intentional any in types.ts utility (IsAny<T> pattern) — Conditional type detection pattern requires comparing with any type directly
 
 ### Pending Todos
 
