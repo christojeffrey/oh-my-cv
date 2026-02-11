@@ -24,13 +24,13 @@ export function CodeEditor() {
   };
 
   return (
-    <div class="h-full flex flex-col bg-background">
-      <Tabs value={activeTab} onValueChange={setActiveTab} class="flex-1 flex flex-col">
-        <TabsList class="grid w-full grid-cols-2">
+    <div className="h-full flex flex-col bg-background">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="css">CSS</TabsTrigger>
         </TabsList>
-        <TabsContent value="markdown" class="flex-1">
+        <TabsContent value="markdown" className="flex-1">
           <Editor
             height="100%"
             language="markdown"
@@ -44,7 +44,7 @@ export function CodeEditor() {
             }}
           />
         </TabsContent>
-        <TabsContent value="css" class="flex-1">
+        <TabsContent value="css" className="flex-1">
           <Editor
             height="100%"
             language="css"
