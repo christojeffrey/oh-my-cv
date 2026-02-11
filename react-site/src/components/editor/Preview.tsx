@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 import { cvDataAtom } from "@/atoms";
 import { markdownService } from "@/utils/markdown";
+import { sanitizeHtml } from "@/utils/dompurify";
 import { Button } from "@/components/ui/button";
 import { ZoomIn, ZoomOut, Maximize2, Maximize } from "lucide-react";
 import { injectCss } from "@/utils/dynamic-css";
@@ -45,7 +46,8 @@ export function Preview() {
   }, [containerWidth, widthPx, heightPx]);
 
   // Render resume markdown to HTML (includes front matter header parsing)
-  const html = markdownService.renderResume(cvData.markdown || "");
+  const dirtyHtml = markdownService.renderResume(cvData.markdown || "");
+  const html = sanitizeHtml(dirtyHtml);
 
   // Inject toolbar styles
   useEffect(() => {
@@ -165,7 +167,6 @@ export function Preview() {
 
   return (
     <div ref={containerRef} className="relative h-full bg-secondary overflow-hidden">
-
       <Zoom scale={scale} className="h-full">
         <div className="h-full overflow-auto flex justify-center p-8">
           <div
