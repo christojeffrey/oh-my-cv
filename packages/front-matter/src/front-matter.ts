@@ -1,6 +1,5 @@
 // Adapted from and improved upon https://github.com/jxson/front-matter
 
-import process from "node:process";
 import * as yamlParser from "js-yaml";
 
 const OPTIONAL_BYTE_ORDER_MARK = "\\ufeff?";
