@@ -3,7 +3,7 @@
 import * as yamlParser from "js-yaml";
 
 const OPTIONAL_BYTE_ORDER_MARK = "\\ufeff?";
-const PLATFORM = typeof process !== "undefined" ? process.platform : "";
+// Use \r? to handle both Windows (CRLF) and Unix (LF) line endings
 const PATTERN =
   "^(" +
   OPTIONAL_BYTE_ORDER_MARK +
@@ -11,7 +11,7 @@ const PATTERN =
   "$([\\s\\S]*?)" +
   "^(?:\\2|\\.\\.\\.)\\s*" +
   "$" +
-  (PLATFORM === "win32" ? "\\r?" : "") +
+  "\\r?" +  // Optional carriage return for Windows compatibility
   "(?:\\n)?)";
 
 export interface FrontMatterResults<T> {
