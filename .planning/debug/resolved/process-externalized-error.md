@@ -46,14 +46,34 @@ next_action: Apply the fix by removing the import line
 
 ## Root Cause
 
-The front-matter package imports `process` from `node:process` on line 3 of `packages/front-matter/src/front-matter.ts`. Even though the code has a `typeof process !== "undefined"` check to handle the browser environment, Vite still sees the import and externalizes the module when bundling for the browser, causing the error.
+The front-matter package accessed `process.platform` at module load time in `packages/front-matter/src/front-matter.ts`. Even though the code had a `typeof process !== "undefined"` check and no explicit import, Vite's static analysis detected the `process.platform` reference and externalized the module when bundling for the browser.
+
+The dist files also contained a direct `import process from "process"` from an earlier build that needed to be regenerated.
 
 ## Fix Applied
 
-Removed the `import process from "node:process";` line from `packages/front-matter/src/front-matter.ts`. The typeof check already handles the case where process doesn't exist, and in Node.js environments, process is available globally without the import.
+Changed the code to be platform-agnostic by always including `\r?` in the regex pattern. This pattern works correctly for both Windows (CRLF) and Unix (LF) line endings, making the platform check unnecessary.
 
-**File changed:** `packages/front-matter/src/front-matter.ts` - removed line 3
+**Before:**
+```typescript
+const PLATFORM = typeof process !== "undefined" ? process.platform : "";
+const PATTERN = ... + (PLATFORM === "win32" ? "\\r?" : "") + ...
+```
+
+**After:**
+```typescript
+const PATTERN = ... + "\\r?" + ...  // Optional carriage return for Windows compatibility
+```
+
+**File changed:** `packages/front-matter/src/front-matter.ts` - removed process.platform check
+
+**Rebuilt:** Ran `npx tsup src/index.ts --format cjs,esm --dts` to update dist files
+
+**Verification:**
+- Dev server starts without errors on port 5177
+- HTML page loads correctly
+- No process references in built dist files
 
 ## Status
 
-✅ **RESOLVED** - Fix verified and working
+✅ **RESOLVED** - Fix verified and working (commit c68b99a)
