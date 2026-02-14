@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type Font, MM_TO_PX, PAPER_SIZES } from "@/constants";
+import { DEFAULT_STYLES, MM_TO_PX, PAPER_SIZES } from "@/constants";
 import { useSmartPages } from "@/hooks/useSmartPages";
 import { googleFontsService } from "@/services/fonts";
 import { type DbResume, storageService } from "@/services/storage";
@@ -22,23 +22,13 @@ interface ResumeCardProps {
 
 const SCALE_FACTOR = 1 / MM_TO_PX; // Scale down for card preview
 
-export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
+export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
   // Ensure styles exists, use defaults if not
-  const styles = resume.styles || {
-    marginV: 50,
-    marginH: 45,
-    lineHeight: 1.3,
-    paragraphSpace: 5,
-    themeColor: "#377bb5",
-    fontCJK: { name: "华康宋体", fontFamily: "HKST" },
-    fontEN: { name: "Arial", fontFamily: "Arial, sans-serif" },
-    fontSize: 15,
-    paper: "A4",
-  };
+  const styles = resume.styles || DEFAULT_STYLES;
 
   const size = PAPER_SIZES[styles.paper] || PAPER_SIZES.A4;
   const widthPx = size.w * MM_TO_PX;
@@ -143,8 +133,8 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
       }
 
       // Load fonts
-      await googleFontsService.resolve(styles.fontEN as Font);
-      await googleFontsService.resolve(styles.fontCJK as Font);
+      await googleFontsService.resolve(styles.fontEN);
+      await googleFontsService.resolve(styles.fontCJK);
 
       setIsLoaded(true);
     };

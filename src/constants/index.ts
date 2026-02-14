@@ -1,3 +1,5 @@
+import type { Font, ResumeStyles } from "@/types/resume";
+
 // Paper sizes (height includes buffer for pagination calculations)
 export const PAPER_SIZES: Record<string, { w: number; h: number }> = {
   A4: { w: 210, h: 297 + 2 }, // Height includes 2mm buffer
@@ -18,14 +20,6 @@ export const PRESET_COLORS = [
   "#0891b2", // Cyan
   "#4b5563", // Gray
 ];
-
-export type ValidPaperSize = "A4" | "letter" | "legal";
-
-// Fonts
-export interface Font {
-  name: string;
-  fontFamily?: string;
-}
 
 export const LOCAL_EN_FONTS: Font[] = [
   { name: "Arial", fontFamily: "Arial, sans-serif" },
@@ -64,7 +58,7 @@ export const GF_CJK_FIRST = ["思源黑体", "思源宋体", "站酷小薇LOGO�
 export const GF_IGNORE_FONTS = ["Icon"];
 
 // Defaults
-export const DEFAULT_STYLES = {
+export const DEFAULT_STYLES: ResumeStyles = {
   marginV: 50,
   marginH: 45,
   lineHeight: 1.3,
@@ -75,11 +69,11 @@ export const DEFAULT_STYLES = {
     fontFamily: "HKST",
   },
   fontEN: {
-    name: "Arial",
-    fontFamily: "Arial, sans-serif",
+    name: "Minion Pro",
+    fontFamily: "Minion Pro, serif",
   },
   fontSize: 15,
-  paper: "A4" as ValidPaperSize,
+  paper: "A4",
 };
 
 export const DEFAULT_RESUME_NAME = "New Resume";

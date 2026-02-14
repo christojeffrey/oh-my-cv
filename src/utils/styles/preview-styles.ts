@@ -1,7 +1,7 @@
-import { type ResumeStyles } from "@/atoms/data";
+import type { ResumeStyles } from "@/types/resume";
 
 export function generatePreviewStyles(styles: ResumeStyles) {
-    return `
+  return `
       .resume-content {
         line-height: ${styles.lineHeight};
         font-size: ${styles.fontSize}px;

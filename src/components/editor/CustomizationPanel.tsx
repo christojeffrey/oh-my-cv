@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { cvDataAtom } from "@/atoms";
-import { type ResumeStyles } from "@/atoms/data";
+import type { ResumeStyles } from "@/types/resume";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

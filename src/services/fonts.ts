@@ -1,9 +1,8 @@
+import type { Font } from "@/types/resume";
 import GoogleFontsLoader from "@/lib/google-fonts-loader";
 
-export interface Font {
-  name: string;
-  fontFamily?: string;
-}
+// Re-export for backwards compatibility
+export type { Font };
 
 let googleFontsLoaderInstance: GoogleFontsLoader | null = null;
 

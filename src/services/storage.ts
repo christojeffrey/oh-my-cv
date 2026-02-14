@@ -1,32 +1,10 @@
 import localforage from "localforage";
+import type { DbResume } from "@/types/resume";
 import { DEFAULT_RESUME_CSS, DEFAULT_RESUME_MARKDOWN } from "@/constants/templates/default";
+import { DEFAULT_STYLES } from "@/constants";
 
-export interface Font {
-  name: string;
-  fontFamily?: string;
-}
-
-export interface ResumeStyles {
-  marginV: number;
-  marginH: number;
-  lineHeight: number;
-  paragraphSpace: number;
-  themeColor: string;
-  fontCJK: Font;
-  fontEN: Font;
-  fontSize: number;
-  paper: "A4" | "letter" | "legal";
-}
-
-export interface DbResume {
-  id: number;
-  name: string;
-  markdown: string;
-  css: string;
-  styles: ResumeStyles;
-  created_at: Date;
-  updated_at: Date;
-}
+// Re-export for backwards compatibility
+export type { DbResume };
 
 class StorageService {
   private readonly store = localforage.createInstance({
@@ -62,22 +40,7 @@ class StorageService {
         name: "Untitled Resume",
         markdown: DEFAULT_RESUME_MARKDOWN,
         css: DEFAULT_RESUME_CSS,
-        styles: {
-          marginV: 50,
-          marginH: 45,
-          lineHeight: 1.3,
-          paragraphSpace: 5,
-          themeColor: "#377bb5",
-          fontCJK: {
-            name: "华康宋体",
-            fontFamily: "HKST",
-          },
-          fontEN: {
-            name: "Minion Pro",
-          },
-          fontSize: 15,
-          paper: "A4",
-        },
+        styles: DEFAULT_STYLES,
         created_at: now,
         updated_at: now,
         ...data,

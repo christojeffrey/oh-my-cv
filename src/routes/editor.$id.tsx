@@ -10,6 +10,7 @@ import { Preview } from "@/components/editor/Preview.tsx";
 import { ResizeHandle } from "@/components/editor/ResizeHandle.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { storageService } from "@/services/storage.ts";
+import { DEFAULT_STYLES } from "@/constants";
 
 export const Route = createFileRoute("/editor/$id")({
   component: Editor,
@@ -36,22 +37,7 @@ function Editor() {
             css: resume.css,
             resumeId: resume.id,
             resumeName: resume.name,
-            styles: resume.styles || {
-              marginV: 50,
-              marginH: 45,
-              lineHeight: 1.3,
-              paragraphSpace: 5,
-              themeColor: "#377bb5",
-              fontCJK: {
-                name: "华康宋体",
-                fontFamily: "HKST",
-              },
-              fontEN: {
-                name: "Minion Pro",
-              },
-              fontSize: 15,
-              paper: "A4",
-            },
+            styles: resume.styles || DEFAULT_STYLES,
             loaded: true,
           });
         } else {
