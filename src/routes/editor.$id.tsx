@@ -1,16 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useAtom } from "jotai";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import { cvDataAtom } from "@/atoms/index.ts";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
-import { CodeEditor } from "@/components/editor/CodeEditor.tsx";
-import { EditorSidebar } from "@/components/editor/EditorSidebar.tsx";
-import { Preview } from "@/components/editor/Preview.tsx";
-import { ResizeHandle } from "@/components/editor/ResizeHandle.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { storageService } from "@/services/storage.ts";
-import { DEFAULT_STYLES } from "@/constants";
+import { CodeEditor, EditorSidebar, Preview, ResizeHandle, useEditorData } from "@/features/editor";
 
 export const Route = createFileRoute("/editor/$id")({
   component: Editor,
@@ -18,8 +11,7 @@ export const Route = createFileRoute("/editor/$id")({
 
 function Editor() {
   const { id } = Route.useParams();
-  const [cvData, setCvData] = useAtom(cvDataAtom);
-  const [isLoading, setIsLoading] = useState(true);
+  const { cvData, isLoading } = useEditorData(id);
   const [isToolbarOpen, setIsToolbarOpen] = useState(true);
 
   useEffect(() => {
@@ -27,30 +19,7 @@ function Editor() {
     if (window.innerWidth < 1024) {
       setIsToolbarOpen(false);
     }
-
-    const loadResume = async () => {
-      try {
-        const resume = await storageService.getResume(Number.parseInt(id));
-        if (resume) {
-          setCvData({
-            markdown: resume.markdown,
-            css: resume.css,
-            resumeId: resume.id,
-            resumeName: resume.name,
-            styles: resume.styles || DEFAULT_STYLES,
-            loaded: true,
-          });
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error loading resume:", error);
-        setIsLoading(false);
-      }
-      setIsLoading(false);
-    };
-    loadResume();
-  }, [id, setCvData]);
+  }, []);
 
   if (isLoading) {
     return (

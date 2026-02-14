@@ -1,6 +1,3 @@
-import { useAtom } from "jotai";
-import { cvDataAtom } from "@/atoms";
-import type { ResumeStyles } from "@/types/resume";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,47 +8,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SliderField } from "@/components/editor/settings/SliderField";
+import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 import { googleFontsService } from "@/services/fonts";
-import { storageService } from "@/services/storage";
+import type { ResumeStyles } from "@/types/resume";
+import { SliderField } from "./settings/SliderField";
 
 export function CustomizationPanel() {
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const { styles, updateStyles } = useResumeStyles();
 
-  const updateStyle = async <K extends keyof ResumeStyles>(
-    key: K,
-    value: ResumeStyles[K]
-  ) => {
-    if (!cvData.resumeId) return;
-
-    const newStyles = { ...cvData.styles, [key]: value };
-    setCvData((prev) => ({ ...prev, styles: newStyles }));
-
-    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  const updateStyle = async <K extends keyof ResumeStyles>(key: K, value: ResumeStyles[K]) => {
+    updateStyles((prev) => ({ ...prev, [key]: value }));
   };
 
   const updateFont = async (type: "fontCJK" | "fontEN", field: string, value: string) => {
-    if (!cvData.resumeId) return;
-
-    const currentFont = cvData.styles[type];
+    const currentFont = styles[type];
     const newFont = { ...currentFont, [field]: value };
-    const newStyles = { ...cvData.styles, [type]: newFont };
 
-    setCvData((prev) => ({ ...prev, styles: newStyles }));
+    updateStyles((prev) => ({ ...prev, [type]: newFont }));
 
     if (field === "name") {
       await googleFontsService.resolve(newFont);
     }
-
-    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
   };
 
   return (
     <div className="space-y-6 p-4">
-      <LayoutSettings styles={cvData.styles} onUpdate={updateStyle} />
-      <ColorSettings styles={cvData.styles} onUpdate={updateStyle} />
-      <FontSettings styles={cvData.styles} onUpdateFont={updateFont} />
-      <PaperSettings styles={cvData.styles} onUpdate={updateStyle} />
+      <LayoutSettings styles={styles} onUpdate={updateStyle} />
+      <ColorSettings styles={styles} onUpdate={updateStyle} />
+      <FontSettings styles={styles} onUpdateFont={updateFont} />
+      <PaperSettings styles={styles} onUpdate={updateStyle} />
     </div>
   );
 }
@@ -77,7 +62,7 @@ function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
             max={100}
             step={5}
             unit="px"
-            onValueChange={(val) => onUpdate("marginV", val)}
+            onValueChange={(val: number) => onUpdate("marginV", val)}
           />
           <SliderField
             id="marginH"
@@ -87,7 +72,7 @@ function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
             max={100}
             step={5}
             unit="px"
-            onValueChange={(val) => onUpdate("marginH", val)}
+            onValueChange={(val: number) => onUpdate("marginH", val)}
           />
         </div>
 
@@ -99,7 +84,7 @@ function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
             min={1}
             max={2}
             step={0.1}
-            onValueChange={(val) => onUpdate("lineHeight", val)}
+            onValueChange={(val: number) => onUpdate("lineHeight", val)}
           />
           <SliderField
             id="paragraphSpace"
@@ -109,7 +94,7 @@ function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
             max={20}
             step={1}
             unit="px"
-            onValueChange={(val) => onUpdate("paragraphSpace", val)}
+            onValueChange={(val: number) => onUpdate("paragraphSpace", val)}
           />
         </div>
 
@@ -121,7 +106,7 @@ function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
           max={20}
           step={1}
           unit="px"
-          onValueChange={(val) => onUpdate("fontSize", val)}
+          onValueChange={(val: number) => onUpdate("fontSize", val)}
         />
       </CardContent>
     </Card>

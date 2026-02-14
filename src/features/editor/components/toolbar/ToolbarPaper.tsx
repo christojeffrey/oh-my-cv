@@ -1,5 +1,3 @@
-import { useAtom } from "jotai";
-import { cvDataAtom } from "@/atoms";
 import {
   Select,
   SelectContent,
@@ -7,24 +5,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { storageService } from "@/services/storage";
+import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 
 export function ToolbarPaper() {
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const { styles, updateStyles } = useResumeStyles();
 
-  const updatePaper = async (value: string) => {
-    if (!cvData.resumeId) return;
-
-    const newStyles = { ...cvData.styles, paper: value as "A4" | "letter" | "legal" };
-    setCvData((prev) => ({ ...prev, styles: newStyles }));
-
-    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  const updatePaper = (value: string) => {
+    updateStyles((prev) => ({ ...prev, paper: value as "A4" | "letter" | "legal" }));
   };
 
   return (
     <div className="space-y-2">
       <div className="text-sm font-medium">Paper Size</div>
-      <Select value={cvData.styles.paper} onValueChange={updatePaper}>
+      <Select value={styles.paper} onValueChange={updatePaper}>
         <SelectTrigger className="w-full">
           <SelectValue />
         </SelectTrigger>

@@ -1,8 +1,9 @@
 import Editor from "@monaco-editor/react";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { cvDataAtom } from "@/atoms/index";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cvDataAtom } from "@/features/editor/stores/cv-data";
+import type { SystemData } from "@/types/resume";
 
 const EDITOR_OPTIONS = {
   minimap: { enabled: false },
@@ -15,7 +16,7 @@ export function CodeEditor() {
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
-      setCvData((prev) => ({
+      setCvData((prev: SystemData) => ({
         ...prev,
         [activeTab]: value,
       }));

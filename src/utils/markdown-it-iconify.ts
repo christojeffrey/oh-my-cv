@@ -50,7 +50,7 @@ export default function MarkdownItIconify(md: MarkdownIt) {
     const start = state.pos;
 
     // Check for starting colon
-    if (state.src.charCodeAt(start) !== 0x3A /* : */) return false;
+    if (state.src.charCodeAt(start) !== 0x3a /* : */) return false;
 
     // Find the next colon
     const max = state.posMax;
@@ -60,13 +60,13 @@ export default function MarkdownItIconify(md: MarkdownIt) {
     while (pos < max) {
       const ch = state.src.charCodeAt(pos);
 
-      if (ch === 0x3A /* : */) {
+      if (ch === 0x3a /* : */) {
         found = true;
         break;
       }
 
       // Allow alphanumeric, underscore, hyphen, plus
-      if (!/[a-zA-Z0-9_\-\+]/.test(String.fromCharCode(ch))) {
+      if (!/[a-zA-Z0-9_\-+]/.test(String.fromCharCode(ch))) {
         return false;
       }
       pos++;

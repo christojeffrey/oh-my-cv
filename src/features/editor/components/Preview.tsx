@@ -1,10 +1,11 @@
 import { useAtom } from "jotai";
 import { Maximize, Maximize2, ZoomIn, ZoomOut } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { cvDataAtom } from "@/atoms";
+import { useEffect, useRef } from "react";
 import { Zoom } from "@/components/shared/Zoom";
 import { Button } from "@/components/ui/button";
 import { MM_TO_PX, PAPER_SIZES } from "@/constants";
+import { usePreviewZoom } from "@/features/editor/hooks/use-preview-zoom";
+import { cvDataAtom } from "@/features/editor/stores/cv-data";
 import { useSmartPages } from "@/hooks/useSmartPages";
 import { sanitizeHtml } from "@/utils/dompurify";
 import { injectCss } from "@/utils/dynamic-css";
@@ -13,38 +14,17 @@ import { generatePreviewStyles } from "@/utils/styles/preview-styles";
 
 export function Preview() {
   const [cvData] = useAtom(cvDataAtom);
-  const [scale, setScale] = useState(1);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [containerHeight, setContainerHeight] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const size = PAPER_SIZES[cvData.styles.paper] || PAPER_SIZES.A4;
   const widthPx = size.w * MM_TO_PX;
   const heightPx = size.h * MM_TO_PX;
 
-  // Measure container for fit calculations
-  useEffect(() => {
-    const updateContainerSize = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.clientWidth);
-        setContainerHeight(containerRef.current.clientHeight);
-      }
-    };
-
-    updateContainerSize();
-    window.addEventListener("resize", updateContainerSize);
-    return () => window.removeEventListener("resize", updateContainerSize);
-  }, []);
-
-  // Auto-fit width on mount and when paper size changes
-  useEffect(() => {
-    if (containerWidth > 0) {
-      // Account for padding (p-8 = 32px on each side = 64px total)
-      const availableWidth = containerWidth - 64;
-      const fitScale = availableWidth / widthPx;
-      setScale(fitScale);
-    }
-  }, [containerWidth, widthPx, heightPx]);
+  const { scale, zoomIn, zoomOut, fitWidth, fitHeight } = usePreviewZoom(containerRef, {
+    contentWidth: widthPx,
+    contentHeight: heightPx,
+    padding: 64,
+  });
 
   // Render resume markdown to HTML (includes front matter header parsing)
   const dirtyHtml = markdownService.renderResume(cvData.markdown || "");
@@ -75,20 +55,7 @@ export function Preview() {
     }
   );
 
-  const zoomIn = () => setScale((prev) => prev * 1.1);
-  const zoomOut = () => setScale((prev) => prev / 1.1);
-  const fitWidth = () => {
-    if (containerWidth > 0) {
-      const availableWidth = containerWidth - 64;
-      setScale(availableWidth / widthPx);
-    }
-  };
-  const fitHeight = () => {
-    if (containerHeight > 0) {
-      const availableHeight = containerHeight - 64;
-      setScale(availableHeight / heightPx);
-    }
-  };
+  // Remove manual zoom functions as they are provided by the hook
 
   return (
     <div ref={containerRef} className="relative h-full bg-secondary overflow-hidden">

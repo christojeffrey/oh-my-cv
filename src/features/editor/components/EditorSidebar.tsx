@@ -32,42 +32,45 @@ export function EditorSidebar({ isOpen }: Readonly<EditorSidebarProps>) {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  const TOOLS = useMemo(() => [
-    { id: "file", icon: Upload, label: t("toolbar.file.title"), component: ToolbarFile },
-    { id: "paper", icon: FileText, label: t("toolbar.paper_size"), component: ToolbarPaper },
-    { id: "theme", icon: Palette, label: t("toolbar.theme_color"), component: ToolbarThemeColor },
-    {
-      id: "fonts",
-      icon: Type,
-      label: t("toolbar.font_family.title"),
-      component: ToolbarFontFamily,
-    },
-    { id: "size", icon: TypeOutline, label: t("toolbar.font_size"), component: ToolbarFontSize },
-    {
-      id: "margins",
-      icon: AlignHorizontalSpaceAround,
-      label: t("toolbar.margins.title"),
-      component: ToolbarMargins,
-    },
-    {
-      id: "spacing",
-      icon: ArrowUpDown,
-      label: t("toolbar.paragraph_spacing"),
-      component: ToolbarParagraphSpace,
-    },
-    {
-      id: "lineHeight",
-      icon: ArrowUpDown,
-      label: t("toolbar.line_height"),
-      component: ToolbarLineHeight,
-    },
-    {
-      id: "case",
-      icon: CheckCircle,
-      label: t("toolbar.correct_case.title"),
-      component: ToolbarCorrectCase,
-    },
-  ], [t]);
+  const TOOLS = useMemo(
+    () => [
+      { id: "file", icon: Upload, label: t("toolbar.file.title"), component: ToolbarFile },
+      { id: "paper", icon: FileText, label: t("toolbar.paper_size"), component: ToolbarPaper },
+      { id: "theme", icon: Palette, label: t("toolbar.theme_color"), component: ToolbarThemeColor },
+      {
+        id: "fonts",
+        icon: Type,
+        label: t("toolbar.font_family.title"),
+        component: ToolbarFontFamily,
+      },
+      { id: "size", icon: TypeOutline, label: t("toolbar.font_size"), component: ToolbarFontSize },
+      {
+        id: "margins",
+        icon: AlignHorizontalSpaceAround,
+        label: t("toolbar.margins.title"),
+        component: ToolbarMargins,
+      },
+      {
+        id: "spacing",
+        icon: ArrowUpDown,
+        label: t("toolbar.paragraph_spacing"),
+        component: ToolbarParagraphSpace,
+      },
+      {
+        id: "lineHeight",
+        icon: ArrowUpDown,
+        label: t("toolbar.line_height"),
+        component: ToolbarLineHeight,
+      },
+      {
+        id: "case",
+        icon: CheckCircle,
+        label: t("toolbar.correct_case.title"),
+        component: ToolbarCorrectCase,
+      },
+    ],
+    [t]
+  );
 
   const scrollToSection = (id: string) => {
     const section = document.getElementById(`toolbar-section-${id}`);

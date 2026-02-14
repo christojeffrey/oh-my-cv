@@ -1,5 +1,5 @@
-import type { Font } from "@/types/resume";
 import GoogleFontsLoader from "@/lib/google-fonts-loader";
+import type { Font } from "@/types/resume";
 
 // Re-export for backwards compatibility
 export type { Font };
@@ -35,8 +35,6 @@ class GoogleFontsService {
       console.error(`Failed to load font: ${font.name}`, error);
     }
   }
-
-
 
   async get(): Promise<{ en: string[]; cjk: string[] } | null> {
     try {

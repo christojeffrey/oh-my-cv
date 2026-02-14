@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Dashboard } from "@/components/dashboard/Dashboard.tsx";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
+import { Dashboard } from "@/features/dashboard";
 
 export const Route = createFileRoute("/")({
   component: () => (
-    <div className="dashboard-page h-full">
+    <div className="h-full">
       <ErrorBoundary>
         <Dashboard />
       </ErrorBoundary>

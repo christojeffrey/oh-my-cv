@@ -1,7 +1,6 @@
 import { useAtom } from "jotai";
 import { Download, FileText, Save, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
-import { cvDataAtom } from "@/atoms";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,8 +10,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { cvDataAtom } from "@/features/editor/stores/cv-data";
 import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
+import type { SystemData } from "@/types/resume";
 
 export function ToolbarFile() {
   const [cvData, setCvData] = useAtom(cvDataAtom);
@@ -39,7 +40,7 @@ export function ToolbarFile() {
   const rename = async () => {
     if (!cvData.resumeId || !newName.trim()) return;
 
-    setCvData((prev) => ({ ...prev, resumeName: newName.trim() }));
+    setCvData((prev: SystemData) => ({ ...prev, resumeName: newName.trim() }));
 
     await storageService.updateResume(cvData.resumeId, { name: newName.trim() }, false);
 
@@ -48,8 +49,8 @@ export function ToolbarFile() {
 
   const exportPDF = () => {
     const title = document.title;
-    document.title = cvData.resumeName.trim().replace(/\s+/g, "_");
-    window.print();
+    document.title = cvData.resumeName.trim().replaceAll(/\s+/g, "_");
+    globalThis.print();
     document.title = title;
   };
 
@@ -58,21 +59,17 @@ export function ToolbarFile() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${cvData.resumeName.trim().replace(/\s+/g, "_")}.md`;
+    link.download = `${cvData.resumeName.trim().replaceAll(/\s+/g, "_")}.md`;
     link.click();
     URL.revokeObjectURL(url);
   };
 
-  const handleImportFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      setCvData((prev) => ({ ...prev, markdown: content }));
-    };
-    reader.readAsText(file);
+    const content = await file.text();
+    setCvData((prev: SystemData) => ({ ...prev, markdown: content }));
     setImportDialogOpen(false);
   };
 

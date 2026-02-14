@@ -1,6 +1,4 @@
-import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { cvDataAtom } from "@/atoms";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -10,11 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { LOCAL_CJK_FONTS, LOCAL_EN_FONTS } from "@/constants";
+import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 import { type Font, googleFontsService } from "@/services/fonts";
-import { storageService } from "@/services/storage";
 
 export function ToolbarFontFamily() {
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const { styles, updateStyles } = useResumeStyles();
   const [loaded, setLoaded] = useState(false);
   const [googleFonts, setGoogleFonts] = useState<{ en: string[]; cjk: string[] }>({
     en: [],
@@ -40,13 +38,9 @@ export function ToolbarFontFamily() {
   }, []);
 
   const updateFont = async (type: "fontEN" | "fontCJK", fontName: string) => {
-    if (!cvData.resumeId) return;
-
     const fontObj: Font = { name: fontName, fontFamily: fontName };
-    const newStyles = { ...cvData.styles, [type]: fontObj };
-    setCvData((prev) => ({ ...prev, styles: newStyles }));
 
-    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+    await updateStyles((prev) => ({ ...prev, [type]: fontObj }));
 
     // Load the font
     await googleFontsService.resolve(fontObj);
@@ -63,8 +57,8 @@ export function ToolbarFontFamily() {
     ...googleFonts.cjk.map((f) => ({ label: f, value: f })),
   ];
 
-  const currentENFont = cvData.styles.fontEN?.fontFamily || cvData.styles.fontEN?.name || "";
-  const currentCJKFont = cvData.styles.fontCJK?.fontFamily || cvData.styles.fontCJK?.name || "";
+  const currentENFont = styles.fontEN?.fontFamily || styles.fontEN?.name || "";
+  const currentCJKFont = styles.fontCJK?.fontFamily || styles.fontCJK?.name || "";
 
   return (
     <div className="space-y-3">

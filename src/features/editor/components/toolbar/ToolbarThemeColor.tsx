@@ -1,21 +1,14 @@
-import { useAtom } from "jotai";
-import { cvDataAtom } from "@/atoms";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PRESET_COLORS } from "@/constants";
-import { storageService } from "@/services/storage";
+import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 
 export function ToolbarThemeColor() {
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const { styles, updateStyles } = useResumeStyles();
 
-  const updateThemeColor = async (value: string) => {
-    if (!cvData.resumeId) return;
-
-    const newStyles = { ...cvData.styles, themeColor: value };
-    setCvData((prev) => ({ ...prev, styles: newStyles }));
-
-    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  const updateThemeColor = (value: string) => {
+    updateStyles((prev) => ({ ...prev, themeColor: value }));
   };
 
   return (
@@ -29,14 +22,14 @@ export function ToolbarThemeColor() {
             key={color}
             onClick={() => updateThemeColor(color)}
             className={`w-8 h-8 rounded-md flex items-center justify-center transition-all hover:scale-110 ${
-              cvData.styles.themeColor.toLowerCase() === color.toLowerCase()
+              styles.themeColor.toLowerCase() === color.toLowerCase()
                 ? "ring-2 ring-offset-2 ring-primary"
                 : ""
             }`}
             style={{ backgroundColor: color }}
             aria-label={`Select color ${color}`}
           >
-            {cvData.styles.themeColor.toLowerCase() === color.toLowerCase() && (
+            {styles.themeColor.toLowerCase() === color.toLowerCase() && (
               <svg
                 className="w-4 h-4 text-white"
                 fill="none"
@@ -59,7 +52,7 @@ export function ToolbarThemeColor() {
       <div className="flex items-center gap-2">
         <Input
           type="color"
-          value={cvData.styles.themeColor}
+          value={styles.themeColor}
           onChange={(e) => updateThemeColor(e.target.value)}
           className="w-full h-10 cursor-pointer"
         />

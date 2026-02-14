@@ -1,11 +1,12 @@
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { cvDataAtom } from "@/atoms";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { cvDataAtom } from "@/features/editor/stores/cv-data";
 import casePolice from "@/lib/case-police";
 import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
+import type { SystemData } from "@/types/resume";
 
 export function ToolbarCorrectCase() {
   const [cvData, setCvData] = useAtom(cvDataAtom);
@@ -25,7 +26,7 @@ export function ToolbarCorrectCase() {
   const applyCorrection = async () => {
     if (!result || !cvData.resumeId) return;
 
-    setCvData((prev) => ({ ...prev, markdown: result.text }));
+    setCvData((prev: SystemData) => ({ ...prev, markdown: result.text }));
 
     await storageService.updateResume(cvData.resumeId, { markdown: result.text }, false);
 

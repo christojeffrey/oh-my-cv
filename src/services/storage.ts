@@ -1,7 +1,7 @@
 import localforage from "localforage";
-import type { DbResume } from "@/types/resume";
-import { DEFAULT_RESUME_CSS, DEFAULT_RESUME_MARKDOWN } from "@/constants/templates/default";
 import { DEFAULT_STYLES } from "@/constants";
+import { DEFAULT_RESUME_CSS, DEFAULT_RESUME_MARKDOWN } from "@/constants/templates/default";
+import type { DbResume } from "@/types/resume";
 
 // Re-export for backwards compatibility
 export type { DbResume };

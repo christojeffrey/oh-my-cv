@@ -10,9 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DEFAULT_STYLES, MM_TO_PX, PAPER_SIZES } from "@/constants";
+import { useResumeActions } from "@/features/dashboard/hooks/use-resume-actions";
+import { useResumePreview } from "@/features/dashboard/hooks/use-resume-preview";
 import { useSmartPages } from "@/hooks/useSmartPages";
-import { googleFontsService } from "@/services/fonts";
-import { type DbResume, storageService } from "@/services/storage";
+import type { DbResume } from "@/services/storage";
 import { markdownService } from "@/utils/markdown";
 
 interface ResumeCardProps {
@@ -24,7 +25,8 @@ const SCALE_FACTOR = 1 / MM_TO_PX; // Scale down for card preview
 
 export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
   const navigate = useNavigate();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { isLoaded } = useResumePreview(resume);
+  const { duplicate, deleteResume } = useResumeActions(onUpdate);
   const [showActions, setShowActions] = useState(false);
 
   // Ensure styles exists, use defaults if not
@@ -54,9 +56,8 @@ export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
   );
 
   useEffect(() => {
-    const setupCard = async () => {
-      // Inject custom CSS
-      const css = `
+    // Inject custom CSS
+    const css = `
         .resume-content {
           margin: ${styles.marginV}px ${styles.marginH}px;
           line-height: ${styles.lineHeight};
@@ -109,54 +110,37 @@ export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
         }
       `;
 
-      const styleId = `toolbar-${resume.id}`;
-      const styleElement = document.getElementById(styleId);
-      if (styleElement) {
-        styleElement.textContent = css;
-      } else {
-        const newStyleElement = document.createElement("style");
-        newStyleElement.id = styleId;
-        newStyleElement.textContent = css;
-        document.head.appendChild(newStyleElement);
-      }
+    const styleId = `toolbar-${resume.id}`;
+    const styleElement = document.getElementById(styleId);
+    if (styleElement) {
+      styleElement.textContent = css;
+    } else {
+      const newStyleElement = document.createElement("style");
+      newStyleElement.id = styleId;
+      newStyleElement.textContent = css;
+      document.head.appendChild(newStyleElement);
+    }
 
-      // Inject custom CSS from resume
-      const customCssStyleId = `custom-css-${resume.id}`;
-      const customCssStyleElement = document.getElementById(customCssStyleId);
-      if (customCssStyleElement) {
-        customCssStyleElement.textContent = resume.css;
-      } else {
-        const newCustomCssElement = document.createElement("style");
-        newCustomCssElement.id = customCssStyleId;
-        newCustomCssElement.textContent = resume.css;
-        document.head.appendChild(newCustomCssElement);
-      }
-
-      // Load fonts
-      await googleFontsService.resolve(styles.fontEN);
-      await googleFontsService.resolve(styles.fontCJK);
-
-      setIsLoaded(true);
-    };
-
-    setupCard();
-  }, [resume]);
+    // Inject custom CSS from resume
+    const customCssStyleId = `custom-css-${resume.id}`;
+    const customCssStyleElement = document.getElementById(customCssStyleId);
+    if (customCssStyleElement) {
+      customCssStyleElement.textContent = resume.css;
+    } else {
+      const newCustomCssElement = document.createElement("style");
+      newCustomCssElement.id = customCssStyleId;
+      newCustomCssElement.textContent = resume.css;
+      document.head.appendChild(newCustomCssElement);
+    }
+  }, [resume, styles]);
 
   const handleEdit = () => {
     navigate({ to: `/editor/${resume.id}` });
   };
 
-  const handleDuplicate = async () => {
-    await storageService.duplicateResume(resume.id);
-    onUpdate();
-  };
+  const handleDuplicate = () => duplicate(resume.id);
 
-  const handleDelete = async () => {
-    if (confirm(`Are you sure you want to delete "${resume.name}"?`)) {
-      await storageService.deleteResume(resume.id);
-      onUpdate();
-    }
-  };
+  const handleDelete = () => deleteResume(resume.id, resume.name);
 
   if (!isLoaded) {
     return (
@@ -181,7 +165,15 @@ export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
         >
           <div
             className="resume-card cursor-pointer peer shrink-0"
+            role="button"
+            tabIndex={0}
             onClick={handleEdit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleEdit();
+              }
+            }}
             style={{
               width: `${widthPx}px`,
               height: `${heightPx}px`,
