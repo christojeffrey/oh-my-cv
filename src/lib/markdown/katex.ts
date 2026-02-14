@@ -2,10 +2,24 @@ import Katex, { type KatexOptions } from "katex";
 import type MarkdownIt from "markdown-it";
 import { htmlEscape } from "@/utils/index";
 
+// Minimal Token interface
+interface Token {
+  attrGet: (name: string) => string | null;
+  attrSet: (name: string, value: string) => void;
+  content: string;
+  type: string;
+  tag: string;
+  markup: string;
+  info: string;
+  nesting: number;
+  level: number;
+  block: boolean;
+  map: [number, number] | null;
+}
+
 type RuleInline = (state: any, silent: boolean) => boolean;
 type RuleBlock = (state: any, start: number, end: number, silent: boolean) => boolean;
-type PluginWithOptions<T = any> = (md: MarkdownIt, options?: T) => void;
-type Token = any;
+type PluginWithOptions<T = object> = (md: MarkdownIt, options?: T) => void;
 
 const isValidDelim = (state: any, pos: number): { canOpen: boolean; canClose: boolean } => {
   const prevChar = pos > 0 ? state.src.charCodeAt(pos - 1) : -1;

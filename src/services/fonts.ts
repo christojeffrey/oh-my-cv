@@ -37,13 +37,7 @@ class GoogleFontsService {
     }
   }
 
-  async resolveCJK(font: Font): Promise<void> {
-    return this.resolve(font);
-  }
 
-  async resolveEN(font: Font): Promise<void> {
-    return this.resolve(font);
-  }
 
   async get(): Promise<{ en: string[]; cjk: string[] } | null> {
     try {

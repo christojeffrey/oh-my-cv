@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
+import { SliderField } from "@/components/editor/settings/SliderField";
 import { googleFontsService } from "@/services/fonts";
 import { storageService } from "@/services/storage";
 
@@ -69,76 +69,60 @@ function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="marginV">Vertical Margin (px)</Label>
-            <Slider
-              id="marginV"
-              min={0}
-              max={100}
-              step={5}
-              value={[styles.marginV]}
-              onValueChange={([value]) => onUpdate("marginV", value)}
-              className="mt-2"
-            />
-            <span className="text-sm text-muted-foreground">{styles.marginV}px</span>
-          </div>
-          <div>
-            <Label htmlFor="marginH">Horizontal Margin (px)</Label>
-            <Slider
-              id="marginH"
-              min={0}
-              max={100}
-              step={5}
-              value={[styles.marginH]}
-              onValueChange={([value]) => onUpdate("marginH", value)}
-              className="mt-2"
-            />
-            <span className="text-sm text-muted-foreground">{styles.marginH}px</span>
-          </div>
+          <SliderField
+            id="marginV"
+            label="Vertical Margin (px)"
+            value={styles.marginV}
+            min={0}
+            max={100}
+            step={5}
+            unit="px"
+            onValueChange={(val) => onUpdate("marginV", val)}
+          />
+          <SliderField
+            id="marginH"
+            label="Horizontal Margin (px)"
+            value={styles.marginH}
+            min={0}
+            max={100}
+            step={5}
+            unit="px"
+            onValueChange={(val) => onUpdate("marginH", val)}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="lineHeight">Line Height</Label>
-            <Slider
-              id="lineHeight"
-              min={1}
-              max={2}
-              step={0.1}
-              value={[styles.lineHeight]}
-              onValueChange={([value]) => onUpdate("lineHeight", value)}
-              className="mt-2"
-            />
-            <span className="text-sm text-muted-foreground">{styles.lineHeight}</span>
-          </div>
-          <div>
-            <Label htmlFor="paragraphSpace">Paragraph Spacing (px)</Label>
-            <Slider
-              id="paragraphSpace"
-              min={0}
-              max={20}
-              step={1}
-              value={[styles.paragraphSpace]}
-              onValueChange={([value]) => onUpdate("paragraphSpace", value)}
-              className="mt-2"
-            />
-            <span className="text-sm text-muted-foreground">{styles.paragraphSpace}px</span>
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="fontSize">Font Size (px)</Label>
-          <Slider
-            id="fontSize"
-            min={10}
+          <SliderField
+            id="lineHeight"
+            label="Line Height"
+            value={styles.lineHeight}
+            min={1}
+            max={2}
+            step={0.1}
+            onValueChange={(val) => onUpdate("lineHeight", val)}
+          />
+          <SliderField
+            id="paragraphSpace"
+            label="Paragraph Spacing (px)"
+            value={styles.paragraphSpace}
+            min={0}
             max={20}
             step={1}
-            value={[styles.fontSize]}
-            onValueChange={([value]) => onUpdate("fontSize", value)}
-            className="mt-2"
+            unit="px"
+            onValueChange={(val) => onUpdate("paragraphSpace", val)}
           />
-          <span className="text-sm text-muted-foreground">{styles.fontSize}px</span>
         </div>
+
+        <SliderField
+          id="fontSize"
+          label="Font Size (px)"
+          value={styles.fontSize}
+          min={10}
+          max={20}
+          step={1}
+          unit="px"
+          onValueChange={(val) => onUpdate("fontSize", val)}
+        />
       </CardContent>
     </Card>
   );
