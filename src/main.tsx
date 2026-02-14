@@ -1,9 +1,9 @@
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { I18nextProvider } from "react-i18next";
-import { routeTree } from "./routeTree.gen";
 import i18n from "./configs/i18n";
+import { routeTree } from "./routeTree.gen";
 import "./index.css";
 
 const router = createRouter({ routeTree });
@@ -17,7 +17,7 @@ const root = createRoot(document.getElementById("root")!, {
   },
   onRecoverableError: (error, errorInfo) => {
     console.warn("Recoverable error:", error, errorInfo);
-  }
+  },
 });
 
 root.render(

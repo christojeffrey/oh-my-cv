@@ -1,4 +1,4 @@
-import GoogleFontsLoader from "@ohmycv/google-fonts-loader";
+import GoogleFontsLoader from "@/lib/google-fonts-loader";
 
 export interface Font {
   name: string;
@@ -14,7 +14,7 @@ class GoogleFontsService {
         families: [],
         categories: [],
         subsets: ["latin"],
-        variants: ["regular"]
+        variants: ["regular"],
       });
       await googleFontsLoaderInstance.init();
     }

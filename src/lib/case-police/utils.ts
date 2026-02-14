@@ -5,11 +5,11 @@
  * this package can be used in the browser environment.
  */
 
-import abbreviates from "../dict/abbreviates.json" assert { type: "json" };
-import brands from "../dict/brands.json" assert { type: "json" };
-import general from "../dict/general.json" assert { type: "json" };
-import products from "../dict/products.json" assert { type: "json" };
-import softwares from "../dict/softwares.json" assert { type: "json" };
+import abbreviates from "./dict/abbreviates.json";
+import brands from "./dict/brands.json";
+import general from "./dict/general.json";
+import products from "./dict/products.json";
+import softwares from "./dict/softwares.json";
 
 export type Preset = "softwares" | "products" | "general" | "brands" | "abbreviates";
 
@@ -34,7 +34,7 @@ export const AVALIABLE_PRESETS: Record<Preset, Record<string, string>> = {
   products,
   general,
   brands,
-  abbreviates
+  abbreviates,
 };
 
 export function buildRegex(dictionary: Record<string, string>): RegExp {
@@ -97,7 +97,7 @@ export function loadPresets(presets?: Preset[]): Record<string, string> {
   return presets.reduce(
     (dictionary, preset) => ({
       ...dictionary,
-      ...AVALIABLE_PRESETS[preset]
+      ...AVALIABLE_PRESETS[preset],
     }),
     {}
   );

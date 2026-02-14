@@ -6,7 +6,7 @@ export default {
   head: {
     title: "Oh My CV! - Free Online Resume Maker",
     desc: "Free online resume maker, allows you to create your resume in minutes with Markdown!",
-    keywords: "resume maker, cv maker, curriculum vitae maker, markdown resume"
+    keywords: "resume maker, cv maker, curriculum vitae maker, markdown resume",
   },
   landing: {
     hero: "Write your <span text-primary>resumes</span> in Markdown!",
@@ -15,13 +15,15 @@ export default {
     feats: [
       {
         title: "Simple and Powerful",
-        items: "Manage multiple resumes<br>Real-time preview<br>Export to PDF<br>Fully customizable<br>Choose fonts and add icons<br>And <a href=\"https://github.com/Renovamen/oh-my-cv#features\" target=\"_blank\">more features</a>"
+        items:
+          'Manage multiple resumes<br>Real-time preview<br>Export to PDF<br>Fully customizable<br>Choose fonts and add icons<br>And <a href="https://github.com/Renovamen/oh-my-cv#features" target="_blank">more features</a>',
       },
       {
         title: "Privacy First",
-        items: "Open source and free<br>All data is saved locally<br>No login or registration needed<br>No user tracking<br>No ads"
-      }
-    ]
+        items:
+          "Open source and free<br>All data is saved locally<br>No login or registration needed<br>No user tracking<br>No ads",
+      },
+    ],
   },
   dashboard: {
     my_resumes: "My Resumes",
@@ -32,7 +34,7 @@ export default {
     import: "Import from...",
     rename: "Rename",
     duplicate: "Duplicate",
-    delete: "Delete"
+    delete: "Delete",
   },
   toolbar: {
     file: {
@@ -44,59 +46,61 @@ export default {
         dialog: {
           header: "Import a Markdown file",
           from_local: "Drag your file here, or click here to choose a file",
-          from_url: "Paste file URL"
-        }
+          from_url: "Paste file URL",
+        },
       },
       export_pdf: {
         title: "Export PDF",
         alert: {
           title: "Heads up!",
-          content: "When printing on Windows, please select \"Save as PDF\" in the print settings popup, <b>not</b> \"Microsoft Print to PDF\"."
-        }
+          content:
+            'When printing on Windows, please select "Save as PDF" in the print settings popup, <b>not</b> "Microsoft Print to PDF".',
+        },
       },
-      export_md: "Export Markdown"
+      export_md: "Export Markdown",
     },
     correct_case: {
       title: "Correct Case",
       example: {
         title: "Example",
-        content: "\"Github\" → \"GitHub\""
+        content: '"Github" → "GitHub"',
       },
       note: {
         title: "Note",
-        content: "Words that are only in uppercase or lowercase (\"GITHUB\" or \"github\") will be left untouched."
+        content:
+          'Words that are only in uppercase or lowercase ("GITHUB" or "github") will be left untouched.',
       },
-      btn: "Correct it!"
+      btn: "Correct it!",
     },
     paper_size: "Paper Size",
     theme_color: "Theme Color",
     font_family: {
       title: "Font Family",
       cjk: "CJK",
-      en: "English"
+      en: "English",
     },
     font_size: "Font Size",
     margins: {
       title: "Margins",
       vertical: "Top & Bottom",
-      horizontal: "Left & Right"
+      horizontal: "Left & Right",
     },
     paragraph_spacing: "Paragraph Spacing",
-    line_height: "Line Spacing"
+    line_height: "Line Spacing",
   },
   notification: {
     save: "Your changes have been saved",
-    switch: "Switched to resume \"{{msg}}\"",
-    delete: "Resume \"{{msg}}\" has been deleted",
+    switch: 'Switched to resume "{{msg}}"',
+    delete: 'Resume "{{msg}}" has been deleted',
     new: "New resume created",
-    duplicate: "Created resume \"{{old}}\"'s duplication \"{{new}}\"",
+    duplicate: 'Created resume "{{old}}"\'s duplication "{{new}}"',
     correct: {
       yes: "Corrected {{num}} words",
-      no: "All case are correct!"
+      no: "All case are correct!",
     },
     import: {
       yes: "Data has been successfully imported!",
-      no: "Data format is invalid."
-    }
-  }
-}
+      no: "Data format is invalid.",
+    },
+  },
+};

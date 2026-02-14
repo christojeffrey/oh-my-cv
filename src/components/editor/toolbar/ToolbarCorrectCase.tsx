@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { useAtom } from "jotai";
+import { useState } from "react";
 import { cvDataAtom } from "@/atoms";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import casePolice from "@/lib/case-police";
 import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
-import casePolice from "@ohmycv/case-police";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export function ToolbarCorrectCase() {
   const [cvData, setCvData] = useAtom(cvDataAtom);

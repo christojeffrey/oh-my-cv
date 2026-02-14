@@ -1,28 +1,28 @@
-import { useEffect, useState } from 'react'
-import { storageService, type DbResume } from '@/services/storage'
-import { NewResume } from './NewResume'
-import { FileActions } from './FileActions'
-import { ResumeCard } from './ResumeCard'
-import { Card } from '@/components/ui/card'
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { type DbResume, storageService } from "@/services/storage";
+import { FileActions } from "./FileActions";
+import { NewResume } from "./NewResume";
+import { ResumeCard } from "./ResumeCard";
 
 export function Dashboard() {
-  const [resumes, setResumes] = useState<DbResume[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [resumes, setResumes] = useState<DbResume[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadResumes = async () => {
-    setIsLoading(true)
-    const data = await storageService.getResumes()
-    setResumes(data)
-    setIsLoading(false)
-  }
+    setIsLoading(true);
+    const data = await storageService.getResumes();
+    setResumes(data);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    loadResumes()
-  }, [])
+    loadResumes();
+  }, []);
 
   const handleUpdate = () => {
-    loadResumes()
-  }
+    loadResumes();
+  };
 
   return (
     <div className="workspace flex flex-col px-4 py-8">
@@ -35,23 +35,17 @@ export function Dashboard() {
         <div className="flex flex-wrap gap-x-4 gap-y-8 pt-4">
           <NewResume onUpdate={handleUpdate} />
 
-          {isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="w-56 h-80">
-                <Card className="w-[210px] h-[299px] bg-secondary animate-pulse mx-auto" />
-              </div>
-            ))
-          ) : (
-            resumes.map((resume) => (
-              <ResumeCard
-                key={resume.id}
-                resume={resume}
-                onUpdate={handleUpdate}
-              />
-            ))
-          )}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="w-56 h-80">
+                  <Card className="w-[210px] h-[299px] bg-secondary animate-pulse mx-auto" />
+                </div>
+              ))
+            : resumes.map((resume) => (
+                <ResumeCard key={resume.id} resume={resume} onUpdate={handleUpdate} />
+              ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { replaceCore, loadPresets, DISABLE_KEY, type Preset } from "./utils";
+import { DISABLE_KEY, loadPresets, type Preset, replaceCore } from "./utils";
 
 /**
  * Works like `case-police`'s CLI, but in the browser environment.
@@ -28,7 +28,7 @@ export const replace = (
   const ignore = (options.ignore || []).map((i) => i.trim().toLowerCase());
   const dict = {
     ...loadPresets(options.presets),
-    ...options.dict
+    ...options.dict,
   };
 
   return replaceCore(code, dict, ignore);
@@ -36,4 +36,4 @@ export const replace = (
 
 export default replace;
 
-export type { Preset, CasePoliceReturn, ChangedCase } from "./utils";
+export type { CasePoliceReturn, ChangedCase, Preset } from "./utils";

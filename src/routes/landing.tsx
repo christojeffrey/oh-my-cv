@@ -1,15 +1,15 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowRight, Globe, Palette, Smartphone, Sparkles } from "lucide-react";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import { BrandName } from "@/components/shared/BrandName";
 import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Palette, Globe, Smartphone } from "lucide-react";
-import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 
 const FEATURES = [
   {
     icon: Sparkles,
     title: "Write in Markdown",
-    items: ["Real-time preview with smooth editing", "Export to PDF with one click"]
+    items: ["Real-time preview with smooth editing", "Export to PDF with one click"],
   },
   {
     icon: Palette,
@@ -17,8 +17,8 @@ const FEATURES = [
     items: [
       "Theme colors, fonts, margins, and more",
       "Pick from 1000+ Google Fonts",
-      "Add custom CSS"
-    ]
+      "Add custom CSS",
+    ],
   },
   {
     icon: Smartphone,
@@ -26,9 +26,9 @@ const FEATURES = [
     items: [
       "PWA - install to your home screen",
       "Your data stays in your browser",
-      "No tracking, no ads"
-    ]
-  }
+      "No tracking, no ads",
+    ],
+  },
 ];
 
 export function LandingPage() {
@@ -91,10 +91,7 @@ export function LandingPage() {
                 </div>
                 <ul className="space-y-2">
                   {feature.items.map((item, itemIndex) => (
-                    <li
-                      key={itemIndex}
-                      className="flex items-start text-muted-foreground text-sm"
-                    >
+                    <li key={itemIndex} className="flex items-start text-muted-foreground text-sm">
                       <span className="mr-2 text-primary">•</span>
                       <span>{item}</span>
                     </li>

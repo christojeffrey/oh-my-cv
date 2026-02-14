@@ -1,4 +1,4 @@
-import { useRef, useMemo, type ReactNode } from "react";
+import { type ReactNode, useMemo, useRef } from "react";
 
 export interface ZoomProps {
   readonly children: ReactNode;
@@ -31,7 +31,7 @@ export function Zoom({ children, scale, className = "" }: ZoomProps) {
           width: "fit-content",
           transformOrigin: "top left",
           transform: `scale(${scale})`,
-          marginLeft: `${left}px`
+          marginLeft: `${left}px`,
         }}
       >
         {children}

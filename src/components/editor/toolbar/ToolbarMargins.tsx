@@ -1,37 +1,29 @@
-import { useAtom } from 'jotai'
-import { cvDataAtom } from '@/atoms'
-import { storageService } from '@/services/storage'
-import { Label } from '@/components/ui/label'
-import { Slider } from '@/components/ui/slider'
+import { useAtom } from "jotai";
+import { cvDataAtom } from "@/atoms";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { storageService } from "@/services/storage";
 
 export function ToolbarMargins() {
-  const [cvData, setCvData] = useAtom(cvDataAtom)
+  const [cvData, setCvData] = useAtom(cvDataAtom);
 
   const updateMarginV = async (value: number) => {
-    if (!cvData.resumeId) return
+    if (!cvData.resumeId) return;
 
-    const newStyles = { ...cvData.styles, marginV: value }
-    setCvData(prev => ({ ...prev, styles: newStyles }))
+    const newStyles = { ...cvData.styles, marginV: value };
+    setCvData((prev) => ({ ...prev, styles: newStyles }));
 
-    await storageService.updateResume(
-      cvData.resumeId,
-      { styles: newStyles },
-      false
-    )
-  }
+    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  };
 
   const updateMarginH = async (value: number) => {
-    if (!cvData.resumeId) return
+    if (!cvData.resumeId) return;
 
-    const newStyles = { ...cvData.styles, marginH: value }
-    setCvData(prev => ({ ...prev, styles: newStyles }))
+    const newStyles = { ...cvData.styles, marginH: value };
+    setCvData((prev) => ({ ...prev, styles: newStyles }));
 
-    await storageService.updateResume(
-      cvData.resumeId,
-      { styles: newStyles },
-      false
-    )
-  }
+    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  };
 
   return (
     <div className="space-y-4">
@@ -63,5 +55,5 @@ export function ToolbarMargins() {
         </div>
       </div>
     </div>
-  )
+  );
 }

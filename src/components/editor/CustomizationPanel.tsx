@@ -1,69 +1,63 @@
-import { useAtom } from 'jotai'
-import { cvDataAtom } from '@/atoms'
-import { storageService } from '@/services/storage'
-import { googleFontsService } from '@/services/fonts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Slider } from '@/components/ui/slider'
+import { useAtom } from "jotai";
+import { cvDataAtom } from "@/atoms";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { googleFontsService } from "@/services/fonts";
+import { storageService } from "@/services/storage";
 
 export function CustomizationPanel() {
-  const [cvData, setCvData] = useAtom(cvDataAtom)
+  const [cvData, setCvData] = useAtom(cvDataAtom);
 
-  const updateStyle = async <K extends keyof typeof cvData['styles']>(
+  const updateStyle = async <K extends keyof (typeof cvData)["styles"]>(
     key: K,
-    value: typeof cvData['styles'][K]
+    value: (typeof cvData)["styles"][K]
   ) => {
-    if (!cvData.resumeId) return
+    if (!cvData.resumeId) return;
 
-    const newStyles = { ...cvData.styles, [key]: value }
-    setCvData(prev => ({ ...prev, styles: newStyles }))
+    const newStyles = { ...cvData.styles, [key]: value };
+    setCvData((prev) => ({ ...prev, styles: newStyles }));
 
-    await storageService.updateResume(
-      cvData.resumeId,
-      { styles: newStyles },
-      false
-    )
-  }
+    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  };
 
   const updateFontCJK = async (field: string, value: string) => {
-    if (!cvData.resumeId) return
+    if (!cvData.resumeId) return;
 
-    const newFontCJK = { ...cvData.styles.fontCJK, [field]: value }
-    const newStyles = { ...cvData.styles, fontCJK: newFontCJK }
-    
-    setCvData(prev => ({ ...prev, styles: newStyles }))
+    const newFontCJK = { ...cvData.styles.fontCJK, [field]: value };
+    const newStyles = { ...cvData.styles, fontCJK: newFontCJK };
 
-    if (field === 'name') {
-      await googleFontsService.resolve(newFontCJK)
+    setCvData((prev) => ({ ...prev, styles: newStyles }));
+
+    if (field === "name") {
+      await googleFontsService.resolve(newFontCJK);
     }
 
-    await storageService.updateResume(
-      cvData.resumeId,
-      { styles: newStyles },
-      false
-    )
-  }
+    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  };
 
   const updateFontEN = async (field: string, value: string) => {
-    if (!cvData.resumeId) return
+    if (!cvData.resumeId) return;
 
-    const newFontEN = { ...cvData.styles.fontEN, [field]: value }
-    const newStyles = { ...cvData.styles, fontEN: newFontEN }
-    
-    setCvData(prev => ({ ...prev, styles: newStyles }))
+    const newFontEN = { ...cvData.styles.fontEN, [field]: value };
+    const newStyles = { ...cvData.styles, fontEN: newFontEN };
 
-    if (field === 'name') {
-      await googleFontsService.resolve(newFontEN)
+    setCvData((prev) => ({ ...prev, styles: newStyles }));
+
+    if (field === "name") {
+      await googleFontsService.resolve(newFontEN);
     }
 
-    await storageService.updateResume(
-      cvData.resumeId,
-      { styles: newStyles },
-      false
-    )
-  }
+    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
+  };
 
   return (
     <div className="space-y-6 p-4">
@@ -81,7 +75,7 @@ export function CustomizationPanel() {
                 max={100}
                 step={5}
                 value={[cvData.styles.marginV]}
-                onValueChange={([value]) => updateStyle('marginV', value)}
+                onValueChange={([value]) => updateStyle("marginV", value)}
                 className="mt-2"
               />
               <span className="text-sm text-muted-foreground">{cvData.styles.marginV}px</span>
@@ -94,7 +88,7 @@ export function CustomizationPanel() {
                 max={100}
                 step={5}
                 value={[cvData.styles.marginH]}
-                onValueChange={([value]) => updateStyle('marginH', value)}
+                onValueChange={([value]) => updateStyle("marginH", value)}
                 className="mt-2"
               />
               <span className="text-sm text-muted-foreground">{cvData.styles.marginH}px</span>
@@ -110,7 +104,7 @@ export function CustomizationPanel() {
                 max={2}
                 step={0.1}
                 value={[cvData.styles.lineHeight]}
-                onValueChange={([value]) => updateStyle('lineHeight', value)}
+                onValueChange={([value]) => updateStyle("lineHeight", value)}
                 className="mt-2"
               />
               <span className="text-sm text-muted-foreground">{cvData.styles.lineHeight}</span>
@@ -123,10 +117,12 @@ export function CustomizationPanel() {
                 max={20}
                 step={1}
                 value={[cvData.styles.paragraphSpace]}
-                onValueChange={([value]) => updateStyle('paragraphSpace', value)}
+                onValueChange={([value]) => updateStyle("paragraphSpace", value)}
                 className="mt-2"
               />
-              <span className="text-sm text-muted-foreground">{cvData.styles.paragraphSpace}px</span>
+              <span className="text-sm text-muted-foreground">
+                {cvData.styles.paragraphSpace}px
+              </span>
             </div>
           </div>
 
@@ -138,7 +134,7 @@ export function CustomizationPanel() {
               max={20}
               step={1}
               value={[cvData.styles.fontSize]}
-              onValueChange={([value]) => updateStyle('fontSize', value)}
+              onValueChange={([value]) => updateStyle("fontSize", value)}
               className="mt-2"
             />
             <span className="text-sm text-muted-foreground">{cvData.styles.fontSize}px</span>
@@ -157,7 +153,7 @@ export function CustomizationPanel() {
               id="themeColor"
               type="color"
               value={cvData.styles.themeColor}
-              onChange={(e) => updateStyle('themeColor', e.target.value)}
+              onChange={(e) => updateStyle("themeColor", e.target.value)}
               className="mt-2 w-20 h-10"
             />
           </div>
@@ -174,14 +170,14 @@ export function CustomizationPanel() {
               <Label>CJK Font</Label>
               <Input
                 placeholder="Font name"
-                value={cvData.styles.fontCJK?.name || ''}
-                onChange={(e) => updateFontCJK('name', e.target.value)}
+                value={cvData.styles.fontCJK?.name || ""}
+                onChange={(e) => updateFontCJK("name", e.target.value)}
                 className="mt-1"
               />
               <Input
                 placeholder="Font family"
-                value={cvData.styles.fontCJK?.fontFamily || ''}
-                onChange={(e) => updateFontCJK('fontFamily', e.target.value)}
+                value={cvData.styles.fontCJK?.fontFamily || ""}
+                onChange={(e) => updateFontCJK("fontFamily", e.target.value)}
                 className="mt-2"
               />
             </div>
@@ -189,8 +185,8 @@ export function CustomizationPanel() {
               <Label>English Font</Label>
               <Input
                 placeholder="Font name"
-                value={cvData.styles.fontEN?.name || ''}
-                onChange={(e) => updateFontEN('name', e.target.value)}
+                value={cvData.styles.fontEN?.name || ""}
+                onChange={(e) => updateFontEN("name", e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -204,9 +200,9 @@ export function CustomizationPanel() {
         </CardHeader>
         <CardContent>
           <Label htmlFor="paper">Paper Size</Label>
-          <Select 
-            value={cvData.styles.paper} 
-            onValueChange={(value) => updateStyle('paper', value as 'A4' | 'letter' | 'legal')}
+          <Select
+            value={cvData.styles.paper}
+            onValueChange={(value) => updateStyle("paper", value as "A4" | "letter" | "legal")}
           >
             <SelectTrigger className="mt-2">
               <SelectValue />
@@ -220,5 +216,5 @@ export function CustomizationPanel() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

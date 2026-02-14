@@ -26,13 +26,21 @@
       "complexity": {
         "recommended": true
       },
-      "correctness": "error",
+      "correctness": {
+        "recommended": true
+      },
       "performance": {
         "recommended": true
       },
-      "security": "error",
-      "style": "warn",
-      "suspicious": "warn"
+      "security": {
+        "recommended": true
+      },
+      "style": {
+        "recommended": true
+      },
+      "suspicious": {
+        "recommended": true
+      }
     }
   },
   "javascript": {

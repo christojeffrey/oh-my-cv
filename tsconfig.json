@@ -3,14 +3,8 @@
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "types": [
-      "vite/client"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
     "skipLibCheck": true,
     "jsx": "react-jsx",
     /* Bundler mode */
@@ -29,42 +23,11 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@ohmycv/case-police": [
-        "./src/libs/case-police/src/index.ts"
-      ],
-      "@ohmycv/dynamic-css": [
-        "./src/libs/dynamic-css/src/index.ts"
-      ],
-      "@ohmycv/front-matter": [
-        "./src/libs/front-matter/src/index.ts"
-      ],
-      "@ohmycv/google-fonts-loader": [
-        "./src/libs/google-fonts-loader/src/index.ts"
-      ],
-      "@ohmycv/markdown-it-cross-ref": [
-        "./src/libs/markdown-it-cross-ref/src/index.ts"
-      ],
-      "@ohmycv/markdown-it-katex": [
-        "./src/libs/markdown-it-katex/src/index.ts"
-      ],
-      "@ohmycv/markdown-it-latex-cmds": [
-        "./src/libs/markdown-it-latex-cmds/src/index.ts"
-      ],
-      "@ohmycv/react-smart-pages": [
-        "./src/libs/react-smart-pages/src/index.ts"
-      ],
-      "@ohmycv/react-zoom": [
-        "./src/libs/react-zoom/src/index.tsx"
-      ],
-      "@renovamen/utils": [
-        "./src/utils/index.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/hooks/*": ["./src/hooks/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

@@ -1,6 +1,6 @@
 // Adapted from and improved upon https://github.com/jxson/front-matter
 
-import * as yamlParser from "js-yaml";
+import yaml from "js-yaml";
 
 const OPTIONAL_BYTE_ORDER_MARK = "\\ufeff?";
 // Use \r? to handle both Windows (CRLF) and Unix (LF) line endings
@@ -11,7 +11,7 @@ const PATTERN =
   "$([\\s\\S]*?)" +
   "^(?:\\2|\\.\\.\\.)\\s*" +
   "$" +
-  "\\r?" +  // Optional carriage return for Windows compatibility
+  "\\r?" + // Optional carriage return for Windows compatibility
   "(?:\\n)?)";
 
 export interface FrontMatterResults<T> {
@@ -49,6 +49,7 @@ export interface FrontMatterOptions {
 
 export class FrontMatterParser<T = Record<string, unknown>> {
   private options: FrontMatterOptions;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   private _lastFrontMatter: T = {} as T;
 
   constructor(options: FrontMatterOptions = {}) {
@@ -103,7 +104,8 @@ export class FrontMatterParser<T = Record<string, unknown>> {
     if (!split) return this._emptyResults(content);
 
     try {
-      const frontMatter = (yamlParser.load(split.frontMatterString) || {}) as T;
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      const frontMatter = (yaml.load(split.frontMatterString) || {}) as T;
       this._lastFrontMatter = frontMatter;
 
       return { ...split, frontMatter };
@@ -143,3 +145,5 @@ export class FrontMatterParser<T = Record<string, unknown>> {
     return this._emptyResults(content);
   }
 }
+
+export default FrontMatterParser;

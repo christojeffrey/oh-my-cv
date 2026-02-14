@@ -1,4 +1,4 @@
-import MarkdownIt from "markdown-it";
+import type MarkdownIt from "markdown-it";
 
 type RenderRule = (tokens: any[], idx: number, options: any, env: any, self: any) => string;
 type RuleBlock = (state: any, start: number, end: number, silent: boolean) => boolean;
@@ -36,7 +36,7 @@ const checkPattern = (
 
   return {
     pos,
-    max
+    max,
   };
 };
 
@@ -59,7 +59,7 @@ const lineBreak: RuleBlock = (state, start, _end, silent) => {
   // Try to find "\\["
   const res = checkPattern(state, start, "\\\\[", {
     minLength: 5, // Should be at least "\\[x]"
-    silent
+    silent,
   });
   if (!res) return false;
 

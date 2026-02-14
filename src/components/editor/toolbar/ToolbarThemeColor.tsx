@@ -1,10 +1,10 @@
 import { useAtom } from "jotai";
 import { cvDataAtom } from "@/atoms";
-import { storageService } from "@/services/storage";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PRESET_COLORS } from "@/constants";
+import { storageService } from "@/services/storage";
 
 export function ToolbarThemeColor() {
   const [cvData, setCvData] = useAtom(cvDataAtom);
@@ -68,9 +68,7 @@ export function ToolbarThemeColor() {
           variant="outline"
           size="sm"
           onClick={() => {
-            const input = document.querySelector(
-              'input[type="color"]'
-            ) as HTMLInputElement;
+            const input = document.querySelector('input[type="color"]') as HTMLInputElement;
             input?.click();
           }}
         >

@@ -1,6 +1,6 @@
 // Based on https://github.com/markdown-it/markdown-it-footnote
 
-import MarkdownIt from "markdown-it";
+import type MarkdownIt from "markdown-it";
 
 export type RenderRule = (tokens: any[], idx: number, options: any, env: any, self: any) => string;
 export type RuleBlock = (state: any, start: number, end: number, silent: boolean) => boolean;
@@ -11,15 +11,13 @@ export type Token = any;
 export type StateBlock = any;
 export type StateInline = any;
 
-const _anchorId = (tokens: Token[], idx: number) =>
-  Number(tokens[idx].meta.id + 1).toString();
+const _anchorId = (tokens: Token[], idx: number) => Number(tokens[idx].meta.id + 1).toString();
 
 const _anchorLabel = (tokens: Token[], idx: number) => tokens[idx].meta.label;
 
 const _isOpen = (state: StateBlock | StateInline, start: number) => {
   return (
-    state.src.charCodeAt(start) === 0x5b /* [ */ &&
-    state.src.charCodeAt(start + 1) === 0x7e /* ~ */
+    state.src.charCodeAt(start) === 0x5b /* [ */ && state.src.charCodeAt(start + 1) === 0x7e /* ~ */
   );
 };
 
@@ -33,14 +31,14 @@ const _extractLabel = (state: StateBlock | StateInline, start: number, end: numb
 
 const render =
   (type: "defOpen" | "ref"): RenderRule =>
-    (tokens, idx) => {
-      const id = `cross-ref-${_anchorId(tokens, idx)}`;
-      const label = _anchorLabel(tokens, idx);
+  (tokens, idx) => {
+    const id = `cross-ref-${_anchorId(tokens, idx)}`;
+    const label = _anchorLabel(tokens, idx);
 
-      return type === "ref"
-        ? `<sup data-scope="cross-ref" data-part="reference"><a data-scope="cross-ref" data-part="link" href="#${id}" id="${id}">${label}</a></sup>`
-        : `<ul data-scope="cross-ref" data-part="definitions"><li id="${id}" data-scope="cross-ref" data-part="definition" data-label="${label}">`;
-    };
+    return type === "ref"
+      ? `<sup data-scope="cross-ref" data-part="reference"><a data-scope="cross-ref" data-part="link" href="#${id}" id="${id}">${label}</a></sup>`
+      : `<ul data-scope="cross-ref" data-part="definitions"><li id="${id}" data-scope="cross-ref" data-part="definition" data-label="${label}">`;
+  };
 
 const _processDefToken = (
   state: StateBlock,
@@ -88,8 +86,7 @@ const _processDefToken = (
   state.bMarks[startLine] = posAfterColon;
   state.blkIndent += 4;
 
-  if (state.sCount[startLine] < state.blkIndent)
-    state.sCount[startLine] += state.blkIndent;
+  if (state.sCount[startLine] < state.blkIndent) state.sCount[startLine] += state.blkIndent;
 
   // Tokenize the block
   state.md.block.tokenize(state, startLine, endLine);
@@ -177,7 +174,7 @@ const postProcessDef: RuleCore = (state) => {
     if (token.type === "renderDefOpen") {
       token.meta = {
         ...token.meta,
-        id: state.env.crossRef?.labelToId?.[token.meta.label] ?? -1
+        id: state.env.crossRef?.labelToId?.[token.meta.label] ?? -1,
       };
     }
   }
@@ -202,7 +199,7 @@ export const MarkdownItCrossRef: PluginSimple = (md) => {
   md.renderer.rules.renderDefClose = () => "</li>\n</ul>\n";
 
   md.block.ruler.before("reference", "processDef", processDef, {
-    alt: ["paragraph", "reference"]
+    alt: ["paragraph", "reference"],
   });
   md.inline.ruler.after("image", "processRef", processRef);
   md.core.ruler.after("inline", "postProcessDef", postProcessDef);

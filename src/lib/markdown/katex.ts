@@ -1,16 +1,13 @@
 import Katex, { type KatexOptions } from "katex";
-import MarkdownIt from "markdown-it";
-import { htmlEscape } from "@renovamen/utils";
+import type MarkdownIt from "markdown-it";
+import { htmlEscape } from "@/utils/index";
 
 type RuleInline = (state: any, silent: boolean) => boolean;
 type RuleBlock = (state: any, start: number, end: number, silent: boolean) => boolean;
 type PluginWithOptions<T = any> = (md: MarkdownIt, options?: T) => void;
 type Token = any;
 
-const isValidDelim = (
-  state: any,
-  pos: number
-): { canOpen: boolean; canClose: boolean } => {
+const isValidDelim = (state: any, pos: number): { canOpen: boolean; canClose: boolean } => {
   const prevChar = pos > 0 ? state.src.charCodeAt(pos - 1) : -1;
   const nextChar = pos + 1 <= state.posMax ? state.src.charCodeAt(pos + 1) : -1;
 
@@ -174,7 +171,7 @@ export const MarkdownItKatex: PluginWithOptions<KatexOptions> = (
 
   md.inline.ruler.after("escape", "mathInline", mathInline);
   md.block.ruler.after("blockquote", "mathBlock", mathBlock, {
-    alt: ["paragraph", "reference", "blockquote", "list"]
+    alt: ["paragraph", "reference", "blockquote", "list"],
   });
 
   md.renderer.rules.mathInline = (tokens: Token[], idx: number): string =>

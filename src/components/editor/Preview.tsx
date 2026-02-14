@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
+import { Maximize, Maximize2, ZoomIn, ZoomOut } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { cvDataAtom } from "@/atoms";
-import { markdownService } from "@/utils/markdown";
-import { sanitizeHtml } from "@/utils/dompurify";
+import { Zoom } from "@/components/shared/Zoom";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize2, Maximize } from "lucide-react";
+import { MM_TO_PX, PAPER_SIZES } from "@/constants";
+import { useSmartPages } from "@/hooks/useSmartPages";
+import { sanitizeHtml } from "@/utils/dompurify";
 import { injectCss } from "@/utils/dynamic-css";
-import { PAPER_SIZES, MM_TO_PX } from "@/constants";
-import { useSmartPages } from "@ohmycv/react-smart-pages";
-import { Zoom } from "@ohmycv/react-zoom";
+import { markdownService } from "@/utils/markdown";
 
 export function Preview() {
   const [cvData] = useAtom(cvDataAtom);
@@ -136,17 +136,14 @@ export function Preview() {
       top: cvData.styles.marginV,
       bottom: Math.max(cvData.styles.marginV - 10, 10),
       left: cvData.styles.marginH,
-      right: cvData.styles.marginH
+      right: cvData.styles.marginH,
     },
     {
       throttle: 200,
       beforeRender: async () => {
         // Inject CSS
-        injectCss(
-          "resume-editor",
-          cvData.css.replace(/vue-smart-pages/g, "react-smart-pages")
-        );
-      }
+        injectCss("resume-editor", cvData.css.replace(/vue-smart-pages/g, "react-smart-pages"));
+      },
     }
   );
 
@@ -174,7 +171,7 @@ export function Preview() {
             className="resume-content"
             style={{
               width: `${widthPx}px`,
-              fontFamily: cvData.styles.fontEN?.fontFamily || "Arial, sans-serif"
+              fontFamily: cvData.styles.fontEN?.fontFamily || "Arial, sans-serif",
             }}
           />
         </div>

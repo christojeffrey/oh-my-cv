@@ -1,13 +1,13 @@
 import { useAtom } from "jotai";
 import { cvDataAtom } from "@/atoms";
-import { storageService } from "@/services/storage";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
+import { storageService } from "@/services/storage";
 
 export function ToolbarPaper() {
   const [cvData, setCvData] = useAtom(cvDataAtom);

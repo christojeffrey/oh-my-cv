@@ -2,7 +2,7 @@
 export const PAPER_SIZES: Record<string, { w: number; h: number }> = {
   A4: { w: 210, h: 297 + 2 }, // Height includes 2mm buffer
   letter: { w: 215.9, h: 279.4 + 3 }, // Height includes 3mm buffer
-  legal: { w: 215.9, h: 355.6 }
+  legal: { w: 215.9, h: 355.6 },
 };
 
 export const MM_TO_PX = 3.78;
@@ -16,7 +16,7 @@ export const PRESET_COLORS = [
   "#7c3aed", // Purple
   "#ea580c", // Orange
   "#0891b2", // Cyan
-  "#4b5563" // Gray
+  "#4b5563", // Gray
 ];
 
 export type ValidPaperSize = "A4" | "letter" | "legal";
@@ -35,7 +35,7 @@ export const LOCAL_EN_FONTS: Font[] = [
   { name: "Courier New", fontFamily: '"Courier New", Courier, monospace' },
   { name: "Verdana", fontFamily: "Verdana, Geneva, sans-serif" },
   { name: "Tahoma", fontFamily: "Tahoma, Geneva, sans-serif" },
-  { name: "Trebuchet MS", fontFamily: '"Trebuchet MS", Helvetica, sans-serif' }
+  { name: "Trebuchet MS", fontFamily: '"Trebuchet MS", Helvetica, sans-serif' },
 ];
 
 export const LOCAL_CJK_FONTS: Font[] = [
@@ -43,7 +43,7 @@ export const LOCAL_CJK_FONTS: Font[] = [
   { name: "思源黑体", fontFamily: '"Noto Sans SC", sans-serif' },
   { name: "思源宋体", fontFamily: '"Noto Serif SC", serif' },
   { name: "楷体", fontFamily: 'KaiTi, "楷体", serif' },
-  { name: "黑体", fontFamily: 'SimHei, "黑体", sans-serif' }
+  { name: "黑体", fontFamily: 'SimHei, "黑体", sans-serif' },
 ];
 
 // Google Fonts
@@ -56,7 +56,7 @@ export const GF_CJK_FAMILY_TO_NAME: Record<string, string> = {
   "ZCOOL QingKe HuangYou": "站酷庆科黄油体",
   "Ma Shan Zheng": "马善政毛笔楷书",
   "Long Cang": "龙藏体",
-  "Liu Jian Mao Cao": "刘建毛草"
+  "Liu Jian Mao Cao": "刘建毛草",
 };
 
 export const GF_CJK_FIRST = ["思源黑体", "思源宋体", "站酷小薇LOGO体", "站酷庆科黄油体"];
@@ -72,14 +72,14 @@ export const DEFAULT_STYLES = {
   themeColor: "#377bb5",
   fontCJK: {
     name: "华康宋体",
-    fontFamily: "HKST"
+    fontFamily: "HKST",
   },
   fontEN: {
     name: "Arial",
-    fontFamily: "Arial, sans-serif"
+    fontFamily: "Arial, sans-serif",
   },
   fontSize: 15,
-  paper: "A4" as ValidPaperSize
+  paper: "A4" as ValidPaperSize,
 };
 
 export const DEFAULT_RESUME_NAME = "New Resume";

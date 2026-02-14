@@ -1,13 +1,13 @@
-import { ToolbarFile } from './toolbar/ToolbarFile'
-import { ToolbarPaper } from './toolbar/ToolbarPaper'
-import { ToolbarThemeColor } from './toolbar/ToolbarThemeColor'
-import { ToolbarFontFamily } from './toolbar/ToolbarFontFamily'
-import { ToolbarFontSize } from './toolbar/ToolbarFontSize'
-import { ToolbarMargins } from './toolbar/ToolbarMargins'
-import { ToolbarParagraphSpace } from './toolbar/ToolbarParagraphSpace'
-import { ToolbarLineHeight } from './toolbar/ToolbarLineHeight'
-import { ToolbarCorrectCase } from './toolbar/ToolbarCorrectCase'
-import { Separator } from '@/components/ui/separator'
+import { Separator } from "@/components/ui/separator";
+import { ToolbarCorrectCase } from "./toolbar/ToolbarCorrectCase";
+import { ToolbarFile } from "./toolbar/ToolbarFile";
+import { ToolbarFontFamily } from "./toolbar/ToolbarFontFamily";
+import { ToolbarFontSize } from "./toolbar/ToolbarFontSize";
+import { ToolbarLineHeight } from "./toolbar/ToolbarLineHeight";
+import { ToolbarMargins } from "./toolbar/ToolbarMargins";
+import { ToolbarPaper } from "./toolbar/ToolbarPaper";
+import { ToolbarParagraphSpace } from "./toolbar/ToolbarParagraphSpace";
+import { ToolbarThemeColor } from "./toolbar/ToolbarThemeColor";
 
 export function EditorToolbar() {
   return (
@@ -30,5 +30,5 @@ export function EditorToolbar() {
       <Separator />
       <ToolbarCorrectCase />
     </div>
-  )
+  );
 }

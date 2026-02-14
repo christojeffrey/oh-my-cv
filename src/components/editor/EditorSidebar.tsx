@@ -1,27 +1,27 @@
-import { useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { ToolbarFile } from "./toolbar/ToolbarFile";
-import { ToolbarPaper } from "./toolbar/ToolbarPaper";
-import { ToolbarThemeColor } from "./toolbar/ToolbarThemeColor";
-import { ToolbarFontFamily } from "./toolbar/ToolbarFontFamily";
-import { ToolbarFontSize } from "./toolbar/ToolbarFontSize";
-import { ToolbarMargins } from "./toolbar/ToolbarMargins";
-import { ToolbarParagraphSpace } from "./toolbar/ToolbarParagraphSpace";
-import { ToolbarLineHeight } from "./toolbar/ToolbarLineHeight";
-import { ToolbarCorrectCase } from "./toolbar/ToolbarCorrectCase";
 import {
-  Upload,
+  AlignHorizontalSpaceAround,
+  ArrowUpDown,
+  CheckCircle,
   FileText,
   Palette,
   Type,
   TypeOutline,
-  AlignHorizontalSpaceAround,
-  ArrowUpDown,
-  CheckCircle
+  Upload,
 } from "lucide-react";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { ToolbarCorrectCase } from "./toolbar/ToolbarCorrectCase";
+import { ToolbarFile } from "./toolbar/ToolbarFile";
+import { ToolbarFontFamily } from "./toolbar/ToolbarFontFamily";
+import { ToolbarFontSize } from "./toolbar/ToolbarFontSize";
+import { ToolbarLineHeight } from "./toolbar/ToolbarLineHeight";
+import { ToolbarMargins } from "./toolbar/ToolbarMargins";
+import { ToolbarPaper } from "./toolbar/ToolbarPaper";
+import { ToolbarParagraphSpace } from "./toolbar/ToolbarParagraphSpace";
+import { ToolbarThemeColor } from "./toolbar/ToolbarThemeColor";
 
 interface EditorSidebarProps {
   isOpen: boolean;
@@ -36,27 +36,37 @@ export function EditorSidebar({ isOpen }: EditorSidebarProps) {
     { id: "file", icon: Upload, label: t("toolbar.file.title"), component: ToolbarFile },
     { id: "paper", icon: FileText, label: t("toolbar.paper_size"), component: ToolbarPaper },
     { id: "theme", icon: Palette, label: t("toolbar.theme_color"), component: ToolbarThemeColor },
-    { id: "fonts", icon: Type, label: t("toolbar.font_family.title"), component: ToolbarFontFamily },
+    {
+      id: "fonts",
+      icon: Type,
+      label: t("toolbar.font_family.title"),
+      component: ToolbarFontFamily,
+    },
     { id: "size", icon: TypeOutline, label: t("toolbar.font_size"), component: ToolbarFontSize },
     {
       id: "margins",
       icon: AlignHorizontalSpaceAround,
       label: t("toolbar.margins.title"),
-      component: ToolbarMargins
+      component: ToolbarMargins,
     },
     {
       id: "spacing",
       icon: ArrowUpDown,
       label: t("toolbar.paragraph_spacing"),
-      component: ToolbarParagraphSpace
+      component: ToolbarParagraphSpace,
     },
     {
       id: "lineHeight",
       icon: ArrowUpDown,
       label: t("toolbar.line_height"),
-      component: ToolbarLineHeight
+      component: ToolbarLineHeight,
     },
-    { id: "case", icon: CheckCircle, label: t("toolbar.correct_case.title"), component: ToolbarCorrectCase }
+    {
+      id: "case",
+      icon: CheckCircle,
+      label: t("toolbar.correct_case.title"),
+      component: ToolbarCorrectCase,
+    },
   ];
 
   const scrollToSection = (id: string) => {

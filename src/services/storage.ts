@@ -30,7 +30,7 @@ export interface DbResume {
 class StorageService {
   private readonly store = localforage.createInstance({
     name: "oh-my-cv",
-    storeName: "resumes"
+    storeName: "resumes",
   });
 
   private readonly VERSION = "0.1.1";
@@ -309,17 +309,17 @@ B.Eng. in Salad Engineering
           themeColor: "#377bb5",
           fontCJK: {
             name: "华康宋体",
-            fontFamily: "HKST"
+            fontFamily: "HKST",
           },
           fontEN: {
-            name: "Minion Pro"
+            name: "Minion Pro",
           },
           fontSize: 15,
-          paper: "A4"
+          paper: "A4",
         },
         created_at: now,
         updated_at: now,
-        ...data
+        ...data,
       };
       await this.store.setItem(String(id), resume);
       return resume;
@@ -340,7 +340,7 @@ B.Eng. in Salad Engineering
         const updated = {
           ...existing,
           ...data,
-          updated_at: newUpdateTime ? new Date() : existing.updated_at
+          updated_at: newUpdateTime ? new Date() : existing.updated_at,
         };
         await this.store.setItem(String(id), updated);
         return updated;
@@ -381,7 +381,7 @@ B.Eng. in Salad Engineering
         name: original.name + " Copy",
         markdown: original.markdown,
         css: original.css,
-        styles: { ...original.styles }
+        styles: { ...original.styles },
       });
       return newResume;
     } catch (error) {
@@ -401,7 +401,7 @@ B.Eng. in Salad Engineering
 
       const json = {
         version: this.VERSION,
-        data
+        data,
       };
 
       const dataStr = JSON.stringify(json, null, 2);
@@ -423,12 +423,7 @@ B.Eng. in Salad Engineering
 
       // Validate version
       if (json.version !== this.VERSION) {
-        console.warn(
-          "Import data version mismatch:",
-          json.version,
-          "expected:",
-          this.VERSION
-        );
+        console.warn("Import data version mismatch:", json.version, "expected:", this.VERSION);
         return false;
       }
 
@@ -442,7 +437,7 @@ B.Eng. in Salad Engineering
           id: Date.now() + Number.parseInt(id),
           ...resumeData,
           created_at: new Date(),
-          updated_at: new Date()
+          updated_at: new Date(),
         };
         await this.store.setItem(String(resume.id), resume);
       }

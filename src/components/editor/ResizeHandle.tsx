@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ResizeHandleProps {
   direction: "horizontal" | "vertical";
@@ -67,9 +67,7 @@ export function ResizeHandle({ direction }: ResizeHandleProps) {
           ? "absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:bg-primary/20 transition-colors"
           : "absolute top-0 bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:bg-primary/20 transition-colors"
       } ${isDragging ? "bg-primary" : "bg-border"}`}
-      title={
-        direction === "horizontal" ? "Drag to resize width" : "Drag to resize height"
-      }
+      title={direction === "horizontal" ? "Drag to resize width" : "Drag to resize height"}
     />
   );
 }

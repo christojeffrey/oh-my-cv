@@ -3,5 +3,5 @@ export function BrandName() {
     <span>
       Oh<span className="text-primary">My</span>CV
     </span>
-  )
+  );
 }

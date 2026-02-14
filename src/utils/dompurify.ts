@@ -5,7 +5,7 @@ import DOMPurify from "dompurify";
 const dompurifyInstance = DOMPurify();
 dompurifyInstance.setConfig({
   USE_PROFILES: { html: true },
-  KEEP_CONTENT: true // Preserve element content when element is removed
+  KEEP_CONTENT: true, // Preserve element content when element is removed
 });
 
 export function sanitizeHtml(dirtyHtml: string): string {

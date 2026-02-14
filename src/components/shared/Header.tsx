@@ -1,17 +1,16 @@
 import { Link } from "@tanstack/react-router";
+import { Github, Languages, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { BrandName } from "./BrandName";
-import { Logo } from "./Logo";
-import { ToggleDark } from "./ToggleDark";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Github, Menu, Languages } from "lucide-react";
-
+import { BrandName } from "./BrandName";
+import { Logo } from "./Logo";
+import { ToggleDark } from "./ToggleDark";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -23,7 +22,7 @@ export function Header({ children }: HeaderProps) {
   const languages = [
     { code: "en", name: "English" },
     { code: "es", name: "Español" },
-    { code: "zh-cn", name: "中文" }
+    { code: "zh-cn", name: "中文" },
   ];
 
   const changeLanguage = (lng: string) => {
@@ -51,7 +50,9 @@ export function Header({ children }: HeaderProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 gap-1">
               <Languages className="w-4 h-4" />
-              <span className="hidden sm:inline">{i18n.language?.toUpperCase().substring(0, 2)}</span>
+              <span className="hidden sm:inline">
+                {i18n.language?.toUpperCase().substring(0, 2)}
+              </span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="min-w-28">
@@ -66,11 +67,7 @@ export function Header({ children }: HeaderProps) {
         <ToggleDark />
 
         <Button variant="ghost" size="sm" className="h-8" asChild>
-          <a
-            href="https://github.com/Renovamen/oh-my-cv"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://github.com/Renovamen/oh-my-cv" target="_blank" rel="noopener noreferrer">
             <Github className="w-4 h-4" />
           </a>
         </Button>

@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
-import { storageService } from "@/services/storage";
 import { Plus } from "lucide-react";
+import { storageService } from "@/services/storage";
 
 interface NewResumeProps {
   onUpdate: () => void;

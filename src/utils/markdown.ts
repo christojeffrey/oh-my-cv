@@ -1,10 +1,10 @@
-import { FrontMatterParser } from "@ohmycv/front-matter";
-import MarkdownItCite from "@ohmycv/markdown-it-cross-ref";
-import MarkdownItKatex from "@ohmycv/markdown-it-katex";
-import MarkdownItLatexCmds from "@ohmycv/markdown-it-latex-cmds";
 import MarkdownIt from "markdown-it";
 import MarkdownItDeflist from "markdown-it-deflist";
 import LinkAttributes from "markdown-it-link-attributes";
+import { FrontMatterParser } from "@/lib/front-matter";
+import MarkdownItCite from "@/lib/markdown/cross-ref";
+import MarkdownItKatex from "@/lib/markdown/katex";
+import MarkdownItLatexCmds from "@/lib/markdown/latex-cmds";
 import { sanitizeHtml } from "./dompurify.ts";
 // import MarkdownItIconify from "./markdown-it-iconify";
 

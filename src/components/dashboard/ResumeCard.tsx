@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { storageService, type DbResume } from "@/services/storage";
-import { markdownService } from "@/utils/markdown";
-import { googleFontsService } from "@/services/fonts";
+import { Copy, MoreHorizontal, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Copy, Trash2, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PAPER_SIZES, MM_TO_PX, type Font } from "@/constants";
-import { useSmartPages } from "@ohmycv/react-smart-pages";
+import { type Font, MM_TO_PX, PAPER_SIZES } from "@/constants";
+import { useSmartPages } from "@/hooks/useSmartPages";
+import { googleFontsService } from "@/services/fonts";
+import { type DbResume, storageService } from "@/services/storage";
+import { markdownService } from "@/utils/markdown";
 
 interface ResumeCardProps {
   resume: DbResume;
@@ -37,7 +37,7 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
     fontCJK: { name: "华康宋体", fontFamily: "HKST" },
     fontEN: { name: "Arial", fontFamily: "Arial, sans-serif" },
     fontSize: 15,
-    paper: "A4"
+    paper: "A4",
   };
 
   const size = PAPER_SIZES[styles.paper] || PAPER_SIZES.A4;
@@ -56,10 +56,10 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
       top: styles.marginV,
       bottom: Math.max(styles.marginV - 10, 10),
       left: styles.marginH,
-      right: styles.marginH
+      right: styles.marginH,
     },
     {
-      throttle: 200
+      throttle: 200,
     }
   );
 
@@ -181,13 +181,12 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
   return (
     <div className="w-56 group/card flex flex-col items-center">
       <div className="h-80 relative flex items-center justify-center w-full">
-
         <div
           className="resume-card-wrapper border rounded-md flex items-center justify-center mx-auto bg-white dark:bg-gray-900"
           style={{
-            width: '210px',
-            height: '297px',
-            overflow: 'hidden'
+            width: "210px",
+            height: "297px",
+            overflow: "hidden",
           }}
         >
           <div
@@ -197,7 +196,7 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
               width: `${widthPx}px`,
               height: `${heightPx}px`,
               transform: `scale(${SCALE_FACTOR})`,
-              transformOrigin: 'center center'
+              transformOrigin: "center center",
             }}
           >
             {/* Hide all pages except the first one */}
@@ -213,7 +212,7 @@ export function ResumeCard({ resume, onUpdate }: ResumeCardProps) {
               style={{
                 fontFamily: styles.fontEN?.fontFamily || "Arial, sans-serif",
                 width: `${widthPx}px`,
-                height: `${heightPx}px`
+                height: `${heightPx}px`,
               }}
             />
           </div>
