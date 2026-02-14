@@ -39,30 +39,17 @@ export function ToolbarFontFamily() {
     loadGoogleFonts();
   }, []);
 
-  const updateFontEN = async (font: string) => {
+  const updateFont = async (type: "fontEN" | "fontCJK", fontName: string) => {
     if (!cvData.resumeId) return;
 
-    const fontObj: Font = { name: font, fontFamily: font };
-    const newStyles = { ...cvData.styles, fontEN: fontObj };
+    const fontObj: Font = { name: fontName, fontFamily: fontName };
+    const newStyles = { ...cvData.styles, [type]: fontObj };
     setCvData((prev) => ({ ...prev, styles: newStyles }));
 
     await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
 
     // Load the font
-    await googleFontsService.resolveEN(fontObj);
-  };
-
-  const updateFontCJK = async (font: string) => {
-    if (!cvData.resumeId) return;
-
-    const fontObj: Font = { name: font, fontFamily: font };
-    const newStyles = { ...cvData.styles, fontCJK: fontObj };
-    setCvData((prev) => ({ ...prev, styles: newStyles }));
-
-    await storageService.updateResume(cvData.resumeId, { styles: newStyles }, false);
-
-    // Load the font
-    await googleFontsService.resolveCJK(fontObj);
+    await googleFontsService.resolve(fontObj);
   };
 
   // Combine local and Google fonts
@@ -83,23 +70,21 @@ export function ToolbarFontFamily() {
     <div className="space-y-3">
       <div className="space-y-2">
         <Label htmlFor="font-en">English Font</Label>
-        <Select value={currentENFont} onValueChange={updateFontEN}>
+        <Select value={currentENFont} onValueChange={(val) => updateFont("fontEN", val)}>
           <SelectTrigger id="font-en">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
           <SelectContent>
-            {!loaded ? (
+            {loaded ? (
+              enFonts.map((font) => (
+                <SelectItem key={font.value} value={font.value}>
+                  {font.label}
+                </SelectItem>
+              ))
+            ) : (
               <div className="flex items-center justify-center p-4">
                 <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
               </div>
-            ) : (
-              <>
-                {enFonts.map((font) => (
-                  <SelectItem key={font.value} value={font.value}>
-                    {font.label}
-                  </SelectItem>
-                ))}
-              </>
             )}
           </SelectContent>
         </Select>
@@ -107,23 +92,21 @@ export function ToolbarFontFamily() {
 
       <div className="space-y-2">
         <Label htmlFor="font-cjk">CJK Font</Label>
-        <Select value={currentCJKFont} onValueChange={updateFontCJK}>
+        <Select value={currentCJKFont} onValueChange={(val) => updateFont("fontCJK", val)}>
           <SelectTrigger id="font-cjk">
             <SelectValue placeholder="Select a font" />
           </SelectTrigger>
           <SelectContent>
-            {!loaded ? (
+            {loaded ? (
+              cjkFonts.map((font) => (
+                <SelectItem key={font.value} value={font.value}>
+                  {font.label}
+                </SelectItem>
+              ))
+            ) : (
               <div className="flex items-center justify-center p-4">
                 <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
               </div>
-            ) : (
-              <>
-                {cjkFonts.map((font) => (
-                  <SelectItem key={font.value} value={font.value}>
-                    {font.label}
-                  </SelectItem>
-                ))}
-              </>
             )}
           </SelectContent>
         </Select>

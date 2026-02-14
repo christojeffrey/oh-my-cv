@@ -8,7 +8,7 @@ import {
   TypeOutline,
   Upload,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -27,12 +27,12 @@ interface EditorSidebarProps {
   isOpen: boolean;
 }
 
-export function EditorSidebar({ isOpen }: EditorSidebarProps) {
+export function EditorSidebar({ isOpen }: Readonly<EditorSidebarProps>) {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  const TOOLS = [
+  const TOOLS = useMemo(() => [
     { id: "file", icon: Upload, label: t("toolbar.file.title"), component: ToolbarFile },
     { id: "paper", icon: FileText, label: t("toolbar.paper_size"), component: ToolbarPaper },
     { id: "theme", icon: Palette, label: t("toolbar.theme_color"), component: ToolbarThemeColor },
@@ -67,7 +67,7 @@ export function EditorSidebar({ isOpen }: EditorSidebarProps) {
       label: t("toolbar.correct_case.title"),
       component: ToolbarCorrectCase,
     },
-  ];
+  ], [t]);
 
   const scrollToSection = (id: string) => {
     const section = document.getElementById(`toolbar-section-${id}`);

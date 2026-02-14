@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { Maximize, Maximize2, ZoomIn, ZoomOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cvDataAtom } from "@/atoms";
+import { type ResumeStyles } from "@/atoms/data";
 import { Zoom } from "@/components/shared/Zoom";
 import { Button } from "@/components/ui/button";
 import { MM_TO_PX, PAPER_SIZES } from "@/constants";
@@ -51,81 +52,8 @@ export function Preview() {
 
   // Inject toolbar styles
   useEffect(() => {
-    const toolbarStyles = `
-      .resume-content {
-        line-height: ${cvData.styles.lineHeight};
-        font-size: ${cvData.styles.fontSize}px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        padding-bottom: 40px;
-      }
-      [data-scope="react-smart-pages"][data-part="page"] {
-        box-sizing: border-box;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        background-color: white;
-      }
-      .resume-content p,
-      .resume-content li {
-        margin-bottom: ${cvData.styles.paragraphSpace}px;
-      }
-      .resume-content h2,
-      .resume-content h3 {
-        margin-bottom: ${cvData.styles.paragraphSpace}px;
-      }
-      .resume-content .resume-header h1 {
-        color: ${cvData.styles.themeColor};
-        margin-bottom: 20px;
-        text-align: center;
-      }
-      .resume-content .resume-header {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-      .resume-content .resume-header-item:not(.no-separator)::after {
-        content: " | ";
-        margin: 0 8px;
-      }
-      .resume-content h2 {
-        border-bottom: 1px solid ${cvData.styles.themeColor};
-        padding-bottom: 5px;
-        margin-bottom: 10px;
-      }
-      .resume-content h3 {
-        margin-top: 20px;
-      }
-      .resume-content ul {
-        list-style-type: circle;
-        padding-left: 20px;
-      }
-      .resume-content ol {
-        list-style-type: decimal;
-        padding-left: 20px;
-      }
-      .resume-content li {
-        margin-bottom: 5px;
-      }
-      .resume-content p {
-        margin-bottom: 10px;
-      }
-      .resume-content strong {
-        font-weight: bold;
-      }
-      .resume-content em {
-        font-style: italic;
-      }
-    `;
-    const styleElement = document.getElementById("preview-toolbar-styles");
-    if (styleElement) {
-      styleElement.textContent = toolbarStyles;
-    } else {
-      const newStyleElement = document.createElement("style");
-      newStyleElement.id = "preview-toolbar-styles";
-      newStyleElement.textContent = toolbarStyles;
-      document.head.appendChild(newStyleElement);
-    }
+    const styles = generatePreviewStyles(cvData.styles);
+    injectCss("preview-toolbar-styles", styles);
   }, [cvData.styles]);
 
   // Use smart pages for pagination
@@ -142,7 +70,7 @@ export function Preview() {
       throttle: 200,
       beforeRender: async () => {
         // Inject CSS
-        injectCss("resume-editor", cvData.css.replace(/vue-smart-pages/g, "react-smart-pages"));
+        injectCss("resume-editor", cvData.css.replaceAll("vue-smart-pages", "react-smart-pages"));
       },
     }
   );
@@ -213,4 +141,73 @@ export function Preview() {
       </div>
     </div>
   );
+}
+
+function generatePreviewStyles(styles: ResumeStyles) {
+  return `
+      .resume-content {
+        line-height: ${styles.lineHeight};
+        font-size: ${styles.fontSize}px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 40px;
+      }
+      [data-scope="react-smart-pages"][data-part="page"] {
+        box-sizing: border-box;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        background-color: white;
+      }
+      .resume-content p,
+      .resume-content li {
+        margin-bottom: ${styles.paragraphSpace}px;
+      }
+      .resume-content h2,
+      .resume-content h3 {
+        margin-bottom: ${styles.paragraphSpace}px;
+      }
+      .resume-content .resume-header h1 {
+        color: ${styles.themeColor};
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .resume-content .resume-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .resume-content .resume-header-item:not(.no-separator)::after {
+        content: " | ";
+        margin: 0 8px;
+      }
+      .resume-content h2 {
+        border-bottom: 1px solid ${styles.themeColor};
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+      }
+      .resume-content h3 {
+        margin-top: 20px;
+      }
+      .resume-content ul {
+        list-style-type: circle;
+        padding-left: 20px;
+      }
+      .resume-content ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+      }
+      .resume-content li {
+        margin-bottom: 5px;
+      }
+      .resume-content p {
+        margin-bottom: 10px;
+      }
+      .resume-content strong {
+        font-weight: bold;
+      }
+      .resume-content em {
+        font-style: italic;
+      }
+  `;
 }
