@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(npm run build)",
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Bash(node:*)",
+      "Bash(curl:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix\\(front-matter\\): remove node:process import to fix Vite externalization error\n\nRoot cause: The front-matter package imported process from node:process,\ncausing Vite to externalize the module when bundling for the browser.\n\nFix: Removed the import since the typeof check already handles the case\nwhere process doesn''t exist, and in Node.js environments process is\navailable globally without the import.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(npx tsup:*)"
     ]
   }
 }
