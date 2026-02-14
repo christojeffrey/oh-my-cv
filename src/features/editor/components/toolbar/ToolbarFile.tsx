@@ -11,11 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { cvDataAtom } from "@/features/editor/stores/cv-data";
+import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
 import type { SystemData } from "@/types/resume";
 
 export function ToolbarFile() {
+  const { updateResume } = useResumes();
   const [cvData, setCvData] = useAtom(cvDataAtom);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [newName, setNewName] = useState("");
@@ -28,11 +30,12 @@ export function ToolbarFile() {
   const save = async () => {
     if (!cvData.resumeId) return;
 
-    await storageService.updateResume(cvData.resumeId, {
+    await updateResume(cvData.resumeId, {
       name: cvData.resumeName,
       markdown: cvData.markdown,
       css: cvData.css,
       styles: cvData.styles,
+      // The hook handles validation and mapping to backend or local
     });
     toast.save();
   };

@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { BrandName } from "./BrandName";
 import { Logo } from "./Logo";
 import { ToggleDark } from "./ToggleDark";
@@ -31,7 +32,7 @@ export function Header({ children }: HeaderProps) {
 
   return (
     <header className="flex items-center justify-between px-4 h-12 border-b bg-background/95 backdrop-blur">
-      <Link to="/" className="flex items-center gap-2 h-full">
+      <Link to="/dashboard" className="flex items-center gap-2 h-full">
         <Logo />
         <BrandName />
       </Link>
@@ -40,7 +41,7 @@ export function Header({ children }: HeaderProps) {
         {children}
 
         <Button variant="ghost" size="sm" className="h-8 gap-1" asChild>
-          <Link to="/">
+          <Link to="/dashboard">
             <Menu className="w-4 h-4 text-foreground" />
             <span className="hidden sm:inline text-foreground">{t("dashboard.my_resumes")}</span>
           </Link>
@@ -65,6 +66,19 @@ export function Header({ children }: HeaderProps) {
         </DropdownMenu>
 
         <ToggleDark />
+
+        <div className="ml-2 flex items-center gap-2">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <Button variant="outline" size="sm">
+                Sign In
+              </Button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+        </div>
 
         <Button variant="ghost" size="sm" className="h-8" asChild>
           <a href="https://github.com/Renovamen/oh-my-cv" target="_blank" rel="noopener noreferrer">

@@ -54,7 +54,7 @@ class StorageService {
   }
 
   async updateResume(
-    id: number,
+    id: number | string,
     data: Partial<DbResume>,
     newUpdateTime = true
   ): Promise<DbResume | null> {
@@ -76,7 +76,7 @@ class StorageService {
     }
   }
 
-  async deleteResume(id: number): Promise<DbResume | null> {
+  async deleteResume(id: number | string): Promise<DbResume | null> {
     try {
       const existing = await this.getResume(id);
       await this.store.removeItem(String(id));
@@ -87,7 +87,7 @@ class StorageService {
     }
   }
 
-  async getResume(id: number): Promise<DbResume | null> {
+  async getResume(id: number | string): Promise<DbResume | null> {
     try {
       return await this.store.getItem<DbResume>(String(id));
     } catch (error) {
@@ -96,7 +96,7 @@ class StorageService {
     }
   }
 
-  async duplicateResume(id: number): Promise<DbResume | null> {
+  async duplicateResume(id: number | string): Promise<DbResume | null> {
     try {
       const original = await this.getResume(id);
       if (!original) return null;
@@ -117,10 +117,10 @@ class StorageService {
   async exportToJSON(): Promise<void> {
     try {
       const resumes = await this.getResumes();
-      const data: Record<number, Omit<DbResume, "id" | "created_at" | "updated_at">> = {};
+      const data: Record<string, Omit<DbResume, "id" | "created_at" | "updated_at">> = {};
       for (const resume of resumes) {
         const { id, created_at, updated_at, ...rest } = resume;
-        data[id] = rest;
+        data[String(id)] = rest;
       }
 
       const json = {
@@ -153,12 +153,12 @@ class StorageService {
 
       // Import resumes
       const resumes: Record<
-        number,
+        string,
         Omit<DbResume, "id" | "created_at" | "updated_at">
       > = json.data || {};
       for (const [id, resumeData] of Object.entries(resumes)) {
         const resume: DbResume = {
-          id: Date.now() + Number.parseInt(id),
+          id: Date.now() + Math.floor(Math.random() * 1000), // Generate new ID to avoid collisions
           ...resumeData,
           created_at: new Date(),
           updated_at: new Date(),

@@ -1,17 +1,20 @@
-import { storageService } from "@/services/storage";
+import { useResumes } from "./use-resumes";
 
 /**
  * Hook to handle resume CRUD operations
  */
 export function useResumeActions(onUpdate?: () => void) {
-  const handleDuplicate = async (resumeId: number) => {
-    await storageService.duplicateResume(resumeId);
+  const { deleteResume } = useResumes();
+
+  const handleDuplicate = async (resumeId: number | string) => {
+    // await storageService.duplicateResume(resumeId);
+    console.warn("Duplicate not implemented for Convex/Unified yet");
     onUpdate?.();
   };
 
-  const handleDelete = async (resumeId: number, resumeName: string) => {
-    if (confirm(`Are you sure you want to delete "${resumeName}"?`)) {
-      await storageService.deleteResume(resumeId);
+  const handleDelete = async (resumeId: number | string, resumeName?: string) => {
+    if (confirm(`Are you sure you want to delete "${resumeName || 'resume'}"?`)) {
+      await deleteResume(resumeId);
       onUpdate?.();
     }
   };

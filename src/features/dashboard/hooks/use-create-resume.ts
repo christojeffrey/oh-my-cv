@@ -1,16 +1,17 @@
 import { useNavigate } from "@tanstack/react-router";
-import { storageService } from "@/services/storage";
+import { useResumes } from "./use-resumes";
 
 /**
  * Hook to handle creating a new resume and navigating to the editor
  */
 export function useCreateResume() {
   const navigate = useNavigate();
+  const { createResume: create } = useResumes();
 
   const createResume = async () => {
-    const data = await storageService.createResume();
-    if (data) {
-      navigate({ to: `/editor/${data.id}` });
+    const id = await create({});
+    if (id) {
+      navigate({ to: `/editor/${id}` });
     }
   };
 

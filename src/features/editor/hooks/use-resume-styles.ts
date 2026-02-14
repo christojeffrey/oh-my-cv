@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { storageService } from "@/services/storage";
+import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import type { ResumeStyles } from "@/types/resume";
 import { cvDataAtom } from "../stores/cv-data";
 
@@ -8,6 +9,7 @@ import { cvDataAtom } from "../stores/cv-data";
  */
 export function useResumeStyles() {
   const [cvData, setCvData] = useAtom(cvDataAtom);
+  const { updateResume } = useResumes();
 
   const updateStyles = async (updater: (prev: ResumeStyles) => ResumeStyles) => {
     const newStyles = updater(cvData.styles);
@@ -17,9 +19,9 @@ export function useResumeStyles() {
       styles: newStyles,
     }));
 
-    // Persist to storage
+    // Persist to storage (or backend via hook)
     if (cvData.resumeId) {
-      await storageService.updateResume(cvData.resumeId, {
+      await updateResume(cvData.resumeId, {
         styles: newStyles,
       });
     }
