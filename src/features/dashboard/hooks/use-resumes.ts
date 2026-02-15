@@ -3,12 +3,13 @@ import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { useEffect, useState, useMemo } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { storageService } from "@/services/storage";
+
 import type { DbResume } from "@/types/resume";
 import { DEFAULT_STYLES } from "@/constants";
 import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CSS } from "@/constants/templates/default";
 
 export function useResumes() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded } = useAuth();
   const { isAuthenticated, isLoading: isConvexAuthLoading } = useConvexAuth();
 
   // Local storage state

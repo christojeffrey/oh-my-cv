@@ -22,11 +22,10 @@ export function useEditorData(id?: string) {
     // For now, let's pick the first one from the list (local storage returns array).
     let resume = null;
 
-    console.log("useEditorData effect. ID:", id, "Resumes:", resumes.length, "Loading:", isResumesLoading);
+
 
     if (id) {
       resume = resumes.find(r => String(r.id) === id);
-      console.log("Found resume by ID:", resume ? "yes" : "no");
     } else if (resumes.length > 0) {
       // If no ID, but we have resumes, pick the first one (most recent usually if sorted by backend/storage service)
       resume = resumes[0];

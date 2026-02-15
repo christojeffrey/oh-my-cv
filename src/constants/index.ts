@@ -76,4 +76,5 @@ export const DEFAULT_STYLES: ResumeStyles = {
   paper: "A4",
 };
 
+
 export const DEFAULT_RESUME_NAME = "New Resume";

@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { SKELETON_COUNT } from "@/constants";
 import { useResumes } from "./hooks/use-resumes";
 import { FileActions } from "./components/FileActions";
 import { NewResume } from "./components/NewResume";
@@ -19,7 +20,7 @@ export function Dashboard() {
           <NewResume onUpdate={reload} />
 
           {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
+            ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
               <div key={i} className="w-56 h-80">
                 <Card className="w-[210px] h-[299px] bg-secondary animate-pulse mx-auto" />
               </div>

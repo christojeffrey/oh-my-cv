@@ -20,7 +20,7 @@ export function Preview() {
   const widthPx = size.w * MM_TO_PX;
   const heightPx = size.h * MM_TO_PX;
 
-  const { scale, zoomIn, zoomOut, fitWidth, fitHeight } = usePreviewZoom(containerRef, {
+  const { scale, zoomIn, zoomOut, fitWidth, fitHeight } = usePreviewZoom<HTMLDivElement>(containerRef as React.RefObject<HTMLDivElement>, {
     contentWidth: widthPx,
     contentHeight: heightPx,
     padding: 64,

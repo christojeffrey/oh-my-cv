@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { storageService } from "@/services/storage";
+
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import type { ResumeStyles } from "@/types/resume";
 import { cvDataAtom } from "../stores/cv-data";

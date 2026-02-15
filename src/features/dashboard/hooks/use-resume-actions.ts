@@ -6,8 +6,8 @@ import { useResumes } from "./use-resumes";
 export function useResumeActions(onUpdate?: () => void) {
   const { deleteResume } = useResumes();
 
-  const handleDuplicate = async (resumeId: number | string) => {
-    // await storageService.duplicateResume(resumeId);
+  const handleDuplicate = async (_resumeId: number | string) => {
+
     console.warn("Duplicate not implemented for Convex/Unified yet");
     onUpdate?.();
   };

@@ -156,7 +156,7 @@ class StorageService {
         string,
         Omit<DbResume, "id" | "created_at" | "updated_at">
       > = json.data || {};
-      for (const [id, resumeData] of Object.entries(resumes)) {
+      for (const [_, resumeData] of Object.entries(resumes)) {
         const resume: DbResume = {
           id: Date.now() + Math.floor(Math.random() * 1000), // Generate new ID to avoid collisions
           ...resumeData,
