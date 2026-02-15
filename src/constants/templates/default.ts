@@ -134,7 +134,7 @@ export const DEFAULT_RESUME_CSS = `/* Backbone CSS for Resume Template 1 */
 }
 
 .resume-content h1 {
-  font-size: 2.13em;
+  font-size: 1.5em;
 }
 
 .resume-content h2,

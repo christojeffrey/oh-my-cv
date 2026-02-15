@@ -2,6 +2,7 @@ import type { ResumeStyles } from "@/types/resume";
 
 export function generatePreviewStyles(styles: ResumeStyles) {
   return `
+@layer resume-dynamic {
       .resume-content {
         line-height: ${styles.lineHeight};
         font-size: ${styles.fontSize}px;
@@ -66,5 +67,6 @@ export function generatePreviewStyles(styles: ResumeStyles) {
       .resume-content em {
         font-style: italic;
       }
+  }
   `;
 }

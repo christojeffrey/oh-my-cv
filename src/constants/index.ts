@@ -59,18 +59,18 @@ export const GF_IGNORE_FONTS = ["Icon"];
 
 // Defaults
 export const DEFAULT_STYLES: ResumeStyles = {
-  marginV: 50,
-  marginH: 45,
+  marginV: 30,
+  marginH: 30,
   lineHeight: 1.3,
   paragraphSpace: 5,
-  themeColor: "#377bb5",
+  themeColor: "#000000",
   fontCJK: {
     name: "华康宋体",
     fontFamily: "HKST",
   },
   fontEN: {
-    name: "Minion Pro",
-    fontFamily: "Minion Pro, serif",
+    name: "Times New Roman",
+    fontFamily: '"Times New Roman", Times, serif',
   },
   fontSize: 15,
   paper: "A4",
