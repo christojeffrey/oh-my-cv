@@ -6,7 +6,6 @@ import MarkdownItCite from "@/lib/markdown/cross-ref";
 import MarkdownItKatex from "@/lib/markdown/katex";
 import MarkdownItLatexCmds from "@/lib/markdown/latex-cmds";
 import { sanitizeHtml } from "./dompurify.ts";
-// import MarkdownItIconify from "./markdown-it-iconify";
 
 export interface ResumeHeaderItem {
   text: string;
@@ -39,7 +38,6 @@ export class MarkdownService {
     md.use(MarkdownItKatex);
     md.use(MarkdownItCite);
     md.use(MarkdownItLatexCmds);
-    // md.use(MarkdownItIconify);
     md.use(LinkAttributes, {
       matcher: (link: string) => /^https?:\/\//.test(link),
       attrs: {
