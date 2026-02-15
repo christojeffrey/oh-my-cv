@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cvDataAtom } from "@/features/editor/stores/cv-data";
+import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import casePolice from "@/lib/case-police";
-import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
 import type { SystemData } from "@/types/resume";
 
 export function ToolbarCorrectCase() {
+  const { updateResume } = useResumes();
   const [cvData, setCvData] = useAtom(cvDataAtom);
   const [result, setResult] = useState<{ num: number; text: string } | null>(null);
 
@@ -28,7 +29,7 @@ export function ToolbarCorrectCase() {
 
     setCvData((prev: SystemData) => ({ ...prev, markdown: result.text }));
 
-    await storageService.updateResume(cvData.resumeId, { markdown: result.text }, false);
+    await updateResume(cvData.resumeId, { markdown: result.text });
 
     setResult(null);
   };

@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { cvDataAtom } from "@/features/editor/stores/cv-data";
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
-import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
 import type { SystemData } from "@/types/resume";
 
@@ -45,7 +44,7 @@ export function ToolbarFile() {
 
     setCvData((prev: SystemData) => ({ ...prev, resumeName: newName.trim() }));
 
-    await storageService.updateResume(cvData.resumeId, { name: newName.trim() }, false);
+    await updateResume(cvData.resumeId, { name: newName.trim() });
 
     setRenameDialogOpen(false);
   };

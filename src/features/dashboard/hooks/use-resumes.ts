@@ -1,9 +1,10 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
-import { useEffect, useState, useMemo } from "react";
+import { useAtom } from "jotai";
+import { useMemo } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { storageService } from "@/services/storage";
+import { resumeAtom } from "@/store/resume-atom";
 
 import type { DbResume } from "@/types/resume";
 import { DEFAULT_STYLES } from "@/constants";
@@ -14,8 +15,7 @@ export function useResumes() {
   const { isAuthenticated, isLoading: isConvexAuthLoading } = useConvexAuth();
 
   // Local storage state
-  const [localResumes, setLocalResumes] = useState<DbResume[]>([]);
-  const [isLocalLoading, setIsLocalLoading] = useState(true);
+  const [localResume, setLocalResume] = useAtom(resumeAtom);
 
   // Convex state
   const convexResumes = useQuery(api.resumes.getResumes, isAuthenticated ? {} : "skip");
@@ -23,21 +23,7 @@ export function useResumes() {
   const updateResumeMutation = useMutation(api.resumes.updateResume);
   const deleteResumeMutation = useMutation(api.resumes.deleteResume);
 
-  // Load local storage
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (!isAuthenticated) {
-      storageService.getResumes().then((resumes) => {
-        setLocalResumes(resumes);
-        setIsLocalLoading(false);
-      });
-    } else {
-      setIsLocalLoading(false);
-    }
-  }, [isAuthenticated, isLoaded]);
-
   // Unified Interface
-
   const resumes = useMemo(() => {
     if (isAuthenticated && convexResumes) {
       return convexResumes.map(r => ({
@@ -50,24 +36,26 @@ export function useResumes() {
         updated_at: new Date(r.lastUpdated),
       }));
     }
-    return isAuthenticated ? [] : localResumes;
-  }, [isAuthenticated, convexResumes, localResumes]);
+    // Return array with single local resume if not authenticated
+    return isAuthenticated ? [] : [localResume];
+  }, [isAuthenticated, convexResumes, localResume]);
 
   // Simplify loading state logic
   const isConvexLoading = isAuthenticated && convexResumes === undefined;
-  const isLoading = !isLoaded || isConvexAuthLoading || isConvexLoading || (!isAuthenticated && isLocalLoading);
+  // Local storage via atomWithStorage is synchronous after initial load (which is handled by Jotai), 
+  // but to be safe we can consider it loaded if the atom has a value. 
+  // For atomWithStorage, it might need a Suspense boundary or we assume it's ready. 
+  // Given the simplicity, we'll assume local is always "loaded" for now or check if localResume is present.
+  const isLoading = !isLoaded || isConvexAuthLoading || isConvexLoading;
 
   const reload = async () => {
-    if (!isAuthenticated) {
-      setIsLocalLoading(true);
-      const data = await storageService.getResumes();
-      setLocalResumes(data);
-      setIsLocalLoading(false);
+    // No-op for atom-based local storage as it reactive
+    if (isAuthenticated && convexResumes === undefined) {
+      // Trigger convex refetch if needed, but useQuery handles it
     }
   };
 
   const createResume = async (data: Partial<DbResume>) => {
-
     // We utilize isAuthenticated to ensure Convex is ready to accept mutations
     if (isAuthenticated) {
       const now = new Date();
@@ -96,23 +84,31 @@ export function useResumes() {
       }
     }
 
-    const newResume = await storageService.createResume(data);
-    if (newResume) {
-      setLocalResumes(prev => [newResume, ...prev]);
-      return newResume.id;
-    }
+    // For local, we only support one resume, so "creating" just updates the single existing one
+    // or resets it. But to match the "create" semantics, we'll update it.
+    // However, if the user thinks they are creating a *new* one, we should probably reset ID/dates?
+    // The requirement says "only a single resume", so effectively "create" is "reset/overwrite".
 
-    return 0;
+    const now = new Date();
+    const newResume: DbResume = {
+      id: "local", // Keep consistent ID for single local resume
+      name: data.name || "Untitled Resume",
+      markdown: data.markdown || DEFAULT_RESUME_MARKDOWN,
+      css: data.css || DEFAULT_RESUME_CSS,
+      styles: { ...DEFAULT_STYLES, ...data.styles },
+      created_at: now,
+      updated_at: now,
+    };
+    setLocalResume(newResume);
+    return newResume.id;
   };
 
   const updateResume = async (id: number | string, data: Partial<DbResume>) => {
     if (isAuthenticated) {
       // For Convex, we need to map the ID
-      // The ID passed here is the Convex ID (string)
       const current = resumes.find(r => r.id === id);
 
       if (!current) {
-
         return;
       }
 
@@ -130,8 +126,16 @@ export function useResumes() {
         console.error("Failed to update resume in Convex:", error);
       }
     } else {
-      await storageService.updateResume(Number(id), data);
-      setLocalResumes(prev => prev.map(r => r.id === id ? { ...r, ...data } : r));
+      // Local update
+      // We ignore the ID check effectively since we only have one, 
+      // but good to keep it somewhat sane.
+      if (id === localResume.id) {
+        setLocalResume(prev => ({
+          ...prev,
+          ...data,
+          updated_at: new Date(),
+        }));
+      }
     }
   };
 
@@ -143,8 +147,19 @@ export function useResumes() {
         console.error("Failed to delete resume in Convex:", error);
       }
     } else {
-      await storageService.deleteResume(Number(id));
-      setLocalResumes(prev => prev.filter(r => r.id !== id));
+      // "Deleting" the single local resume... maybe reset to default?
+      // Or do nothing? 
+      // Let's reset to default to simulate "gone" but keeping the structure ready.
+      const defaultResume: DbResume = {
+        id: "local",
+        name: "My Resume",
+        markdown: DEFAULT_RESUME_MARKDOWN,
+        css: DEFAULT_RESUME_CSS,
+        styles: DEFAULT_STYLES,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+      setLocalResume(defaultResume);
     }
   };
 

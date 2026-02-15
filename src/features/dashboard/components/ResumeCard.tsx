@@ -13,7 +13,7 @@ import { DEFAULT_STYLES, MM_TO_PX, PAPER_SIZES } from "@/constants";
 import { useResumeActions } from "@/features/dashboard/hooks/use-resume-actions";
 import { useResumePreview } from "@/features/dashboard/hooks/use-resume-preview";
 import { useSmartPages } from "@/hooks/useSmartPages";
-import type { DbResume } from "@/services/storage";
+import type { DbResume } from "@/types/resume";
 import { markdownService } from "@/utils/markdown";
 
 interface ResumeCardProps {
