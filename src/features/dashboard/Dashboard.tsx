@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
-import { SKELETON_COUNT } from "@/constants";
 import { useResumes } from "./hooks/use-resumes";
 import { FileActions } from "./components/FileActions";
 import { NewResume } from "./components/NewResume";
 import { ResumeCard } from "./components/ResumeCard";
+
+export const SKELETON_COUNT = 4;
 
 export function Dashboard() {
   const { resumes, isLoading, reload } = useResumes();
