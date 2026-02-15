@@ -2,6 +2,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { useEffect, useState, useMemo } from "react";
 import { api } from "../../../../convex/_generated/api";
+import type { Id } from "../../../../convex/_generated/dataModel";
 import { storageService } from "@/services/storage";
 
 import type { DbResume } from "@/types/resume";
@@ -66,7 +67,7 @@ export function useResumes() {
   };
 
   const createResume = async (data: Partial<DbResume>) => {
-    console.log("createResume called. isAuthenticated:", isAuthenticated);
+
     // We utilize isAuthenticated to ensure Convex is ready to accept mutations
     if (isAuthenticated) {
       const now = new Date();
@@ -104,26 +105,22 @@ export function useResumes() {
     return 0;
   };
 
-
   const updateResume = async (id: number | string, data: Partial<DbResume>) => {
-    console.log("updateResume called for id:", id);
     if (isAuthenticated) {
       // For Convex, we need to map the ID
       // The ID passed here is the Convex ID (string)
       const current = resumes.find(r => r.id === id);
 
       if (!current) {
-        console.error("No resume found to update with id:", id);
+
         return;
       }
 
       const updated = { ...current, ...data, updated_at: new Date() };
 
       try {
-        // We cast id to any because it's a specific Id<"resumes"> type in Convex but string here
-        // The mutation expects Id<"resumes"> which is a string at runtime
         await updateResumeMutation({
-          id: id as any,
+          id: id as Id<"resumes">,
           title: updated.name,
           markdown: updated.markdown,
           css: updated.css,
@@ -141,7 +138,7 @@ export function useResumes() {
   const deleteResume = async (id: number | string) => {
     if (isAuthenticated) {
       try {
-        await deleteResumeMutation({ id: id as any });
+        await deleteResumeMutation({ id: id as Id<"resumes"> });
       } catch (error) {
         console.error("Failed to delete resume in Convex:", error);
       }
