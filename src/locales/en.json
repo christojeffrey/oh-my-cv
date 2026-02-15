@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "my_resumes": "My Resumes",
+    "github": "GitHub"
+  },
+  "dashboard": {
+    "my_resumes": "My Resumes",
+    "new_resume": "New Resume",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "export_all": "Export All",
+    "import": "Import"
+  },
+  "editor": {
+    "save": "Save",
+    "rename": "Rename",
+    "export_pdf": "Export PDF",
+    "export_md": "Export Markdown",
+    "import_md": "Import Markdown",
+    "import_json": "Import JSON",
+    "code": "Code",
+    "customize": "Customize"
+  },
+  "toolbar": {
+    "file": "File",
+    "paper": "Paper",
+    "theme_color": "Theme Color",
+    "font_family": "Font Family",
+    "font_size": "Font Size",
+    "margins": "Margins",
+    "line_height": "Line Height",
+    "paragraph_spacing": "Paragraph Spacing",
+    "correct_case": "Correct Case"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save_success": "Saved successfully",
+    "error": "Error",
+    "confirm_delete": "Are you sure you want to delete this resume?"
+  }
+}

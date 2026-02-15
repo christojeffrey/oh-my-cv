@@ -1,0 +1,225 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Workspace and Header */
+header {
+  height: 48px;
+}
+
+.workspace {
+  height: calc(100vh - 48px);
+  height: calc(100dvh - 48px);
+}
+
+/* Icons in resumes */
+svg.iconify {
+  display: inline-block;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Resume preview styles */
+.resume-content {
+  text-align: justify;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.resume-content p,
+.resume-content li,
+.resume-content dl {
+  margin: 0;
+}
+
+.resume-content h1,
+.resume-content h2,
+.resume-content h3 {
+  font-weight: bold;
+}
+
+.resume-content h1 {
+  font-size: 2.13em;
+}
+
+.resume-content h2,
+.resume-content h3 {
+  margin-bottom: 5px;
+  font-size: 1.2em;
+}
+
+.resume-content h2 {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.resume-content ul,
+.resume-content ol {
+  padding-left: 1.5em;
+  margin: 0.2em 0;
+}
+
+.resume-content ul {
+  list-style-type: circle;
+}
+
+.resume-content ol {
+  list-style-type: decimal;
+}
+
+.resume-content dl {
+  display: flex;
+}
+
+.resume-content dl dt,
+.resume-content dl dd:not(:last-child) {
+  flex: 1;
+}
+
+.resume-content :not(span.katex-display) > span.katex {
+  font-size: 1em !important;
+}
+
+.resume-content svg.iconify {
+  vertical-align: -0.2em;
+}
+
+.resume-content img {
+  max-width: 100%;
+}
+
+.resume-content .resume-header {
+  text-align: center;
+}
+
+.resume-content .resume-header h1 {
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.resume-content .resume-header-item:not(.no-separator)::after {
+  content: " | ";
+}
+
+.resume-content [data-scope="cross-ref"][data-part="definitions"] {
+  padding-left: 1.2em;
+}
+
+.resume-content [data-scope="cross-ref"][data-part="definition"] p {
+  margin-left: 0.5em;
+}
+
+.resume-content [data-scope="cross-ref"][data-part="definition"]::marker {
+  content: attr(data-label);
+}
+
+.resume-content [data-scope="cross-ref"][data-part="reference"] {
+  font-size: 100%;
+  top: 0;
+}
+
+/* Dark mode for resume preview */
+.dark .resume-content {
+  background-color: hsl(213, 12%, 15%);
+  color: hsl(216, 12%, 84%);
+}
+
+@media print {
+  .dark .resume-content {
+    background-color: white;
+    color: black;
+  }
+}
+
+/* Resume card */
+.resume-card {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.resume-card:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Focus visible ring */
+.ring-when-focus:focus-visible {
+  @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+}
+
+/* Panel container */
+.pane-container {
+  height: 100%;
+}
+
+/* Size fit utility (matches UnoCSS size-fit) */
+.size-fit {
+  width: fit-content;
+  height: fit-content;
+}

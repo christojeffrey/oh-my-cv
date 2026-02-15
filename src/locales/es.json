@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "my_resumes": "Mis Resumes",
+    "github": "GitHub"
+  },
+  "dashboard": {
+    "my_resumes": "Mis Resumes",
+    "new_resume": "Nuevo Resume",
+    "duplicate": "Duplicar",
+    "delete": "Eliminar",
+    "export_all": "Exportar Todo",
+    "import": "Importar"
+  },
+  "editor": {
+    "save": "Guardar",
+    "rename": "Renombrar",
+    "export_pdf": "Exportar PDF",
+    "export_md": "Exportar Markdown",
+    "import_md": "Importar Markdown",
+    "import_json": "Importar JSON",
+    "code": "Código",
+    "customize": "Personalizar"
+  },
+  "toolbar": {
+    "file": "Archivo",
+    "paper": "Papel",
+    "theme_color": "Color del Tema",
+    "font_family": "Familia de Fuente",
+    "font_size": "Tamaño de Fuente",
+    "margins": "Márgenes",
+    "line_height": "Altura de Línea",
+    "paragraph_spacing": "Espaciado de Párrafo",
+    "correct_case": "Corregir Mayúsculas"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save_success": "Guardado exitosamente",
+    "error": "Error",
+    "confirm_delete": "¿Estás seguro de que quieres eliminar este resume?"
+  }
+}
