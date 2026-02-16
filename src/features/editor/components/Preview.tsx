@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { Zoom } from "@/components/shared/Zoom";
 import { PreviewControls } from "@/features/editor/components/PreviewControls";
 import { useResumePagination } from "@/hooks/use-resume-pagination";
@@ -29,6 +29,19 @@ export function Preview() {
     padding: 64,
   });
 
+  useEffect(() => {
+    const handlePrint = () => {
+      if (hostRef.current) {
+        import("@/utils/print-service").then(({ printResume }) => {
+          printResume(hostRef.current, cvData.resumeName || "Resume", cvData.styles.paper);
+        });
+      }
+    };
+
+    globalThis.addEventListener("resume:print", handlePrint);
+    return () => globalThis.removeEventListener("resume:print", handlePrint);
+  }, [cvData.resumeName, hostRef]);
+
   return (
     <div ref={zoomContainerRef} className="relative h-full bg-secondary overflow-hidden">
       <Zoom scale={scale} className="h-full">
@@ -51,3 +64,4 @@ export function Preview() {
     </div>
   );
 }
+

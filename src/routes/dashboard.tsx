@@ -4,7 +4,11 @@ import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
 import { Dashboard } from "@/features/dashboard";
 
 export const Route = createFileRoute("/dashboard")({
-  component: () => (
+  component: DashboardComponent,
+});
+
+function DashboardComponent() {
+  return (
     <ErrorBoundary>
       <SignedIn>
         <Dashboard />
@@ -13,5 +17,5 @@ export const Route = createFileRoute("/dashboard")({
         <RedirectToSignIn />
       </SignedOut>
     </ErrorBoundary>
-  ),
-});
+  );
+}

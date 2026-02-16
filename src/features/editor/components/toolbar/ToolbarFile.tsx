@@ -49,10 +49,7 @@ export function ToolbarFile() {
   const getFileName = () => cvData.resumeName.trim().replaceAll(/\s+/g, "_");
 
   const handleExportPDF = () => {
-    const title = document.title;
-    document.title = getFileName();
-    globalThis.print();
-    document.title = title;
+    globalThis.dispatchEvent(new CustomEvent("resume:print"));
   };
 
   const handleExportMarkdown = () => {

@@ -5,7 +5,11 @@ import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
 import { Header } from "@/components/shared/Header.tsx";
 
 export const Route = createRootRoute({
-  component: () => (
+  component: RootComponent,
+});
+
+function RootComponent() {
+  return (
     <div className="min-h-screen bg-background font-ui flex flex-col">
       <Header />
       <main className="workspace">
@@ -16,5 +20,5 @@ export const Route = createRootRoute({
       <Toaster />
       <TanStackRouterDevtools />
     </div>
-  ),
-});
+  );
+}
