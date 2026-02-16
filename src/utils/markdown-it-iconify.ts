@@ -45,8 +45,16 @@ export default function MarkdownItIconify(md: MarkdownIt) {
     return content;
   };
 
+  // Minimal state interface for what we need
+  interface StateInline {
+    pos: number;
+    src: string;
+    posMax: number;
+    push: (type: string, tag: string, nesting: number) => Token;
+  }
+
   // Parser rule to detect :shortcode:
-  const iconRule = (state: any, silent: boolean): boolean => {
+  const iconRule = (state: StateInline, silent: boolean): boolean => {
     const start = state.pos;
 
     // Check for starting colon
@@ -88,7 +96,7 @@ export default function MarkdownItIconify(md: MarkdownIt) {
   };
 
   md.renderer.rules.icon = iconifyRender;
-  md.inline.ruler.push("icon", iconRule);
+  md.inline.ruler.push("icon", iconRule as any); // Cast to any because the specialized StateInline doesn't perfectly match the internal one, but it's safer than 'state: any' in the function signature
 
   return md;
 }

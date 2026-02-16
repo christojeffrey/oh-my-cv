@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { cvDataAtom } from "@/features/editor/stores/cv-data";
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
-import { storageService } from "@/services/storage";
 import { toast } from "@/services/toast";
 import type { SystemData } from "@/types/resume";
 
@@ -27,7 +26,7 @@ export function ToolbarFile() {
     setNewName(cvData.resumeName);
   }, [cvData.resumeName]);
 
-  const save = async () => {
+  const handleSave = async () => {
     if (!cvData.resumeId) return;
 
     await updateResume(cvData.resumeId, {
@@ -35,34 +34,33 @@ export function ToolbarFile() {
       markdown: cvData.markdown,
       css: cvData.css,
       styles: cvData.styles,
-      // The hook handles validation and mapping to backend or local
     });
     toast.save();
   };
 
-  const rename = async () => {
+  const handleRename = async () => {
     if (!cvData.resumeId || !newName.trim()) return;
 
     setCvData((prev: SystemData) => ({ ...prev, resumeName: newName.trim() }));
-
-    await storageService.updateResume(cvData.resumeId, { name: newName.trim() }, false);
-
+    await updateResume(cvData.resumeId, { name: newName.trim() });
     setRenameDialogOpen(false);
   };
 
-  const exportPDF = () => {
+  const getFileName = () => cvData.resumeName.trim().replaceAll(/\s+/g, "_");
+
+  const handleExportPDF = () => {
     const title = document.title;
-    document.title = cvData.resumeName.trim().replaceAll(/\s+/g, "_");
+    document.title = getFileName();
     globalThis.print();
     document.title = title;
   };
 
-  const exportMd = () => {
+  const handleExportMarkdown = () => {
     const blob = new Blob([cvData.markdown], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${cvData.resumeName.trim().replaceAll(/\s+/g, "_")}.md`;
+    link.download = `${getFileName()}.md`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -79,7 +77,7 @@ export function ToolbarFile() {
   return (
     <div className="space-y-2">
       <div className="text-sm font-medium mb-2">File</div>
-      <Button onClick={save} className="w-full justify-start gap-2" variant="ghost">
+      <Button onClick={handleSave} className="w-full justify-start gap-2" variant="ghost">
         <Save className="w-4 h-4" />
         Save
         <span className="ml-auto text-xs text-muted-foreground tracking-widest">⌘ S</span>
@@ -101,22 +99,22 @@ export function ToolbarFile() {
             <Input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && rename()}
+              onKeyDown={(e) => e.key === "Enter" && handleRename()}
               placeholder="Enter new name"
             />
-            <Button onClick={rename} className="w-full">
+            <Button onClick={handleRename} className="w-full">
               Rename
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <Button onClick={exportPDF} className="w-full justify-start gap-2" variant="ghost">
+      <Button onClick={handleExportPDF} className="w-full justify-start gap-2" variant="ghost">
         <Download className="w-4 h-4" />
         Export PDF
       </Button>
 
-      <Button onClick={exportMd} className="w-full justify-start gap-2" variant="ghost">
+      <Button onClick={handleExportMarkdown} className="w-full justify-start gap-2" variant="ghost">
         <FileText className="w-4 h-4" />
         Export Markdown
       </Button>

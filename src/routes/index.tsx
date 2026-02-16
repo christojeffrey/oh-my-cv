@@ -12,7 +12,6 @@ function HomeRedirect() {
   const { resumes, isLoading, createResume } = useResumes();
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
   const navigate = useNavigate();
-  // Use a ref to prevent double creation in strict mode
   const creatingRef = useRef(false);
 
   useEffect(() => {
@@ -23,10 +22,8 @@ function HomeRedirect() {
       return;
     }
 
-    // Guest mode: ensure we have a resume to show
     if (resumes.length === 0 && !creatingRef.current) {
       creatingRef.current = true;
-      // Create a default resume for the guest
       createResume({}).then(() => {
         creatingRef.current = false;
       });
@@ -42,12 +39,7 @@ function HomeRedirect() {
     );
   }
 
-  // If authenticated, we are redirecting...
   if (isAuthenticated) return null;
 
-  // If guest, show editor. 
-  // ResumeEditor will pick up the latest resume via useEditorData once it's created/loaded.
   return <ResumeEditor />;
 }
-
-// Create a separate landing/marketing route if needed in future

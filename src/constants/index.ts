@@ -1,4 +1,4 @@
-import type { Font, ResumeStyles } from "@/types/resume";
+import type { Font, ResumeConfiguration } from "@/types/resume";
 
 // Paper sizes (height includes buffer for pagination calculations)
 export const PAPER_SIZES: Record<string, { w: number; h: number }> = {
@@ -58,19 +58,19 @@ export const GF_CJK_FIRST = ["思源黑体", "思源宋体", "站酷小薇LOGO�
 export const GF_IGNORE_FONTS = ["Icon"];
 
 // Defaults
-export const DEFAULT_STYLES: ResumeStyles = {
-  marginV: 50,
-  marginH: 45,
+export const DEFAULT_STYLES: ResumeConfiguration = {
+  marginV: 30,
+  marginH: 30,
   lineHeight: 1.3,
   paragraphSpace: 5,
-  themeColor: "#377bb5",
+  themeColor: "#000000",
   fontCJK: {
     name: "华康宋体",
     fontFamily: "HKST",
   },
   fontEN: {
-    name: "Minion Pro",
-    fontFamily: "Minion Pro, serif",
+    name: "Times New Roman",
+    fontFamily: '"Times New Roman", Times, serif',
   },
   fontSize: 15,
   paper: "A4",

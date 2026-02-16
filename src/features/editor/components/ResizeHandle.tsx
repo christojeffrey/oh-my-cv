@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 interface ResizeHandleProps {
-  direction: "horizontal" | "vertical";
+  readonly direction: "horizontal" | "vertical";
 }
 
 export function ResizeHandle({ direction }: ResizeHandleProps) {
@@ -23,14 +23,12 @@ export function ResizeHandle({ direction }: ResizeHandleProps) {
 
       const handleMouseMove = (e: MouseEvent) => {
         if (direction === "horizontal") {
-          const deltaX = e.clientX - startX;
-          const newWidth = startWidth + deltaX;
+          const newWidth = startWidth + (e.clientX - startX);
           if (newWidth > 200 && newWidth < window.innerWidth - 200) {
             container.style.width = `${newWidth}px`;
           }
-        } else if (direction === "vertical") {
-          const deltaY = e.clientY - startY;
-          const newHeight = startHeight + deltaY;
+        } else {
+          const newHeight = startHeight + (e.clientY - startY);
           if (newHeight > 100 && newHeight < window.innerHeight - 100) {
             container.style.height = `${newHeight}px`;
           }
@@ -59,14 +57,13 @@ export function ResizeHandle({ direction }: ResizeHandleProps) {
     };
   }, [direction]);
 
+  const horizontalClass = "absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:bg-primary/20 transition-colors";
+  const verticalClass = "absolute top-0 bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:bg-primary/20 transition-colors";
+
   return (
     <div
       ref={containerRef}
-      className={`${
-        direction === "horizontal"
-          ? "absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize hover:bg-primary/20 transition-colors"
-          : "absolute top-0 bottom-0 left-0 right-0 h-1 cursor-ns-resize hover:bg-primary/20 transition-colors"
-      } ${isDragging ? "bg-primary" : "bg-border"}`}
+      className={`${direction === "horizontal" ? horizontalClass : verticalClass} ${isDragging ? "bg-primary" : "bg-border"}`}
       title={direction === "horizontal" ? "Drag to resize width" : "Drag to resize height"}
     />
   );

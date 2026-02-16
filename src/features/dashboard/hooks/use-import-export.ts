@@ -1,11 +1,18 @@
-import { storageService } from "@/services/storage";
+import { useAtom } from "jotai";
+import { resumeAtom } from "@/store/resume-atom";
 
-/**
- * Hook to handle import/export operations
- */
 export function useImportExport(onUpdate?: () => void) {
+  const [resume, setResume] = useAtom(resumeAtom);
+
   const exportToJSON = () => {
-    storageService.exportToJSON();
+    const dataStr = JSON.stringify(resume, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `resume-${resume.name.replace(/\s+/g, "_")}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   const importFromJSON = async () => {
@@ -20,9 +27,24 @@ export function useImportExport(onUpdate?: () => void) {
       const reader = new FileReader();
       reader.onload = async (event) => {
         const content = event.target?.result as string;
-        const success = await storageService.importFromJson(content);
-        if (success) {
-          onUpdate?.();
+        try {
+          const json = JSON.parse(content);
+
+          if (json.version && json.data) {
+            const firstKey = Object.keys(json.data)[0];
+            if (firstKey && json.data[firstKey]) {
+              setResume({ ...json.data[firstKey], id: "local", updated_at: new Date() });
+              onUpdate?.();
+              return;
+            }
+          }
+
+          if (json.name && (json.markdown || json.css)) {
+            setResume({ ...json, id: "local", updated_at: new Date() });
+            onUpdate?.();
+          }
+        } catch (error) {
+          console.error("Failed to import resume", error);
         }
       };
       reader.readAsText(file);

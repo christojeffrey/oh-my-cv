@@ -82,43 +82,41 @@ export function EditorSidebar({ isOpen }: Readonly<EditorSidebarProps>) {
 
   return (
     <div className={`flex h-full transition-all duration-300 ${isOpen ? "w-72" : "w-0"}`}>
-      {/* Icon sidebar (always visible when sidebar is open) */}
       {isOpen && (
-        <div className="w-10 border-r bg-muted flex flex-col items-center py-4 gap-2">
-          {TOOLS.map((tool) => (
-            <Button
-              key={tool.id}
-              variant="ghost"
-              size="icon"
-              onClick={() => scrollToSection(tool.id)}
-              className={`relative ${activeSection === tool.id ? "bg-accent" : ""}`}
-              title={tool.label}
-            >
-              <tool.icon className="w-5 h-5" />
-              {activeSection === tool.id && (
-                <div className="absolute right-0 w-0.5 h-6 bg-primary" />
-              )}
-            </Button>
-          ))}
-        </div>
-      )}
+        <>
+          <div className="w-10 border-r bg-muted flex flex-col items-center py-4 gap-2">
+            {TOOLS.map((tool) => (
+              <Button
+                key={tool.id}
+                variant="ghost"
+                size="icon"
+                onClick={() => scrollToSection(tool.id)}
+                className={`relative ${activeSection === tool.id ? "bg-accent" : ""}`}
+                title={tool.label}
+              >
+                <tool.icon className="w-5 h-5" />
+                {activeSection === tool.id && (
+                  <div className="absolute right-0 w-0.5 h-6 bg-primary" />
+                )}
+              </Button>
+            ))}
+          </div>
 
-      {/* Main toolbar content */}
-      {isOpen && (
-        <div ref={toolbarRef} className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="p-4 space-y-4">
-              {TOOLS.map((tool, index) => (
-                <div key={tool.id}>
-                  <div id={`toolbar-section-${tool.id}`} className="mb-4">
-                    <tool.component />
+          <div ref={toolbarRef} className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full">
+              <div className="p-4 space-y-4">
+                {TOOLS.map((tool, index) => (
+                  <div key={tool.id}>
+                    <div id={`toolbar-section-${tool.id}`} className="mb-4">
+                      <tool.component />
+                    </div>
+                    {index < TOOLS.length - 1 && <Separator />}
                   </div>
-                  {index < TOOLS.length - 1 && <Separator />}
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </>
       )}
     </div>
   );

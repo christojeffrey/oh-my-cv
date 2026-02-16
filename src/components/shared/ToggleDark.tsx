@@ -4,19 +4,18 @@ import { useEffect } from "react";
 import { darkModeAtom } from "@/atoms";
 import { Button } from "@/components/ui/button";
 
+const MODES = [
+  { value: "light", icon: Sun },
+  { value: "dark", icon: Moon },
+  { value: "system", icon: Monitor },
+] as const;
+
 export function ToggleDark() {
   const [darkMode, setDarkMode] = useAtom(darkModeAtom) as [string, (value: string) => void];
 
-  const modes = [
-    { value: "light", icon: Sun },
-    { value: "dark", icon: Moon },
-    { value: "system", icon: Monitor },
-  ];
+  const currentIndex = MODES.findIndex((m) => m.value === darkMode);
+  const nextMode = MODES[(currentIndex + 1) % MODES.length];
 
-  const currentIndex = modes.findIndex((m) => m.value === darkMode);
-  const nextMode = modes[(currentIndex + 1) % modes.length];
-
-  // Effect to apply theme
   useEffect(() => {
     const root = document.documentElement;
     const applyTheme = () => {
@@ -25,7 +24,6 @@ export function ToggleDark() {
       } else if (darkMode === "light") {
         root.classList.remove("dark");
       } else {
-        // System
         const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         root.classList.toggle("dark", systemDark);
       }
@@ -33,7 +31,6 @@ export function ToggleDark() {
 
     applyTheme();
 
-    // Listen for system changes if in system mode
     if (darkMode === "system") {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       const handler = () => applyTheme();
@@ -42,19 +39,13 @@ export function ToggleDark() {
     }
   }, [darkMode]);
 
-  const switchMode = () => {
-    setDarkMode(nextMode.value);
-  };
-
-  // The icon should represent the current state or the action?
-  // User prefers to see the CURRENT mode icon.
-  const CurrentIcon = modes[currentIndex].icon;
+  const CurrentIcon = MODES[currentIndex].icon;
 
   return (
     <Button
       variant="ghost"
       size="sm"
-      onClick={switchMode}
+      onClick={() => setDarkMode(nextMode.value)}
       className="w-9 h-9 p-0"
       title={`Current mode: ${darkMode}. Click to switch to ${nextMode.value}`}
     >

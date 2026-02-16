@@ -8,7 +8,7 @@ export interface Font {
     fontFamily?: string;
 }
 
-export interface ResumeStyles {
+export interface ResumeConfiguration {
     marginV: number;
     marginH: number;
     lineHeight: number;
@@ -25,7 +25,7 @@ export interface DbResume {
     name: string;
     markdown: string;
     css: string;
-    styles: ResumeStyles;
+    styles: ResumeConfiguration;
     created_at: Date;
     updated_at: Date;
 }
@@ -35,7 +35,7 @@ export interface SystemData {
     css: string;
     resumeId: number | string | null;
     resumeName: string;
-    styles: ResumeStyles;
+    styles: ResumeConfiguration;
     loaded: boolean;
 }
 

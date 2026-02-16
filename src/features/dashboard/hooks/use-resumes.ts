@@ -1,9 +1,10 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQuery, useConvexAuth } from "convex/react";
-import { useEffect, useState, useMemo } from "react";
+import { useAtom } from "jotai";
+import { useMemo } from "react";
 import { api } from "../../../../convex/_generated/api";
-import { storageService } from "@/services/storage";
-
+import type { Id } from "../../../../convex/_generated/dataModel";
+import { resumeAtom } from "@/store/resume-atom";
 import type { DbResume } from "@/types/resume";
 import { DEFAULT_STYLES } from "@/constants";
 import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CSS } from "@/constants/templates/default";
@@ -11,31 +12,12 @@ import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CSS } from "@/constants/templat
 export function useResumes() {
   const { isLoaded } = useAuth();
   const { isAuthenticated, isLoading: isConvexAuthLoading } = useConvexAuth();
+  const [localResume, setLocalResume] = useAtom(resumeAtom);
 
-  // Local storage state
-  const [localResumes, setLocalResumes] = useState<DbResume[]>([]);
-  const [isLocalLoading, setIsLocalLoading] = useState(true);
-
-  // Convex state
   const convexResumes = useQuery(api.resumes.getResumes, isAuthenticated ? {} : "skip");
   const createResumeMutation = useMutation(api.resumes.createResume);
   const updateResumeMutation = useMutation(api.resumes.updateResume);
   const deleteResumeMutation = useMutation(api.resumes.deleteResume);
-
-  // Load local storage
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (!isAuthenticated) {
-      storageService.getResumes().then((resumes) => {
-        setLocalResumes(resumes);
-        setIsLocalLoading(false);
-      });
-    } else {
-      setIsLocalLoading(false);
-    }
-  }, [isAuthenticated, isLoaded]);
-
-  // Unified Interface
 
   const resumes = useMemo(() => {
     if (isAuthenticated && convexResumes) {
@@ -49,25 +31,17 @@ export function useResumes() {
         updated_at: new Date(r.lastUpdated),
       }));
     }
-    return isAuthenticated ? [] : localResumes;
-  }, [isAuthenticated, convexResumes, localResumes]);
+    return isAuthenticated ? [] : [localResume];
+  }, [isAuthenticated, convexResumes, localResume]);
 
-  // Simplify loading state logic
   const isConvexLoading = isAuthenticated && convexResumes === undefined;
-  const isLoading = !isLoaded || isConvexAuthLoading || isConvexLoading || (!isAuthenticated && isLocalLoading);
+  const isLoading = !isLoaded || isConvexAuthLoading || isConvexLoading;
 
   const reload = async () => {
-    if (!isAuthenticated) {
-      setIsLocalLoading(true);
-      const data = await storageService.getResumes();
-      setLocalResumes(data);
-      setIsLocalLoading(false);
-    }
+    // No-op for reactive queries
   };
 
   const createResume = async (data: Partial<DbResume>) => {
-    console.log("createResume called. isAuthenticated:", isAuthenticated);
-    // We utilize isAuthenticated to ensure Convex is ready to accept mutations
     if (isAuthenticated) {
       const now = new Date();
       const resumeToSave = {
@@ -95,35 +69,30 @@ export function useResumes() {
       }
     }
 
-    const newResume = await storageService.createResume(data);
-    if (newResume) {
-      setLocalResumes(prev => [newResume, ...prev]);
-      return newResume.id;
-    }
-
-    return 0;
+    const now = new Date();
+    const newResume: DbResume = {
+      id: "local",
+      name: data.name || "Untitled Resume",
+      markdown: data.markdown || DEFAULT_RESUME_MARKDOWN,
+      css: data.css || DEFAULT_RESUME_CSS,
+      styles: { ...DEFAULT_STYLES, ...data.styles },
+      created_at: now,
+      updated_at: now,
+    };
+    setLocalResume(newResume);
+    return newResume.id;
   };
 
-
   const updateResume = async (id: number | string, data: Partial<DbResume>) => {
-    console.log("updateResume called for id:", id);
     if (isAuthenticated) {
-      // For Convex, we need to map the ID
-      // The ID passed here is the Convex ID (string)
       const current = resumes.find(r => r.id === id);
-
-      if (!current) {
-        console.error("No resume found to update with id:", id);
-        return;
-      }
+      if (!current) return;
 
       const updated = { ...current, ...data, updated_at: new Date() };
 
       try {
-        // We cast id to any because it's a specific Id<"resumes"> type in Convex but string here
-        // The mutation expects Id<"resumes"> which is a string at runtime
         await updateResumeMutation({
-          id: id as any,
+          id: id as Id<"resumes">,
           title: updated.name,
           markdown: updated.markdown,
           css: updated.css,
@@ -133,21 +102,34 @@ export function useResumes() {
         console.error("Failed to update resume in Convex:", error);
       }
     } else {
-      await storageService.updateResume(Number(id), data);
-      setLocalResumes(prev => prev.map(r => r.id === id ? { ...r, ...data } : r));
+      if (id === localResume.id) {
+        setLocalResume(prev => ({
+          ...prev,
+          ...data,
+          updated_at: new Date(),
+        }));
+      }
     }
   };
 
   const deleteResume = async (id: number | string) => {
     if (isAuthenticated) {
       try {
-        await deleteResumeMutation({ id: id as any });
+        await deleteResumeMutation({ id: id as Id<"resumes"> });
       } catch (error) {
         console.error("Failed to delete resume in Convex:", error);
       }
     } else {
-      await storageService.deleteResume(Number(id));
-      setLocalResumes(prev => prev.filter(r => r.id !== id));
+      const defaultResume: DbResume = {
+        id: "local",
+        name: "My Resume",
+        markdown: DEFAULT_RESUME_MARKDOWN,
+        css: DEFAULT_RESUME_CSS,
+        styles: DEFAULT_STYLES,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+      setLocalResume(defaultResume);
     }
   };
 
