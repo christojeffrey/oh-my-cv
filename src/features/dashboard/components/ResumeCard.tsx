@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Copy, MoreHorizontal, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DEFAULT_STYLES, MM_TO_PX, PAPER_SIZES } from "@/constants";
+import { useShadowResume } from "@/features/shared/hooks/use-shadow-resume";
 import { useResumeActions } from "@/features/dashboard/hooks/use-resume-actions";
 import { useResumePreview } from "@/features/dashboard/hooks/use-resume-preview";
 import { useSmartPages } from "@/hooks/useSmartPages";
@@ -36,12 +37,20 @@ export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
   const widthPx = size.w * MM_TO_PX;
   const heightPx = size.h * MM_TO_PX;
 
+  // Shadow DOM - CSS isolation (each card has isolated styles)
+  // Add CSS to hide pages after the first one for card preview
+  const cardCss = `
+    [data-part="page"]:not(:first-child) {
+      display: none;
+    }
+  `;
+  const { hostRef, containerRef: shadowContainerRef } = useShadowResume(styles, resume.css || "", cardCss);
+
   // Render resume markdown to HTML (includes front matter header parsing)
   const html = markdownService.renderResume(resume.markdown || "");
 
   // Use smart pages for pagination - show first page only
-  // Note: useSmartPages expects width in mm, height in px (matching vue-smart-pages behavior)
-  const { containerRef } = useSmartPages(
+  useSmartPages(
     html,
     { width: size.w, height: heightPx },
     {
@@ -52,87 +61,9 @@ export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
     },
     {
       throttle: 200,
-    }
+    },
+    shadowContainerRef  // Pass shadow container ref
   );
-
-  useEffect(() => {
-    // Inject custom CSS
-    const css = `
-        .resume-content {
-          margin: ${styles.marginV}px ${styles.marginH}px;
-          line-height: ${styles.lineHeight};
-          font-size: ${styles.fontSize}px;
-        }
-        .resume-content h2,
-        .resume-content h3 {
-          margin-bottom: ${styles.paragraphSpace}px;
-        }
-        .resume-content .resume-header h1 {
-          color: ${styles.themeColor};
-          margin-bottom: 20px;
-          text-align: center;
-        }
-        .resume-content .resume-header {
-          text-align: center;
-          margin-bottom: 30px;
-        }
-        .resume-content .resume-header-item:not(.no-separator)::after {
-          content: " | ";
-          margin: 0 8px;
-        }
-        .resume-content h2 {
-          border-bottom: 1px solid ${styles.themeColor};
-          padding-bottom: 5px;
-          margin-bottom: 10px;
-        }
-        .resume-content h3 {
-          margin-top: 20px;
-        }
-        .resume-content ul {
-          list-style-type: circle;
-          padding-left: 20px;
-        }
-        .resume-content ol {
-          list-style-type: decimal;
-          padding-left: 20px;
-        }
-        .resume-content li {
-          margin-bottom: 5px;
-        }
-        .resume-content p {
-          margin-bottom: 10px;
-        }
-        .resume-content strong {
-          font-weight: bold;
-        }
-        .resume-content em {
-          font-style: italic;
-        }
-      `;
-
-    const styleId = `toolbar-${resume.id}`;
-    const styleElement = document.getElementById(styleId);
-    if (styleElement) {
-      styleElement.textContent = css;
-    } else {
-      const newStyleElement = document.createElement("style");
-      newStyleElement.id = styleId;
-      newStyleElement.textContent = css;
-      document.head.appendChild(newStyleElement);
-    }
-
-    // Inject custom CSS from resume
-    const customCssStyleId = `custom-css-${resume.id}`;
-    const customCssStyleElement = document.getElementById(customCssStyleId);
-    if (customCssStyleElement) {
-      customCssStyleElement.textContent = resume.css;
-    } else {
-      const newCustomCssElement = document.createElement("style");
-      newCustomCssElement.id = customCssStyleId;
-      newCustomCssElement.textContent = resume.css;
-      document.head.appendChild(newCustomCssElement);
-    }
-  }, [resume, styles]);
 
   const handleEdit = () => {
     navigate({ to: `/editor/${resume.id}` });
@@ -181,20 +112,12 @@ export function ResumeCard({ resume, onUpdate }: Readonly<ResumeCardProps>) {
               transformOrigin: "center center",
             }}
           >
-            {/* Hide all pages except the first one */}
-            <style>{`
-              #resume-preview-${resume.id} [data-part="page"]:not(:first-child) {
-                display: none;
-              }
-            `}</style>
+            {/* Shadow host - styles are injected into shadow root */}
             <div
-              id={`resume-preview-${resume.id}`}
-              ref={containerRef}
-              className="resume-content"
+              ref={hostRef}
+              className="resume-host"
               style={{
                 fontFamily: styles.fontEN?.fontFamily || "Arial, sans-serif",
-                width: `${widthPx}px`,
-                height: `${heightPx}px`,
               }}
             />
           </div>

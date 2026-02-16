@@ -3,12 +3,11 @@ import { useRef } from "react";
 import { Zoom } from "@/components/shared/Zoom";
 import { MM_TO_PX, PAPER_SIZES } from "@/constants";
 import { PreviewControls } from "@/features/editor/components/PreviewControls";
-import { useInjectPreviewStyles } from "@/features/editor/hooks/use-inject-preview-styles";
+import { useShadowResume } from "@/features/shared/hooks/use-shadow-resume";
 import { usePreviewZoom } from "@/features/editor/hooks/use-preview-zoom";
 import { cvDataAtom } from "@/features/editor/stores/cv-data";
 import { useSmartPages } from "@/hooks/useSmartPages";
 import { sanitizeHtml } from "@/utils/dompurify";
-import { injectCss } from "@/utils/dynamic-css";
 import { markdownService } from "@/utils/markdown";
 
 export function Preview() {
@@ -19,8 +18,8 @@ export function Preview() {
   const widthPx = size.w * MM_TO_PX;
   const heightPx = size.h * MM_TO_PX;
 
-  // Hooks
-  useInjectPreviewStyles(cvData.styles);
+  // Shadow DOM - CSS isolation
+  const { hostRef, containerRef: shadowContainerRef } = useShadowResume(cvData.styles, cvData.css);
 
   const { scale, zoomIn, zoomOut, fitWidth, fitHeight } = usePreviewZoom<HTMLDivElement>(
     containerRef as React.RefObject<HTMLDivElement>,
@@ -36,7 +35,7 @@ export function Preview() {
   const html = sanitizeHtml(dirtyHtml);
 
   // Use smart pages for pagination
-  const { containerRef: pagesContainerRef } = useSmartPages(
+  useSmartPages(
     html,
     { width: size.w, height: heightPx },
     {
@@ -47,22 +46,19 @@ export function Preview() {
     },
     {
       throttle: 200,
-      beforeRender: async () => {
-        // Inject CSS
-        injectCss("resume-editor", cvData.css);
-      },
-    }
+    },
+    shadowContainerRef  // Pass shadow container ref
   );
 
   return (
     <div ref={containerRef} className="relative h-full bg-secondary overflow-hidden">
       <Zoom scale={scale} className="h-full">
         <div className="h-full overflow-auto flex justify-center p-8">
+          {/* Shadow host - styles are injected into shadow root */}
           <div
-            ref={pagesContainerRef}
-            className="resume-content"
+            ref={hostRef}
+            className="resume-host"
             style={{
-              width: `${widthPx}px`,
               fontFamily: cvData.styles.fontEN?.fontFamily || "Arial, sans-serif",
             }}
           />

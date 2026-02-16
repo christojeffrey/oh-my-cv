@@ -21,10 +21,10 @@ export interface SmartPagesOptions {
 const NEW_PAGE_CLASS = "md-it-newpage";
 
 const _elementHeight = (element: Element) => {
-  const style = window.getComputedStyle(element);
+  const style = globalThis.getComputedStyle(element);
 
-  const marginTop = parseInt(style.marginTop) || 0;
-  const marginBottom = parseInt(style.marginBottom) || 0;
+  const marginTop = Number.parseInt(style.marginTop) || 0;
+  const marginBottom = Number.parseInt(style.marginBottom) || 0;
 
   return element.clientHeight + marginTop + marginBottom;
 };
@@ -84,9 +84,12 @@ export const useSmartPages = (
   html: string,
   size: PageSize,
   margins: PageMargins = {},
-  options: SmartPagesOptions = {}
+  options: SmartPagesOptions = {},
+  externalRef?: React.RefObject<HTMLDivElement | null>
 ): UseSmartPagesResult => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const internalRef = useRef<HTMLDivElement | null>(null);
+  // Use external ref if provided, otherwise use internal ref
+  const containerRef = (externalRef as React.RefObject<HTMLDivElement | null>) || internalRef;
 
   const render = useCallback(async () => {
     const element = containerRef.current;
@@ -106,8 +109,20 @@ export const useSmartPages = (
     element.style.width = `${width}mm`;
     element.style.padding = `${top}px ${right}px ${bottom}px ${left}px`;
 
-    // Attach to body temporarily to get correct computed styles
-    document.body.appendChild(copy);
+    // Attach temporarily to get correct computed styles
+    // Check if the current element is inside a Shadow Root to ensure styles are applied
+    const rootNode = element.getRootNode();
+    const attachTarget = (rootNode instanceof ShadowRoot ? rootNode : document.body);
+
+    // Hide the copy to prevent flickering, but ensure it's rendered for calculations
+    copy.style.visibility = "hidden";
+    copy.style.position = "absolute";
+    copy.style.left = "-9999px";
+    copy.style.top = "0";
+    copy.style.pointerEvents = "none";
+    copy.style.boxSizing = "border-box";
+
+    attachTarget.appendChild(copy);
     copy.style.width = `${width}mm`;
     copy.style.padding = `${top}px ${right}px ${bottom}px ${left}px`;
 

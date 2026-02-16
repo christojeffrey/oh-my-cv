@@ -37,7 +37,7 @@ export function CodeEditor() {
               language={lang}
               value={cvData[lang] || ""}
               onChange={handleEditorChange}
-              theme="vs-dark"
+              theme="vs-light"
               options={EDITOR_OPTIONS}
             />
           </TabsContent>

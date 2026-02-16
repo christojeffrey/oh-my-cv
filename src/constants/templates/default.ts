@@ -107,106 +107,93 @@ B.Eng. in Salad Engineering
 
 export const DEFAULT_RESUME_CSS = `/* Backbone CSS for Resume Template 1 */
 
-@layer resume-custom {
-  .resume-content {
+/* Paragraphs and lists */
+p, li, dl {
+  margin: 0;
+}
 
+/* Headings */
+h1, h2, h3 {
+  font-weight: bold;
+}
 
-    p, li, dl {
-      margin: 0;
-    }
+h1 {
+  font-size: 1.5em;
+}
 
-    /* Headings */
-    h1, h2, h3 {
-      font-weight: bold;
-    }
+h2, h3 {
+  margin-bottom: 5px;
+  font-size: 1.2em;
+}
 
-    h1 {
-      font-size: 1.5em;
-    }
+/* Lists */
+ul, ol {
+  padding-left: 1.5em;
+  margin: 0.2em 0;
+}
 
-    h2, h3 {
-      margin-bottom: 5px;
-      font-size: 1.2em;
-    }
+ul {
+  list-style-type: circle;
+}
 
-    h2 {
-      border-bottom-style: solid;
-      border-bottom-width: 1px;
-    }
+ol {
+  list-style-type: decimal;
+}
 
-    /* Lists */
-    ul, ol {
-      padding-left: 1.5em;
-      margin: 0.2em 0;
-    }
+/* Definition Lists */
+dl {
+  display: flex;
+}
 
-    ul {
-      list-style-type: circle;
-    }
+dl dt,
+dl dd:not(:last-child) {
+  flex: 1;
+}
 
-    ol {
-      list-style-type: decimal;
-    }
+/* KaTeX */
+:not(span.katex-display) > span.katex {
+  font-size: 1em !important;
+}
 
-    /* Definition Lists */
-    dl {
-      display: flex;
-    }
+/* SVG & Images */
+svg.iconify {
+  vertical-align: -0.2em;
+}
 
-    dl dt,
-    dl dd:not(:last-child) {
-      flex: 1;
-    }
+img {
+  max-width: 100%;
+}
 
-    /* Tex */
-    :not(span.katex-display) > span.katex {
-      font-size: 1em !important;
-    }
+/* Header */
+.resume-header {
+  text-align: center;
+}
 
-    /* SVG & Images */
-    svg.iconify {
-      vertical-align: -0.2em;
-    }
+.resume-header h1 {
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 8px;
+}
 
-    img {
-      max-width: 100%;
-    }
+.resume-header-item:not(.no-separator)::after {
+  content: " | ";
+}
 
-    /* Header */
-    .resume-header {
-      text-align: center;
-    }
+/* Citations */
+[data-scope="cross-ref"][data-part="definitions"] {
+  padding-left: 1.2em;
+}
 
-    .resume-header h1 {
-      text-align: center;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
+[data-scope="cross-ref"][data-part="definition"] p {
+  margin-left: 0.5em;
+}
 
-    .resume-header-item:not(.no-separator)::after {
-      content: " | ";
-    }
-    
-    /* Citations */
-    [data-scope="cross-ref"][data-part="definitions"] {
-      padding-left: 1.2em;
-    }
+[data-scope="cross-ref"][data-part="definition"]::marker {
+  content: attr(data-label);
+}
 
-    [data-scope="cross-ref"][data-part="definition"] {
-      p {
-        margin-left: 0.5em;
-      }
-      &::marker {
-        content: attr(data-label);
-      }
-    }
-
-    [data-scope="cross-ref"][data-part="reference"] {
-      font-size: 100%;
-      top: 0;
-    }
-  }
-
-
+[data-scope="cross-ref"][data-part="reference"] {
+  font-size: 100%;
+  top: 0;
 }
 `;
