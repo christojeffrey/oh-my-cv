@@ -1,7 +1,7 @@
 export default {
     providers: [
         {
-            domain: "https://sacred-panther-51.clerk.accounts.dev",
+            domain: "https://clerk.cv.cjeff.app",
             applicationID: "convex",
         },
     ],
