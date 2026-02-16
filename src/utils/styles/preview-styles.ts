@@ -1,24 +1,26 @@
-import type { ResumeStyles } from "@/types/resume";
+import type { ResumeConfiguration } from "@/types/resume";
 
-export function generatePreviewStyles(styles: ResumeStyles) {
+export function generateConfigurationStyles(resumeConfiguration: ResumeConfiguration) {
   return `
-line-height: ${styles.lineHeight};
-font-size: ${styles.fontSize}px;
+p, h1, h2, h3, li, dt, dd {
+  line-height: ${resumeConfiguration.lineHeight};
+  font-size: ${resumeConfiguration.fontSize}px;
+}
 
 p, li {
-  margin-bottom: ${styles.paragraphSpace}px;
+  margin-bottom: ${resumeConfiguration.paragraphSpace}px;
 }
 
 h2, h3 {
-  margin-bottom: ${styles.paragraphSpace}px;
+  margin-bottom: ${resumeConfiguration.paragraphSpace}px;
 }
 
 .resume-header h1 {
-  color: ${styles.themeColor};
+  color: ${resumeConfiguration.themeColor};
 }
 
 h2 {
-  border-bottom: 1px solid ${styles.themeColor};
+  border-bottom: 1px solid ${resumeConfiguration.themeColor};
 }
 `;
 }

@@ -17,10 +17,16 @@ export function useResumePreview(resume: DbResume) {
       }
 
       // Load fonts
-      await googleFontsService.resolve(styles.fontEN);
-      await googleFontsService.resolve(styles.fontCJK);
-
-      setIsLoaded(true);
+      try {
+        await Promise.all([
+          googleFontsService.resolve(styles.fontEN).catch(e => console.warn("Failed to load EN font", e)),
+          googleFontsService.resolve(styles.fontCJK).catch(e => console.warn("Failed to load CJK font", e))
+        ]);
+      } catch (error) {
+        console.error("Font loading error:", error);
+      } finally {
+        setIsLoaded(true);
+      }
     };
 
     setupPreview();

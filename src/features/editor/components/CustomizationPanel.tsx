@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/select";
 import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 import { googleFontsService } from "@/services/fonts";
-import type { ResumeStyles } from "@/types/resume";
+import type { ResumeConfiguration } from "@/types/resume";
 import { SliderField } from "./settings/SliderField";
 
 export function CustomizationPanel() {
   const { styles, updateStyles } = useResumeStyles();
 
-  const updateStyle = async <K extends keyof ResumeStyles>(key: K, value: ResumeStyles[K]) => {
+  const updateStyle = async <K extends keyof ResumeConfiguration>(key: K, value: ResumeConfiguration[K]) => {
     updateStyles((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -42,8 +42,8 @@ export function CustomizationPanel() {
 }
 
 interface SettingsProps {
-  styles: ResumeStyles;
-  onUpdate: <K extends keyof ResumeStyles>(key: K, value: ResumeStyles[K]) => void;
+  styles: ResumeConfiguration;
+  onUpdate: <K extends keyof ResumeConfiguration>(key: K, value: ResumeConfiguration[K]) => void;
 }
 
 function LayoutSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
@@ -136,7 +136,7 @@ function ColorSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
 }
 
 interface FontSettingsProps {
-  styles: ResumeStyles;
+  styles: ResumeConfiguration;
   onUpdateFont: (type: "fontCJK" | "fontEN", field: string, value: string) => void;
 }
 

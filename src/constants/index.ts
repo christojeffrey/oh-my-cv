@@ -1,4 +1,4 @@
-import type { Font, ResumeStyles } from "@/types/resume";
+import type { Font, ResumeConfiguration } from "@/types/resume";
 
 // Paper sizes (height includes buffer for pagination calculations)
 export const PAPER_SIZES: Record<string, { w: number; h: number }> = {
@@ -58,7 +58,7 @@ export const GF_CJK_FIRST = ["思源黑体", "思源宋体", "站酷小薇LOGO�
 export const GF_IGNORE_FONTS = ["Icon"];
 
 // Defaults
-export const DEFAULT_STYLES: ResumeStyles = {
+export const DEFAULT_STYLES: ResumeConfiguration = {
   marginV: 30,
   marginH: 30,
   lineHeight: 1.3,
