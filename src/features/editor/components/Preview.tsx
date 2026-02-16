@@ -23,7 +23,7 @@ export function Preview() {
     html
   );
 
-  const { scale, ...controls } = usePreviewZoom(zoomContainerRef, {
+  const { scale, ...controls } = usePreviewZoom(zoomContainerRef as React.RefObject<HTMLElement>, {
     contentWidth: dims.widthPx,
     contentHeight: dims.heightPx,
     padding: 64,

@@ -22,12 +22,10 @@ export function Dashboard() {
 
           {isLoading
             ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-              <div key={i} className="w-56 h-80">
-                <Card className="w-[210px] h-[299px] bg-secondary animate-pulse mx-auto" />
-              </div>
+              <Card key={i} className="w-[210px] h-[299px] bg-secondary animate-pulse" />
             ))
             : resumes.map((resume) => (
-              <ResumeCard key={resume.id} resume={resume} onUpdate={reload} />
+              <ResumeCard key={resume.id} resume={resume} />
             ))}
         </div>
       </div>

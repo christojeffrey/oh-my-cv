@@ -1,15 +1,10 @@
 import { useAtom } from "jotai";
 import { resumeAtom } from "@/store/resume-atom";
 
-
-/**
- * Hook to handle import/export operations
- */
 export function useImportExport(onUpdate?: () => void) {
   const [resume, setResume] = useAtom(resumeAtom);
 
   const exportToJSON = () => {
-    // Export the single local resume
     const dataStr = JSON.stringify(resume, null, 2);
     const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
@@ -35,20 +30,15 @@ export function useImportExport(onUpdate?: () => void) {
         try {
           const json = JSON.parse(content);
 
-          // Check if it's the old bulk format
           if (json.version && json.data) {
-            // Take the first resume found
             const firstKey = Object.keys(json.data)[0];
             if (firstKey && json.data[firstKey]) {
-              const imported = json.data[firstKey];
-              // Ensure it uses the 'local' ID
-              setResume({ ...imported, id: "local", updated_at: new Date() });
+              setResume({ ...json.data[firstKey], id: "local", updated_at: new Date() });
               onUpdate?.();
               return;
             }
           }
 
-          // Assume it's a single resume
           if (json.name && (json.markdown || json.css)) {
             setResume({ ...json, id: "local", updated_at: new Date() });
             onUpdate?.();

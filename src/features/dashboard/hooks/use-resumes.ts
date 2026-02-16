@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { resumeAtom } from "@/store/resume-atom";
-
 import type { DbResume } from "@/types/resume";
 import { DEFAULT_STYLES } from "@/constants";
 import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CSS } from "@/constants/templates/default";
@@ -13,17 +12,13 @@ import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CSS } from "@/constants/templat
 export function useResumes() {
   const { isLoaded } = useAuth();
   const { isAuthenticated, isLoading: isConvexAuthLoading } = useConvexAuth();
-
-  // Local storage state
   const [localResume, setLocalResume] = useAtom(resumeAtom);
 
-  // Convex state
   const convexResumes = useQuery(api.resumes.getResumes, isAuthenticated ? {} : "skip");
   const createResumeMutation = useMutation(api.resumes.createResume);
   const updateResumeMutation = useMutation(api.resumes.updateResume);
   const deleteResumeMutation = useMutation(api.resumes.deleteResume);
 
-  // Unified Interface
   const resumes = useMemo(() => {
     if (isAuthenticated && convexResumes) {
       return convexResumes.map(r => ({
@@ -36,27 +31,17 @@ export function useResumes() {
         updated_at: new Date(r.lastUpdated),
       }));
     }
-    // Return array with single local resume if not authenticated
     return isAuthenticated ? [] : [localResume];
   }, [isAuthenticated, convexResumes, localResume]);
 
-  // Simplify loading state logic
   const isConvexLoading = isAuthenticated && convexResumes === undefined;
-  // Local storage via atomWithStorage is synchronous after initial load (which is handled by Jotai), 
-  // but to be safe we can consider it loaded if the atom has a value. 
-  // For atomWithStorage, it might need a Suspense boundary or we assume it's ready. 
-  // Given the simplicity, we'll assume local is always "loaded" for now or check if localResume is present.
   const isLoading = !isLoaded || isConvexAuthLoading || isConvexLoading;
 
   const reload = async () => {
-    // No-op for atom-based local storage as it reactive
-    if (isAuthenticated && convexResumes === undefined) {
-      // Trigger convex refetch if needed, but useQuery handles it
-    }
+    // No-op for reactive queries
   };
 
   const createResume = async (data: Partial<DbResume>) => {
-    // We utilize isAuthenticated to ensure Convex is ready to accept mutations
     if (isAuthenticated) {
       const now = new Date();
       const resumeToSave = {
@@ -84,14 +69,9 @@ export function useResumes() {
       }
     }
 
-    // For local, we only support one resume, so "creating" just updates the single existing one
-    // or resets it. But to match the "create" semantics, we'll update it.
-    // However, if the user thinks they are creating a *new* one, we should probably reset ID/dates?
-    // The requirement says "only a single resume", so effectively "create" is "reset/overwrite".
-
     const now = new Date();
     const newResume: DbResume = {
-      id: "local", // Keep consistent ID for single local resume
+      id: "local",
       name: data.name || "Untitled Resume",
       markdown: data.markdown || DEFAULT_RESUME_MARKDOWN,
       css: data.css || DEFAULT_RESUME_CSS,
@@ -105,12 +85,8 @@ export function useResumes() {
 
   const updateResume = async (id: number | string, data: Partial<DbResume>) => {
     if (isAuthenticated) {
-      // For Convex, we need to map the ID
       const current = resumes.find(r => r.id === id);
-
-      if (!current) {
-        return;
-      }
+      if (!current) return;
 
       const updated = { ...current, ...data, updated_at: new Date() };
 
@@ -126,9 +102,6 @@ export function useResumes() {
         console.error("Failed to update resume in Convex:", error);
       }
     } else {
-      // Local update
-      // We ignore the ID check effectively since we only have one, 
-      // but good to keep it somewhat sane.
       if (id === localResume.id) {
         setLocalResume(prev => ({
           ...prev,
@@ -147,9 +120,6 @@ export function useResumes() {
         console.error("Failed to delete resume in Convex:", error);
       }
     } else {
-      // "Deleting" the single local resume... maybe reset to default?
-      // Or do nothing? 
-      // Let's reset to default to simulate "gone" but keeping the structure ready.
       const defaultResume: DbResume = {
         id: "local",
         name: "My Resume",

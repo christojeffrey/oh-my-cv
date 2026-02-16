@@ -1,32 +1,25 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { Card } from "@/components/ui/card";
 import { useResumePagination } from "@/hooks/use-resume-pagination";
-import { useResumePreview } from "@/features/dashboard/hooks/use-resume-preview";
 import type { DbResume } from "@/types/resume";
 import { markdownService } from "@/utils/markdown";
 
-export function ResumeCard({ resume, onUpdate }: { resume: DbResume; onUpdate: () => void }) {
-  const navigate = useNavigate();
-  const { isLoaded } = useResumePreview(resume);
+const CARD_ONLY_CSS = `[data-part="page"]:not(:first-child) { display: none; }`;
 
-  // Thumbnail CSS: Hide pages after the first one
-  const cardOnlyCss = `[data-part="page"]:not(:first-child) { display: none; }`;
+interface ResumeCardProps {
+  readonly resume: DbResume;
+}
+
+export function ResumeCard({ resume }: ResumeCardProps) {
+  const navigate = useNavigate();
   const html = useMemo(() => markdownService.renderResume(resume.markdown || ""), [resume.markdown]);
 
   const { hostRef, dims } = useResumePagination(
     resume.styles,
     resume.css || "",
     html,
-    cardOnlyCss
+    CARD_ONLY_CSS
   );
-
-  // Calculate dynamic scale to fit the 210x297 preview container
-  const thumbnailScale = 210 / dims.widthPx;
-
-  if (!isLoaded) {
-    return <Card className="w-[210px] h-[299px] bg-secondary animate-pulse mx-auto" />;
-  }
 
   return (
     <div className="w-56 group/card flex flex-col items-center">
@@ -41,7 +34,7 @@ export function ResumeCard({ resume, onUpdate }: { resume: DbResume; onUpdate: (
             style={{
               width: `${dims.widthPx}px`,
               height: `${dims.heightPx}px`,
-              transform: `scale(${thumbnailScale})`,
+              transform: `scale(${210 / dims.widthPx})`,
             }}
           >
             <div ref={hostRef} style={{ fontFamily: resume.styles.fontEN?.fontFamily }} />

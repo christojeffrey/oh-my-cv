@@ -5,38 +5,41 @@ import { toast } from "@/services/toast";
 import { useImportExport } from "../hooks/use-import-export";
 
 interface FileActionsProps {
-  onUpdate: () => void;
+  readonly onUpdate: () => void;
 }
 
-export function FileActions({ onUpdate }: Readonly<FileActionsProps>) {
+export function FileActions({ onUpdate }: FileActionsProps) {
   const [isImporting, setIsImporting] = useState(false);
   const { exportToJSON, importFromJSON } = useImportExport(onUpdate);
 
-  const handleExport = () => {
-    exportToJSON();
-    toast.export();
-  };
-
-  const handleImportClick = async () => {
-    setIsImporting(true);
-    try {
-      await importFromJSON();
-      toast.import(true);
-    } catch (error) {
-      console.error("Import failed:", error);
-      toast.error("Import failed");
-    } finally {
-      setIsImporting(false);
-    }
-  };
-
   return (
     <div className="flex gap-2">
-      <Button onClick={handleExport} variant="secondary">
+      <Button
+        onClick={() => {
+          exportToJSON();
+          toast.export();
+        }}
+        variant="secondary"
+      >
         <Save className="w-4 h-4 mr-1" />
         Save as...
       </Button>
-      <Button variant="outline" disabled={isImporting} onClick={handleImportClick}>
+      <Button
+        variant="outline"
+        disabled={isImporting}
+        onClick={async () => {
+          setIsImporting(true);
+          try {
+            await importFromJSON();
+            toast.import(true);
+          } catch (error) {
+            console.error("Import failed:", error);
+            toast.error("Import failed");
+          } finally {
+            setIsImporting(false);
+          }
+        }}
+      >
         <Upload className="w-4 h-4 mr-1" />
         {isImporting ? "Importing..." : "Import"}
       </Button>
