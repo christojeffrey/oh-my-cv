@@ -9,7 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [TanStackRouterVite(), react(), pwa],
+  plugins: [react(), TanStackRouterVite(), pwa],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

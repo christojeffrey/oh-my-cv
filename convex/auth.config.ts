@@ -1,8 +1,8 @@
 export default {
     providers: [
         {
-            domain: "https://clerk.cv.cjeff.app",
-            applicationID: "convex",
+            domain: process.env.CLERK_JWT_ISSUER_DOMAIN,
+            issuer: process.env.CLERK_JWT_ISSUER_DOMAIN,
         },
     ],
 };
