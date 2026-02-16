@@ -48,6 +48,7 @@ export const setWidthAndMargins = (
 ) => {
   element.style.width = `${size.width}mm`;
   element.style.padding = `${margins.top}px ${margins.right}px ${margins.bottom}px ${margins.left}px`;
+  element.style.boxSizing = "border-box";
 };
 
 export const breakPage = (target: HTMLElement, size: PageSize, margins: Required<PageMargins>) => {
@@ -105,9 +106,10 @@ export const useSmartPages = (
     const copy = element.cloneNode(true) as HTMLElement;
     copy.innerHTML = html;
 
-    // Set width and margins
-    element.style.width = `${width}mm`;
-    element.style.padding = `${top}px ${right}px ${bottom}px ${left}px`;
+    // Clear styles on container to avoid conflicts with child pages
+    element.style.width = "";
+    element.style.padding = "";
+    element.style.boxSizing = "";
 
     // Attach temporarily to get correct computed styles
     // Check if the current element is inside a Shadow Root to ensure styles are applied
