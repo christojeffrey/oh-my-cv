@@ -22,6 +22,7 @@ export function PreviewControls({
         onClick={onZoomIn}
         className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10"
         title="Zoom In"
+        data-umami-event="preview-zoom-in"
       >
         <ZoomIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
@@ -31,6 +32,7 @@ export function PreviewControls({
         onClick={onZoomOut}
         className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10"
         title="Zoom Out"
+        data-umami-event="preview-zoom-out"
       >
         <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
@@ -40,6 +42,7 @@ export function PreviewControls({
         onClick={onFitWidth}
         className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10 hidden sm:block"
         title="Fit Width"
+        data-umami-event="preview-fit-width"
       >
         <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
@@ -49,6 +52,7 @@ export function PreviewControls({
         onClick={onFitHeight}
         className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10 hidden sm:block"
         title="Fit Height"
+        data-umami-event="preview-fit-height"
       >
         <Maximize className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>

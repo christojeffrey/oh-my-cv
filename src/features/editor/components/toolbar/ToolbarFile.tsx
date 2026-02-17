@@ -42,7 +42,7 @@ export function ToolbarFile() {
 
       <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="w-full justify-start gap-2" variant="ghost">
+          <Button className="w-full justify-start gap-2" variant="ghost" data-umami-event="open-rename-dialog">
             <FileText className="w-4 h-4" />
             Rename
             <span className="ml-auto text-xs text-muted-foreground tracking-widest">↵</span>
@@ -59,14 +59,14 @@ export function ToolbarFile() {
               onKeyDown={(e) => e.key === "Enter" && handleRename()}
               placeholder="Enter new name"
             />
-            <Button onClick={handleRename} className="w-full">
+            <Button onClick={handleRename} className="w-full" data-umami-event="rename-resume">
               Rename
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <Button onClick={handleExportPDF} className="w-full justify-start gap-2" variant="ghost">
+      <Button onClick={handleExportPDF} className="w-full justify-start gap-2" variant="ghost" data-umami-event="export-pdf-file-menu">
         <Download className="w-4 h-4" />
         Export PDF
       </Button>

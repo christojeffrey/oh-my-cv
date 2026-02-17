@@ -50,6 +50,7 @@ export function NewResume() {
       <button
         onClick={handleCreate}
         className="w-full p-4 border border-dashed border-border/40 rounded-sm bg-muted/10 hover:bg-muted/20 hover:border-border/60 transition-all duration-200 flex items-center justify-center gap-2"
+        data-umami-event="create-new-resume"
       >
         <Plus className="h-5 w-5 text-muted-foreground" />
         <span className="text-sm font-medium text-muted-foreground">New Resume</span>
@@ -72,6 +73,7 @@ export function NewResume() {
             await handleCreate();
           }}
           type="button"
+          data-umami-event="create-new-resume"
         >
           <div className="flex flex-col items-center gap-3">
             <Plus className="w-12 h-12 text-muted-foreground/60 group-hover:text-foreground transition-colors duration-200" />

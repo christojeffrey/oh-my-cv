@@ -27,7 +27,7 @@ export function Header({ children }: HeaderProps) {
         <div className="ml-1 sm:ml-2 flex items-center gap-1 sm:gap-2">
           <SignedOut>
             <SignInButton mode="modal">
-              <Button variant="outline" size="sm" className="h-9 rounded-sm font-medium shadow-subtle px-2 sm:px-4 text-xs sm:text-sm">
+              <Button variant="outline" size="sm" className="h-9 rounded-sm font-medium shadow-subtle px-2 sm:px-4 text-xs sm:text-sm" data-umami-event="sign-in-button">
                 <span className="hidden sm:inline">Sign In</span>
                 <span className="sm:hidden">Sign</span>
               </Button>
