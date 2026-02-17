@@ -1,4 +1,4 @@
-import { Eye, Settings, Check, X, XCircle, Code2, FileCode, Download } from "lucide-react";
+import { Eye, Settings, Check, X, XCircle, FileCode, Download, Code2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -32,7 +32,7 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
 
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 1024;
+      const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
       if (mobile) {
         setIsToolbarOpen(false);
@@ -99,11 +99,11 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
     <ErrorBoundary>
       <div className="flex flex-col h-full">
         {/* Editor Header Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border-b border-border/40 bg-background gap-2 sm:gap-0">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border-b border-border/40 bg-background gap-3 sm:gap-0">
           {/* Left: Name + Status */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
             {isEditingName ? (
-              <div className="flex items-center gap-2 w-full max-w-md">
+              <div className="flex items-center gap-2 w-full max-w-[200px] sm:max-w-md">
                 <input
                   type="text"
                   value={tempName}
@@ -131,19 +131,19 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
                 </Button>
               </div>
             ) : (
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                 <button
                   onClick={() => setIsEditingName(true)}
-                  className="text-base font-medium text-foreground hover:text-foreground/80 transition-colors truncate px-2 py-1 rounded-sm hover:bg-accent/50 text-left"
+                  className="text-base font-medium text-foreground hover:text-foreground/80 transition-colors truncate px-2 py-1 rounded-sm hover:bg-accent/50 text-left max-w-[150px] sm:max-w-none"
                   title="Click to edit name"
                 >
                   {resume.resumeName || "Untitled Resume"}
                 </button>
 
-                {/* Save Status */}
+                {/* Save Status - Hidden on very small mobile, shown on sm+ */}
                 <div
                   className={`
-                    text-xs font-medium px-2 py-0.5 rounded-sm border select-none pointer-events-none transition-all duration-200 flex-shrink-0
+                    hidden sm:block text-xs font-medium px-2 py-0.5 rounded-sm border select-none pointer-events-none transition-all duration-200 flex-shrink-0
                     ${saveStatus === "saved"
                       ? "bg-emerald-50/80 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-800/30"
                       : saveStatus === "saving"
@@ -160,21 +160,10 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
             )}
           </div>
 
-          {/* Right: Action Buttons */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            {/* Export PDF Button */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-9 px-3 gap-2 rounded-sm transition-all duration-200"
-              onClick={handleExportPDF}
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">Export PDF</span>
-            </Button>
-
-            {/* Editor Mode Toggle - Only visible when editing */}
-            <div className="flex items-center border border-border/40 rounded-sm overflow-hidden">
+          {/* Right: Action Buttons - Thoughtful order */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {/* Editor Mode Toggle - Core work */}
+            <div className="flex items-center gap-1 border border-border/40 rounded-sm overflow-hidden">
               <Button
                 variant="ghost"
                 size="sm"
@@ -184,18 +173,22 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
                 <FileCode className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Markdown</span>
               </Button>
+
+              {/* Advanced CSS - Icon + Gear to indicate it's different */}
               <Button
                 variant="ghost"
                 size="sm"
                 className={`h-8 px-2 sm:px-3 text-xs gap-1.5 rounded-none border-0 transition-all duration-200 ${editorMode === "css" ? "bg-foreground/10 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                 onClick={() => setEditorMode("css")}
               >
-                <Code2 className="h-3.5 w-3.5" />
+                <span className="flex items-center gap-1">
+                  <Code2 className="h-3.5 w-3.5" />
+                </span>
                 <span className="hidden sm:inline">CSS</span>
               </Button>
             </div>
 
-            {/* Preview Button */}
+            {/* Preview Button - High frequency */}
             <Button
               variant="ghost"
               size="sm"
@@ -218,7 +211,18 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
               <span className="hidden sm:inline">Preview</span>
             </Button>
 
-            {/* Settings Button */}
+            {/* Export PDF - Important but infrequent */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 px-3 gap-2 rounded-sm transition-all duration-200 hidden sm:flex"
+              onClick={handleExportPDF}
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Export</span>
+            </Button>
+
+            {/* Settings - Occasional */}
             <Button
               variant="ghost"
               size="sm"
