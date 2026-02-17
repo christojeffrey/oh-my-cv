@@ -1,12 +1,12 @@
 import { atom } from "jotai";
-import { DEFAULT_STYLES } from "@/constants";
-import type { SystemData } from "@/types/resume";
+import { DEFAULT_RESUME_CONFIGURATION } from "@/constants";
+import type { Resume } from "@/types/resume";
 
-export const cvDataAtom = atom<SystemData>({
+export const resumeAtom = atom<Resume>({
   markdown: "",
-  css: "",
+  customCss: "",
   resumeId: null,
   resumeName: "",
-  styles: DEFAULT_STYLES,
+  configuration: DEFAULT_RESUME_CONFIGURATION,
   loaded: false,
 });

@@ -12,4 +12,4 @@ export { useEditorData } from "./hooks/use-editor-data";
 export { usePreviewZoom } from "./hooks/use-preview-zoom";
 export { useResumeStyles } from "./hooks/use-resume-styles";
 // Stores
-export { cvDataAtom } from "./stores/cv-data";
+export { resumeAtom } from "./stores/cv-data";

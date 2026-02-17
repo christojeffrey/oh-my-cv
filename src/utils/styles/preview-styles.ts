@@ -2,7 +2,8 @@ import type { ResumeConfiguration } from "@/types/resume";
 
 export function generateConfigurationStyles(resumeConfiguration: ResumeConfiguration) {
   return `
-p, h1, h2, h3, li, dt, dd {
+* {
+  font-family: ${resumeConfiguration.fontEN?.fontFamily};
   line-height: ${resumeConfiguration.lineHeight};
   font-size: ${resumeConfiguration.fontSize}px;
 }

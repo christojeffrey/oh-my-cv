@@ -1,11 +1,11 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { DEFAULT_STYLES } from "@/constants";
+import { DEFAULT_RESUME_CONFIGURATION } from "@/constants";
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
-import { cvDataAtom } from "../stores/cv-data";
+import { resumeAtom } from "../stores/cv-data";
 
 export function useEditorData(id?: string) {
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const [cvData, setCvData] = useAtom(resumeAtom);
   const { resumes, isLoading: isResumesLoading } = useResumes();
 
   useEffect(() => {
@@ -27,10 +27,10 @@ export function useEditorData(id?: string) {
 
         return {
           markdown: resume.markdown,
-          css: resume.css,
+          customCss: resume.customCss,
           resumeId: resume.id,
           resumeName: resume.name,
-          styles: { ...DEFAULT_STYLES, ...resume.styles },
+          configuration: { ...DEFAULT_RESUME_CONFIGURATION, ...resume.configuration },
           loaded: true,
         };
       });

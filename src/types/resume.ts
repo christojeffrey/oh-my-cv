@@ -24,18 +24,18 @@ export interface DbResume {
     id: number | string;
     name: string;
     markdown: string;
-    css: string;
-    styles: ResumeConfiguration;
+    customCss: string;
+    configuration: ResumeConfiguration;
     created_at: Date;
     updated_at: Date;
 }
 
-export interface SystemData {
+export interface Resume {
     markdown: string;
-    css: string;
+    customCss: string;
     resumeId: number | string | null;
     resumeName: string;
-    styles: ResumeConfiguration;
+    configuration: ResumeConfiguration;
     loaded: boolean;
 }
 

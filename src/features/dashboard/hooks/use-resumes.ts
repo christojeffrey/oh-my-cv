@@ -6,8 +6,8 @@ import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { resumeAtom } from "@/store/resume-atom";
 import type { DbResume } from "@/types/resume";
-import { DEFAULT_STYLES } from "@/constants";
-import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CSS } from "@/constants/templates/default";
+import { DEFAULT_RESUME_CONFIGURATION } from "@/constants";
+import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CUSTOM_CSS } from "@/constants/templates/default";
 
 export function useResumes() {
   const { isLoaded } = useAuth();
@@ -24,9 +24,9 @@ export function useResumes() {
       return convexResumes.map(r => ({
         id: r._id,
         name: r.title,
-        markdown: r.markdown || DEFAULT_RESUME_MARKDOWN,
-        css: r.css || DEFAULT_RESUME_CSS,
-        styles: r.styles ? JSON.parse(r.styles) : DEFAULT_STYLES,
+        markdown: r.markdown,
+        customCss: r.customCss,
+        configuration: JSON.parse(r.configuration),
         created_at: new Date(r._creationTime),
         updated_at: new Date(r.lastUpdated),
       }));
@@ -37,29 +37,24 @@ export function useResumes() {
   const isConvexLoading = isAuthenticated && convexResumes === undefined;
   const isLoading = !isLoaded || isConvexAuthLoading || isConvexLoading;
 
-  const reload = async () => {
-    // No-op for reactive queries
-  };
-
-  const createResume = async (data: Partial<DbResume>) => {
+  const createResume = async () => {
     if (isAuthenticated) {
       const now = new Date();
       const resumeToSave = {
-        name: data.name || "Untitled Resume",
-        markdown: data.markdown || DEFAULT_RESUME_MARKDOWN,
-        css: data.css || DEFAULT_RESUME_CSS,
-        styles: { ...DEFAULT_STYLES, ...data.styles },
+        name: "Untitled Resume",
+        markdown: DEFAULT_RESUME_MARKDOWN,
+        customCss: DEFAULT_RESUME_CUSTOM_CSS,
+        configuration: { ...DEFAULT_RESUME_CONFIGURATION, },
         created_at: now,
         updated_at: now,
-        ...data
       };
 
       try {
         const id = await createResumeMutation({
           title: resumeToSave.name,
           markdown: resumeToSave.markdown,
-          css: resumeToSave.css,
-          styles: JSON.stringify(resumeToSave.styles),
+          customCss: resumeToSave.customCss,
+          configuration: JSON.stringify(resumeToSave.configuration),
         });
         return id;
       } catch (error) {
@@ -72,10 +67,10 @@ export function useResumes() {
     const now = new Date();
     const newResume: DbResume = {
       id: "local",
-      name: data.name || "Untitled Resume",
-      markdown: data.markdown || DEFAULT_RESUME_MARKDOWN,
-      css: data.css || DEFAULT_RESUME_CSS,
-      styles: { ...DEFAULT_STYLES, ...data.styles },
+      name: "Untitled Resume",
+      markdown: DEFAULT_RESUME_MARKDOWN,
+      customCss: DEFAULT_RESUME_CUSTOM_CSS,
+      configuration: { ...DEFAULT_RESUME_CONFIGURATION },
       created_at: now,
       updated_at: now,
     };
@@ -95,20 +90,18 @@ export function useResumes() {
           id: id as Id<"resumes">,
           title: updated.name,
           markdown: updated.markdown,
-          css: updated.css,
-          styles: JSON.stringify(updated.styles),
+          customCss: updated.customCss,
+          configuration: JSON.stringify(updated.configuration),
         });
       } catch (error) {
         console.error("Failed to update resume in Convex:", error);
       }
-    } else {
-      if (id === localResume.id) {
-        setLocalResume(prev => ({
-          ...prev,
-          ...data,
-          updated_at: new Date(),
-        }));
-      }
+    } else if (id === localResume.id) {
+      setLocalResume(prev => ({
+        ...prev,
+        ...data,
+        updated_at: new Date(),
+      }));
     }
   };
 
@@ -124,8 +117,8 @@ export function useResumes() {
         id: "local",
         name: "My Resume",
         markdown: DEFAULT_RESUME_MARKDOWN,
-        css: DEFAULT_RESUME_CSS,
-        styles: DEFAULT_STYLES,
+        customCss: DEFAULT_RESUME_CUSTOM_CSS,
+        configuration: DEFAULT_RESUME_CONFIGURATION,
         created_at: new Date(),
         updated_at: new Date(),
       };
@@ -139,6 +132,5 @@ export function useResumes() {
     createResume,
     updateResume,
     deleteResume,
-    reload
   };
 }

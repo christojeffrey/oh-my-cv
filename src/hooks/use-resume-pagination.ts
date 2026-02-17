@@ -23,7 +23,7 @@ export function useResumePagination(
             vMargin: config.marginV,
             hMargin: config.marginH,
         };
-    }, [config.paper, config.marginV, config.marginH]);
+    }, [config.paper, config.marginV, config.marginH, config.fontSize]);
 
     // 2. Setup Shadow DOM & Styles
     useLayoutEffect(() => {
@@ -37,9 +37,9 @@ export function useResumePagination(
         }
 
         styleRef.current!.textContent = `
-      ${coreCss} 
-      ${generateConfigCss(config)} 
-      ${customCss} 
+      ${coreCss}
+      ${generateConfigCss(config)}
+      ${customCss}
       ${additionalCss}
     `;
     }, [config, customCss, additionalCss]);
@@ -66,12 +66,11 @@ export function useResumePagination(
             p.dataset.part = "page";
             p.dataset.scope = "react-smart-pages";
             p.style.cssText = `
-        height: ${dims.heightPx}px; 
-        width: ${dims.widthPx}px; 
-        padding: ${dims.vMargin}px ${dims.hMargin}px; 
-        box-sizing: border-box; 
-        overflow: hidden; 
-        flex-shrink: 0; 
+        height: ${dims.heightPx}px;
+        width: ${dims.widthPx}px;
+        padding: ${dims.vMargin}px ${dims.hMargin}px;
+        box-sizing: border-box;
+        flex-shrink: 0;
         background: white;
         position: relative;
       `;

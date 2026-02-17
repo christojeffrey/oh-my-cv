@@ -15,8 +15,8 @@ export function ResumeCard({ resume }: ResumeCardProps) {
   const html = useMemo(() => markdownService.renderResume(resume.markdown || ""), [resume.markdown]);
 
   const { hostRef, dims } = useResumePagination(
-    resume.styles,
-    resume.css || "",
+    resume.configuration,
+    resume.customCss || "",
     html,
     CARD_ONLY_CSS
   );
@@ -37,7 +37,7 @@ export function ResumeCard({ resume }: ResumeCardProps) {
               transform: `scale(${210 / dims.widthPx})`,
             }}
           >
-            <div ref={hostRef} style={{ fontFamily: resume.styles.fontEN?.fontFamily }} />
+            <div ref={hostRef} />
           </div>
         </div>
       </div>

@@ -51,8 +51,8 @@ export const createResume = mutation({
     args: {
         title: v.string(),
         markdown: v.string(),
-        css: v.string(),
-        styles: v.string(),
+        customCss: v.string(),
+        configuration: v.string(),
     },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
@@ -87,8 +87,8 @@ export const createResume = mutation({
             userId: user._id,
             title: args.title,
             markdown: args.markdown,
-            css: args.css,
-            styles: args.styles,
+            customCss: args.customCss,
+            configuration: args.configuration,
             lastUpdated: now,
         });
         return resumeId;
@@ -103,8 +103,8 @@ export const updateResume = mutation({
         id: v.id("resumes"),
         title: v.optional(v.string()),
         markdown: v.optional(v.string()),
-        css: v.optional(v.string()),
-        styles: v.optional(v.string()),
+        customCss: v.optional(v.string()),
+        configuration: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
@@ -117,8 +117,8 @@ export const updateResume = mutation({
         await ctx.db.patch(args.id, {
             ...(args.title && { title: args.title }),
             ...(args.markdown && { markdown: args.markdown }),
-            ...(args.css && { css: args.css }),
-            ...(args.styles && { styles: args.styles }),
+            ...(args.customCss && { customCss: args.customCss }),
+            ...(args.configuration && { configuration: args.configuration }),
             lastUpdated: now,
         });
     },

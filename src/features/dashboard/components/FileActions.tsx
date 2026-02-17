@@ -2,15 +2,12 @@ import { Save, Upload } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/services/toast";
-import { useImportExport } from "../hooks/use-import-export";
+import { useImportExport } from "@/features/dashboard";
 
-interface FileActionsProps {
-  readonly onUpdate: () => void;
-}
 
-export function FileActions({ onUpdate }: FileActionsProps) {
+export function FileActions() {
   const [isImporting, setIsImporting] = useState(false);
-  const { exportToJSON, importFromJSON } = useImportExport(onUpdate);
+  const { exportToJSON, importFromJSON } = useImportExport();
 
   return (
     <div className="flex gap-2">

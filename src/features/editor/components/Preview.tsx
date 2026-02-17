@@ -4,22 +4,21 @@ import { Zoom } from "@/components/shared/Zoom";
 import { PreviewControls } from "@/features/editor/components/PreviewControls";
 import { useResumePagination } from "@/hooks/use-resume-pagination";
 import { usePreviewZoom } from "@/features/editor/hooks/use-preview-zoom";
-import { cvDataAtom } from "@/features/editor/stores/cv-data";
-import { sanitizeHtml } from "@/utils/dompurify";
+import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { markdownService } from "@/utils/markdown";
 
 export function Preview() {
-  const [cvData] = useAtom(cvDataAtom);
+  const [cvData] = useAtom(resumeAtom);
+  const { configuration, customCss } = cvData;
   const zoomContainerRef = useRef<HTMLDivElement>(null);
 
   const html = useMemo(() => {
-    const dirtyHtml = markdownService.renderResume(cvData.markdown || "");
-    return sanitizeHtml(dirtyHtml);
+    return markdownService.renderResume(cvData.markdown);
   }, [cvData.markdown]);
 
   const { hostRef, dims } = useResumePagination(
-    cvData.styles,
-    cvData.css,
+    configuration,
+    customCss,
     html
   );
 
@@ -33,25 +32,20 @@ export function Preview() {
     const handlePrint = () => {
       if (hostRef.current) {
         import("@/utils/print-service").then(({ printResume }) => {
-          printResume(hostRef.current, cvData.resumeName || "Resume", cvData.styles.paper);
+          printResume(hostRef.current, cvData.resumeName || "Resume", configuration.paper);
         });
       }
     };
 
     globalThis.addEventListener("resume:print", handlePrint);
     return () => globalThis.removeEventListener("resume:print", handlePrint);
-  }, [cvData.resumeName, hostRef]);
+  }, [cvData.resumeName, hostRef, configuration.paper]);
 
   return (
-    <div ref={zoomContainerRef} className="relative h-full bg-secondary overflow-hidden">
+    <div ref={zoomContainerRef} className="relative h-full overflow-clip bg-secondary border-2 border-black">
       <Zoom scale={scale} className="h-full">
-        <div className="h-full overflow-auto flex justify-center p-8">
-          <div
-            ref={hostRef}
-            style={{
-              fontFamily: cvData.styles.fontEN?.fontFamily,
-            }}
-          />
+        <div className="h-full overflow-visible flex justify-center">
+          <div ref={hostRef}/>
         </div>
       </Zoom>
 

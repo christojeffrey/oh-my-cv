@@ -13,8 +13,8 @@ export default defineSchema({
         userId: v.id("users"), // Foreign key to users
         title: v.string(),
         markdown: v.string(),
-        css: v.string(),
-        styles: v.string(),   // JSON stringified styles
+        customCss: v.string(),
+        configuration: v.string(),   // JSON stringified styles
         lastUpdated: v.number(), // Timestamp
     }).index("by_user", ["userId"]),
 });

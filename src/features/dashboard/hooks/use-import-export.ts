@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { resumeAtom } from "@/store/resume-atom";
 
-export function useImportExport(onUpdate?: () => void) {
+export function useImportExport() {
   const [resume, setResume] = useAtom(resumeAtom);
 
   const exportToJSON = () => {
@@ -34,14 +34,23 @@ export function useImportExport(onUpdate?: () => void) {
             const firstKey = Object.keys(json.data)[0];
             if (firstKey && json.data[firstKey]) {
               setResume({ ...json.data[firstKey], id: "local", updated_at: new Date() });
-              onUpdate?.();
               return;
             }
           }
 
-          if (json.name && (json.markdown || json.css)) {
-            setResume({ ...json, id: "local", updated_at: new Date() });
-            onUpdate?.();
+          if (json.name && (json.markdown || json.css || json.customCss)) {
+            const mappedResume = {
+              ...json,
+              customCss: json.customCss || json.css || "",
+              configuration: json.configuration || json.styles || {},
+              id: "local",
+              updated_at: new Date(),
+            };
+            // Clean up old fields
+            delete mappedResume.css;
+            delete mappedResume.styles;
+
+            setResume(mappedResume);
           }
         } catch (error) {
           console.error("Failed to import resume", error);

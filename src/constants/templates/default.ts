@@ -1,22 +1,14 @@
 export const DEFAULT_RESUME_MARKDOWN = `---
 name: Haha Ha
 header:
-  - text: |
-      <span style="font-size: 1.2em; font-weight: bold;">Applying for: Cooking Engineer</span>
-  - text: <span class="iconify" data-icon="tabler:phone"></span> (+1) 123-456-7890
-    newLine: true
-  - text: <span class="iconify" data-icon="tabler:mail"></span> icancook@email.com
+  - text: (+1) 123-456-7890
+  - text: icancook@email.com
     link: mailto:icancook@email.com
-  - text: <span class="iconify" data-icon="tabler:brand-github"></span> Renovamen
+  - text: Renovamen
     link: https://github.com/Renovamen
-  - text: <span class="iconify" data-icon="charm:person"></span> zxh.me
+  - text: zxh.me
     link: https://zxh.me
 ---
-
-<!-- Important: Replace all template content, especially contact details, with your own information. -->
-
-<!-- Important: When updating your email address, remember to change both the "text" (visible text) and the "link" (underlying hyperlink) fields. -->
-
 
 ## Education
 
@@ -105,95 +97,4 @@ B.Eng. in Salad Engineering
 **Languages:** Chinese (native), English (proficient)
 `;
 
-export const DEFAULT_RESUME_CSS = `/* Backbone CSS for Resume Template 1 */
-
-/* Paragraphs and lists */
-p, li, dl {
-  margin: 0;
-}
-
-/* Headings */
-h1, h2, h3 {
-  font-weight: bold;
-}
-
-h1 {
-  font-size: 1.5em;
-}
-
-h2, h3 {
-  margin-bottom: 5px;
-  font-size: 1.2em;
-}
-
-/* Lists */
-ul, ol {
-  padding-left: 1.5em;
-  margin: 0.2em 0;
-}
-
-ul {
-  list-style-type: circle;
-}
-
-ol {
-  list-style-type: decimal;
-}
-
-/* Definition Lists */
-dl {
-  display: flex;
-}
-
-dl dt,
-dl dd:not(:last-child) {
-  flex: 1;
-}
-
-/* KaTeX */
-:not(span.katex-display) > span.katex {
-  font-size: 1em !important;
-}
-
-/* SVG & Images */
-svg.iconify {
-  vertical-align: -0.2em;
-}
-
-img {
-  max-width: 100%;
-}
-
-/* Header */
-.resume-header {
-  text-align: center;
-}
-
-.resume-header h1 {
-  text-align: center;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.resume-header-item:not(.no-separator)::after {
-  content: " | ";
-}
-
-/* Citations */
-[data-scope="cross-ref"][data-part="definitions"] {
-  padding-left: 1.2em;
-}
-
-[data-scope="cross-ref"][data-part="definition"] p {
-  margin-left: 0.5em;
-}
-
-[data-scope="cross-ref"][data-part="definition"]::marker {
-  content: attr(data-label);
-}
-
-[data-scope="cross-ref"][data-part="reference"] {
-  font-size: 100%;
-  top: 0;
-}
-`;
+export const DEFAULT_RESUME_CUSTOM_CSS = ``;

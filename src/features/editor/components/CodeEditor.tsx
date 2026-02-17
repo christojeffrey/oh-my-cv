@@ -2,8 +2,8 @@ import Editor from "@monaco-editor/react";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cvDataAtom } from "@/features/editor/stores/cv-data";
-import type { SystemData } from "@/types/resume";
+import { resumeAtom } from "@/features/editor/stores/cv-data";
+import type { Resume } from "@/types/resume";
 
 const EDITOR_OPTIONS = {
   minimap: { enabled: false },
@@ -11,12 +11,12 @@ const EDITOR_OPTIONS = {
 };
 
 export function CodeEditor() {
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const [resume, setResume] = useAtom(resumeAtom);
   const [activeTab, setActiveTab] = useState("markdown");
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
-      setCvData((prev: SystemData) => ({
+      setResume((prev: Resume) => ({
         ...prev,
         [activeTab]: value,
       }));
@@ -30,12 +30,12 @@ export function CodeEditor() {
           <TabsTrigger value="markdown">Markdown</TabsTrigger>
           <TabsTrigger value="css">CSS</TabsTrigger>
         </TabsList>
-        {(["markdown", "css"] as const).map((lang) => (
+        {(["markdown", "customCss"] as const).map((lang) => (
           <TabsContent key={lang} value={lang} className="flex-1">
             <Editor
               height="100%"
               language={lang}
-              value={cvData[lang] || ""}
+              value={resume[lang] || ""}
               onChange={handleEditorChange}
               theme="vs-light"
               options={EDITOR_OPTIONS}

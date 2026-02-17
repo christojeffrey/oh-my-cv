@@ -7,18 +7,18 @@ import { ResumeCard } from "./components/ResumeCard";
 export const SKELETON_COUNT = 4;
 
 export function Dashboard() {
-  const { resumes, isLoading, reload } = useResumes();
+  const { resumes, isLoading } = useResumes();
 
   return (
     <div className="workspace flex flex-col px-4 py-8">
       <div className="flex items-center justify-between mb-8 px-2 gap-2">
         <h1 className="text-3xl font-bold">My Resumes</h1>
-        <FileActions onUpdate={reload} />
+        <FileActions />
       </div>
 
       <div className="flex-1 overflow-auto">
         <div className="flex flex-wrap gap-x-4 gap-y-8 pt-4">
-          <NewResume onUpdate={reload} />
+          <NewResume />
 
           {isLoading
             ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (

@@ -52,8 +52,7 @@ export class MarkdownService {
   }
 
   public renderMarkdown(md: string): string {
-    const dirtyHtml = this.md.render(md);
-    return sanitizeHtml(dirtyHtml);
+    return this.md.render(md);
   }
 
   /**
@@ -100,7 +99,7 @@ export class MarkdownService {
 
   public renderHeader(frontMatter: ResumeFrontMatter): string {
     const content = [
-      frontMatter.name ? `<h1>${frontMatter.name}</h1>\n` : "",
+      frontMatter.name ? `<h1>${frontMatter.name}</h1>` : "",
       (frontMatter.header ?? [])
         .map((item, i, array) =>
           this.renderHeaderItem(item, i !== array.length - 1 && !array[i + 1].newLine)
@@ -117,7 +116,7 @@ export class MarkdownService {
     const content = this.resolveDeflist(this.renderMarkdown(body));
     const header = this.renderHeader(frontMatter);
 
-    return header + content;
+    return sanitizeHtml(header + content)
   }
 }
 

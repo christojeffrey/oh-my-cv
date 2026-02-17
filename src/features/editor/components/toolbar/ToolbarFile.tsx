@@ -10,14 +10,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { cvDataAtom } from "@/features/editor/stores/cv-data";
+import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import { toast } from "@/services/toast";
-import type { SystemData } from "@/types/resume";
+import type { Resume } from "@/types/resume";
 
 export function ToolbarFile() {
   const { updateResume } = useResumes();
-  const [cvData, setCvData] = useAtom(cvDataAtom);
+  const [cvData, setCvData] = useAtom(resumeAtom);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [importDialogOpen, setImportDialogOpen] = useState(false);
@@ -32,8 +32,8 @@ export function ToolbarFile() {
     await updateResume(cvData.resumeId, {
       name: cvData.resumeName,
       markdown: cvData.markdown,
-      css: cvData.css,
-      styles: cvData.styles,
+      customCss: cvData.customCss,
+      configuration: cvData.configuration,
     });
     toast.save();
   };
@@ -41,7 +41,7 @@ export function ToolbarFile() {
   const handleRename = async () => {
     if (!cvData.resumeId || !newName.trim()) return;
 
-    setCvData((prev: SystemData) => ({ ...prev, resumeName: newName.trim() }));
+    setCvData((prev: Resume) => ({ ...prev, resumeName: newName.trim() }));
     await updateResume(cvData.resumeId, { name: newName.trim() });
     setRenameDialogOpen(false);
   };
@@ -67,7 +67,7 @@ export function ToolbarFile() {
     if (!file) return;
 
     const content = await file.text();
-    setCvData((prev: SystemData) => ({ ...prev, markdown: content }));
+    setCvData((prev: Resume) => ({ ...prev, markdown: content }));
     setImportDialogOpen(false);
   };
 

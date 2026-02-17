@@ -24,7 +24,7 @@ function HomeRedirect() {
 
     if (resumes.length === 0 && !creatingRef.current) {
       creatingRef.current = true;
-      createResume({}).then(() => {
+      createResume().then(() => {
         creatingRef.current = false;
       });
     }

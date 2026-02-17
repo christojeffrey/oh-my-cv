@@ -39,7 +39,7 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
 
   return (
     <ErrorBoundary>
-      <div className="flex flex-col h-screen relative">
+      <div className="flex flex-col h-full relative">
         <div className="absolute top-3 right-4 z-50 flex gap-2">
           <Button
             variant="ghost"
