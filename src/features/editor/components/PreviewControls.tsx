@@ -14,21 +14,43 @@ export function PreviewControls({
   onFitWidth,
   onFitHeight,
 }: PreviewControlsProps) {
-  const buttonClass = "text-white hover:bg-blue-600 p-2";
-
   return (
-    <div className="absolute bottom-4 left-4 bg-blue-500 text-white rounded-full shadow-lg flex z-10">
-      <Button variant="ghost" size="sm" onClick={onZoomIn} className={buttonClass} title="Zoom In">
-        <ZoomIn className="w-4 h-4" />
+    <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 bg-background/90 backdrop-elevated border border-border/60 rounded-sm shadow-elevated flex z-10 p-1">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onZoomIn}
+        className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10"
+        title="Zoom In"
+      >
+        <ZoomIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
-      <Button variant="ghost" size="sm" onClick={onZoomOut} className={buttonClass} title="Zoom Out">
-        <ZoomOut className="w-4 h-4" />
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onZoomOut}
+        className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10"
+        title="Zoom Out"
+      >
+        <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
-      <Button variant="ghost" size="sm" onClick={onFitWidth} className={buttonClass} title="Fit Width">
-        <Maximize2 className="w-4 h-4" />
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onFitWidth}
+        className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10 hidden sm:block"
+        title="Fit Width"
+      >
+        <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
-      <Button variant="ghost" size="sm" onClick={onFitHeight} className={buttonClass} title="Fit Height">
-        <Maximize className="w-4 h-4" />
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onFitHeight}
+        className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-sm text-foreground hover:bg-foreground/10 hidden sm:block"
+        title="Fit Height"
+      >
+        <Maximize className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </Button>
     </div>
   );

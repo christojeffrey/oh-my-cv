@@ -7,7 +7,11 @@ import { usePreviewZoom } from "@/features/editor/hooks/use-preview-zoom";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { markdownService } from "@/utils/markdown";
 
-export function Preview() {
+interface PreviewProps {
+  fullscreen?: boolean;
+}
+
+export function Preview({ fullscreen = false }: PreviewProps = {}) {
   const [cvData] = useAtom(resumeAtom);
   const { configuration, customCss } = cvData;
   const zoomContainerRef = useRef<HTMLDivElement>(null);
@@ -25,7 +29,7 @@ export function Preview() {
   const { scale, ...controls } = usePreviewZoom(zoomContainerRef as React.RefObject<HTMLElement>, {
     contentWidth: dims.widthPx,
     contentHeight: dims.heightPx,
-    padding: 64,
+    padding: fullscreen ? 32 : 64,
   });
 
   useEffect(() => {
@@ -42,10 +46,10 @@ export function Preview() {
   }, [cvData.resumeName, hostRef, configuration.paper]);
 
   return (
-    <div className="relative h-full bg-secondary overflow-hidden">
+    <div className="relative h-full bg-muted/30 overflow-hidden">
       <div ref={zoomContainerRef} className="h-full w-full overflow-auto">
         <Zoom scale={scale} className="h-full">
-          <div className="h-full overflow-visible flex justify-center">
+          <div className="min-h-full overflow-visible flex justify-center py-4 sm:py-8 px-2">
             <div ref={hostRef} />
           </div>
         </Zoom>

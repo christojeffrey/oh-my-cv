@@ -31,34 +31,38 @@ export function Header({ children }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between px-4 h-12 border-b bg-background/95 backdrop-blur">
-      <Link to="/dashboard" className="flex items-center gap-2 h-full">
+    <header className="flex items-center justify-between px-3 sm:px-5 h-14 border-b border-border/60 bg-background/80 backdrop-elevated">
+      <Link to="/dashboard" className="flex items-center gap-2 sm:gap-3 h-full transition-opacity hover:opacity-80 min-w-0">
         <Logo />
-        <BrandName />
+        <span className="hidden sm:inline"><BrandName /></span>
       </Link>
 
       <div className="flex items-center gap-1 h-full">
         {children}
 
-        <Button variant="ghost" size="sm" className="h-8 gap-1" asChild>
+        <Button variant="ghost" size="sm" className="h-9 gap-2 text-sm font-medium rounded-sm px-2 sm:px-3" asChild>
           <Link to="/dashboard">
-            <Menu className="w-4 h-4 text-foreground" />
-            <span className="hidden sm:inline text-foreground">{t("dashboard.my_resumes")}</span>
+            <Menu className="w-4 h-4 flex-shrink-0" />
+            <span className="hidden md:inline">{t("dashboard.my_resumes")}</span>
           </Link>
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 gap-1">
-              <Languages className="w-4 h-4" />
-              <span className="hidden sm:inline">
+            <Button variant="ghost" size="sm" className="h-9 gap-2 rounded-sm px-2 sm:px-3">
+              <Languages className="w-4 h-4 flex-shrink-0" />
+              <span className="hidden sm:inline text-xs font-medium tracking-wide">
                 {i18n.language?.toUpperCase().substring(0, 2)}
               </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="min-w-28">
+          <DropdownMenuContent align="end" className="min-w-[160px] rounded-sm border-border/60 shadow-elevated">
             {languages.map((lang) => (
-              <DropdownMenuItem key={lang.code} onClick={() => changeLanguage(lang.code)}>
+              <DropdownMenuItem
+                key={lang.code}
+                onClick={() => changeLanguage(lang.code)}
+                className="text-sm rounded-sm"
+              >
                 {lang.name}
               </DropdownMenuItem>
             ))}
@@ -67,11 +71,12 @@ export function Header({ children }: HeaderProps) {
 
         <ToggleDark />
 
-        <div className="ml-2 flex items-center gap-2">
+        <div className="ml-1 sm:ml-2 flex items-center gap-1 sm:gap-2">
           <SignedOut>
             <SignInButton mode="modal">
-              <Button variant="outline" size="sm">
-                Sign In
+              <Button variant="outline" size="sm" className="h-9 rounded-sm font-medium shadow-subtle px-2 sm:px-4 text-xs sm:text-sm">
+                <span className="hidden sm:inline">Sign In</span>
+                <span className="sm:hidden">Sign</span>
               </Button>
             </SignInButton>
           </SignedOut>

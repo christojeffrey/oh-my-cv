@@ -1,8 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { useResumePagination } from "@/hooks/use-resume-pagination";
 import type { DbResume } from "@/types/resume";
 import { markdownService } from "@/utils/markdown";
+import { FileText } from "lucide-react";
 
 const CARD_ONLY_CSS = `[data-part="page"]:not(:first-child) { display: none; }`;
 
@@ -12,6 +13,10 @@ interface ResumeCardProps {
 
 export function ResumeCard({ resume }: ResumeCardProps) {
   const navigate = useNavigate();
+  const [cardWidth, setCardWidth] = useState(210);
+  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const html = useMemo(() => markdownService.renderResume(resume.markdown || ""), [resume.markdown]);
 
   const { hostRef, dims } = useResumePagination(
@@ -21,28 +26,87 @@ export function ResumeCard({ resume }: ResumeCardProps) {
     CARD_ONLY_CSS
   );
 
+  // Detect mobile and measure container width
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    const measureWidth = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.offsetWidth - 24; // padding
+        setCardWidth(Math.max(180, Math.min(280, width)));
+      }
+    };
+
+    checkMobile();
+    measureWidth();
+
+    const resizeObserver = new ResizeObserver(() => {
+      checkMobile();
+      measureWidth();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  const scale = cardWidth / dims.widthPx;
+
+  // Mobile: show simple card without preview
+  if (isMobile) {
+    return (
+      <button
+        onClick={() => navigate({ to: `/editor/${resume.id}` })}
+        className="w-full p-4 border border-border/40 rounded-sm bg-background hover:bg-accent/50 transition-colors duration-200 text-left"
+      >
+        <div className="flex items-start gap-3">
+          <div className="p-2 rounded-sm bg-muted/40 flex-shrink-0">
+            <FileText className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate text-foreground">{resume.name}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {new Date(resume._creationTime || Date.now()).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </button>
+    );
+  }
+
+  // Desktop: show preview card
   return (
-    <div className="w-56 group/card flex flex-col items-center">
-      <div className="h-80 relative flex items-center justify-center w-full">
+    <div className="w-full flex flex-col items-center">
+      <div
+        ref={containerRef}
+        className="w-full relative flex items-center justify-center p-3"
+      >
         <div
-          className="border rounded-md overflow-hidden bg-white shadow-sm"
-          style={{ width: "210px", height: "297px" }}
+          className="border border-border/40 rounded-sm overflow-hidden bg-white shadow-subtle hover:shadow-elevated transition-shadow duration-300 cursor-pointer"
+          onClick={() => navigate({ to: `/editor/${resume.id}` })}
+          style={{ width: `${cardWidth}px`, height: `${cardWidth * 297 / 210}px` }}
         >
           <div
-            className="cursor-pointer origin-top-left"
-            onClick={() => navigate({ to: `/editor/${resume.id}` })}
+            className="origin-top-left"
             style={{
               width: `${dims.widthPx}px`,
               height: `${dims.heightPx}px`,
-              transform: `scale(${210 / dims.widthPx})`,
+              transform: `scale(${scale})`,
             }}
           >
             <div ref={hostRef} />
           </div>
         </div>
       </div>
-      <div className="mt-2 text-center">
-        <p className="text-sm font-medium truncate w-48">{resume.name}</p>
+      <div className="mt-3 text-center w-full px-2">
+        <p className="text-sm font-medium truncate text-foreground">{resume.name}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          {new Date(resume._creationTime || Date.now()).toLocaleDateString()}
+        </p>
       </div>
     </div>
   );
