@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+
 import { Toaster } from "sonner";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
 import { Header } from "@/components/shared/Header.tsx";
@@ -18,7 +19,8 @@ function RootComponent() {
         </ErrorBoundary>
       </main>
       <Toaster />
-      <TanStackRouterDevtools />
+      {import.meta.env.DEV && <TanStackRouterDevtools />}
+
     </div>
   );
 }
