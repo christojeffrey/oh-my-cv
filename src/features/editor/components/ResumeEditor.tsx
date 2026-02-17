@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { CodeEditor, EditorSidebar, Preview, ResizeHandle, useEditorData } from "@/features/editor";
+import { useAutoSave } from "@/features/editor/hooks/use-auto-save";
 
 interface ResumeEditorProps {
   readonly id?: string;
@@ -11,6 +12,7 @@ interface ResumeEditorProps {
 export function ResumeEditor({ id }: ResumeEditorProps) {
   const { cvData, isLoading } = useEditorData(id);
   const [isToolbarOpen, setIsToolbarOpen] = useState(true);
+  const saveStatus = useAutoSave();
 
   useEffect(() => {
     if (window.innerWidth < 1024) {
@@ -40,7 +42,12 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
   return (
     <ErrorBoundary>
       <div className="flex flex-col h-full relative">
-        <div className="absolute top-3 right-4 z-50 flex gap-2">
+        <div className="absolute top-3 right-4 z-50 flex gap-2 items-center">
+          <div className="text-sm text-muted-foreground mr-2 bg-background/50 backdrop-blur px-2 py-1 rounded shadow-sm border select-none pointer-events-none">
+            {saveStatus === "saved" && "Saved"}
+            {saveStatus === "saving" && "Saving..."}
+            {saveStatus === "unsaved" && "Unsaved changes"}
+          </div>
           <Button
             variant="ghost"
             size="sm"

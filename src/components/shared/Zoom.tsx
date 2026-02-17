@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useRef } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 export interface ZoomProps {
   readonly children: ReactNode;
@@ -9,14 +9,25 @@ export interface ZoomProps {
 export function Zoom({ children, scale, className = "" }: ZoomProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
+  const [left, setLeft] = useState(0);
 
-  // Calculate left offset for horizontal centering
-  const left = useMemo(() => {
-    if (!containerRef.current || !zoomRef.current) return 0;
-    const containerWidth = containerRef.current.clientWidth;
-    const zoomWidth = zoomRef.current.clientWidth;
-    return Math.max(0, (containerWidth - scale * zoomWidth) / 2);
-  }, [scale, containerRef.current?.clientWidth, zoomRef.current?.clientWidth]);
+  useEffect(() => {
+    const updateCentering = () => {
+      if (!containerRef.current || !zoomRef.current) return;
+      const containerWidth = containerRef.current.clientWidth;
+      const zoomWidth = zoomRef.current.offsetWidth;
+      const offset = (containerWidth - zoomWidth * scale) / 2;
+      setLeft(Math.max(0, offset));
+    };
+
+    updateCentering();
+    const observer = new ResizeObserver(updateCentering);
+
+    if (containerRef.current) observer.observe(containerRef.current);
+    if (zoomRef.current) observer.observe(zoomRef.current);
+
+    return () => observer.disconnect();
+  }, [scale]);
 
   return (
     <div

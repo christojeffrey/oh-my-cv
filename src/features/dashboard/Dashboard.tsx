@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { useResumes } from "./hooks/use-resumes";
-import { FileActions } from "./components/FileActions";
 import { NewResume } from "./components/NewResume";
 import { ResumeCard } from "./components/ResumeCard";
 
@@ -13,7 +12,6 @@ export function Dashboard() {
     <div className="workspace flex flex-col px-4 py-8">
       <div className="flex items-center justify-between mb-8 px-2 gap-2">
         <h1 className="text-3xl font-bold">My Resumes</h1>
-        <FileActions />
       </div>
 
       <div className="flex-1 overflow-auto">

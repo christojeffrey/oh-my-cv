@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Github, Languages, Menu } from "lucide-react";
+import { Languages, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,12 +79,6 @@ export function Header({ children }: HeaderProps) {
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
         </div>
-
-        <Button variant="ghost" size="sm" className="h-8" asChild>
-          <a href="https://github.com/Renovamen/oh-my-cv" target="_blank" rel="noopener noreferrer">
-            <Github className="w-4 h-4" />
-          </a>
-        </Button>
       </div>
     </header>
   );

@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { useMemo } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { resumeAtom } from "@/store/resume-atom";
+import { localResumeAtom } from "@/store/local-resume-atom.ts";
 import type { DbResume } from "@/types/resume";
 import { DEFAULT_RESUME_CONFIGURATION } from "@/constants";
 import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CUSTOM_CSS } from "@/constants/templates/default";
@@ -12,7 +12,7 @@ import { DEFAULT_RESUME_MARKDOWN, DEFAULT_RESUME_CUSTOM_CSS } from "@/constants/
 export function useResumes() {
   const { isLoaded } = useAuth();
   const { isAuthenticated, isLoading: isConvexAuthLoading } = useConvexAuth();
-  const [localResume, setLocalResume] = useAtom(resumeAtom);
+  const [localResume, setLocalResume] = useAtom(localResumeAtom);
 
   const convexResumes = useQuery(api.resumes.getResumes, isAuthenticated ? {} : "skip");
   const createResumeMutation = useMutation(api.resumes.createResume);
@@ -108,21 +108,10 @@ export function useResumes() {
   const deleteResume = async (id: number | string) => {
     if (isAuthenticated) {
       try {
-        await deleteResumeMutation({ id: id as Id<"resumes"> });
+        await deleteResumeMutation({id: id as Id<"resumes">});
       } catch (error) {
         console.error("Failed to delete resume in Convex:", error);
       }
-    } else {
-      const defaultResume: DbResume = {
-        id: "local",
-        name: "My Resume",
-        markdown: DEFAULT_RESUME_MARKDOWN,
-        customCss: DEFAULT_RESUME_CUSTOM_CSS,
-        configuration: DEFAULT_RESUME_CONFIGURATION,
-        created_at: new Date(),
-        updated_at: new Date(),
-      };
-      setLocalResume(defaultResume);
     }
   };
 

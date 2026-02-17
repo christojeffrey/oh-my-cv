@@ -12,7 +12,7 @@ So, why not write it in Markdown?
 
 ## Credits
 
-- oh my cv
+- [Renovamen/oh-my-cv](https://github.com/Renovamen/oh-my-cv)
 - [billryan/resume](https://github.com/billryan/resume)
 
 

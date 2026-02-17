@@ -42,12 +42,14 @@ export function Preview() {
   }, [cvData.resumeName, hostRef, configuration.paper]);
 
   return (
-    <div ref={zoomContainerRef} className="relative h-full overflow-clip bg-secondary border-2 border-black">
-      <Zoom scale={scale} className="h-full">
-        <div className="h-full overflow-visible flex justify-center">
-          <div ref={hostRef}/>
-        </div>
-      </Zoom>
+    <div className="relative h-full bg-secondary overflow-hidden">
+      <div ref={zoomContainerRef} className="h-full w-full overflow-auto">
+        <Zoom scale={scale} className="h-full">
+          <div className="h-full overflow-visible flex justify-center">
+            <div ref={hostRef} />
+          </div>
+        </Zoom>
+      </div>
 
       <PreviewControls
         onZoomIn={controls.zoomIn}
