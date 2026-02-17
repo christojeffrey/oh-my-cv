@@ -1,10 +1,11 @@
 import Editor from "@monaco-editor/react";
 import { useAtom } from "jotai";
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 import type { Resume } from "@/types/resume";
+import { darkModeAtom } from "@/atoms";
 
-const EDITOR_OPTIONS = {
+const EDITOR_OPTIONS : any = {
   minimap: { enabled: false },
   fontSize: 14,
   padding: { top: 16 },
@@ -17,29 +18,19 @@ const EDITOR_OPTIONS = {
 
 interface CodeEditorProps {
   mode?: "markdown" | "css";
-  onModeChange?: (mode: "markdown" | "css") => void;
 }
 
-export function CodeEditor({ mode = "markdown", onModeChange }: CodeEditorProps = {}) {
+export function CodeEditor({ mode = "markdown" }: CodeEditorProps = {}) {
   const [resume, setResume] = useAtom(resumeAtom);
-  const [isDark, setIsDark] = useState(false);
+  const [darkMode] = useAtom(darkModeAtom);
   const showAdvanced = mode === "css";
 
-  // Detect dark mode
-  useEffect(() => {
-    const checkDark = () => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    };
-    checkDark();
-
-    const observer = new MutationObserver(checkDark);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const editorTheme = useMemo(() => {
+    if (darkMode === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "vs-dark" : "vs-light";
+    }
+    return darkMode === "dark" ? "vs-dark" : "vs-light";
+  }, [darkMode]);
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
@@ -58,7 +49,7 @@ export function CodeEditor({ mode = "markdown", onModeChange }: CodeEditorProps 
           language={showAdvanced ? "css" : "markdown"}
           value={showAdvanced ? resume.customCss || "" : resume.markdown || ""}
           onChange={handleEditorChange}
-          theme={isDark ? "vs-dark" : "vs-light"}
+          theme={editorTheme}
           options={EDITOR_OPTIONS}
         />
       </div>

@@ -251,7 +251,7 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
             <CodeEditor mode={editorMode} />
           </div>
 
-          {/* Desktop Preview Sidebar */}
+          {/* Desktop Preview Sidebar - Visible when open */}
           {!isMobile && isPreviewOpen && (
             <div className="flex-1 flex-col flex-1 min-w-0">
               <Preview />
@@ -294,6 +294,11 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
             </DialogContent>
           </Dialog>
         )}
+      </div>
+
+      {/* Hidden Print Preview - Always mounted for export functionality, never visible */}
+      <div style={{ position: 'absolute', left: '-9999px', visibility: 'hidden' }} aria-hidden="true">
+        <Preview />
       </div>
     </ErrorBoundary>
   );

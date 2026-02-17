@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { Languages, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,13 +14,16 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-reac
 import { BrandName } from "./BrandName";
 import { Logo } from "./Logo";
 import { ToggleDark } from "./ToggleDark";
+import { languageAtom } from "@/atoms";
 
 interface HeaderProps {
   children?: React.ReactNode;
 }
 
 export function Header({ children }: HeaderProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const [language, setLanguage] = useAtom(languageAtom);
+  const { i18n } = useTranslation();
 
   const languages = [
     { code: "en", name: "English" },
@@ -26,8 +31,15 @@ export function Header({ children }: HeaderProps) {
     { code: "zh-cn", name: "中文" },
   ];
 
+  // Sync language from atom to i18next
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language, i18n]);
+
   const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+    setLanguage(lng);
   };
 
   return (
@@ -52,7 +64,7 @@ export function Header({ children }: HeaderProps) {
             <Button variant="ghost" size="sm" className="h-9 gap-2 rounded-sm px-2 sm:px-3">
               <Languages className="w-4 h-4 flex-shrink-0" />
               <span className="hidden sm:inline text-xs font-medium tracking-wide">
-                {i18n.language?.toUpperCase().substring(0, 2)}
+                {language?.toUpperCase().substring(0, 2)}
               </span>
             </Button>
           </DropdownMenuTrigger>
