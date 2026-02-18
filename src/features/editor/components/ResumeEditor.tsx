@@ -1,4 +1,4 @@
-import { Eye, Settings, Check, X, XCircle, FileCode, Download, Code2 } from "lucide-react";
+import { Eye, Settings, Check, X, XCircle, FileCode, Download, Code2, BookCopy } from "lucide-react";
 import { useEffect, useState } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -12,6 +12,7 @@ import { CodeEditor, EditorSidebar, Preview, ResizeHandle, useEditorData } from 
 import { useAutoSave } from "@/features/editor/hooks/use-auto-save";
 import { useAtom } from "jotai";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
+import { copyLLMGuideToClipboard } from "@/constants/llm-guide";
 
 interface ResumeEditorProps {
   readonly id?: string;
@@ -29,6 +30,7 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
   const [resume, setResume] = useAtom(resumeAtom);
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(resume.resumeName || "");
+  const [guideCopied, setGuideCopied] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -71,6 +73,14 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
 
   const handleExportPDF = () => {
     globalThis.dispatchEvent(new CustomEvent("resume:print"));
+  };
+
+  const handleCopyGuide = async () => {
+    const success = await copyLLMGuideToClipboard();
+    if (success) {
+      setGuideCopied(true);
+      setTimeout(() => setGuideCopied(false), 2000);
+    }
   };
 
   if (isLoading) {
@@ -220,6 +230,24 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
             >
               <Download className="h-4 w-4" />
               <span className="hidden sm:inline">Export</span>
+            </Button>
+
+            {/* Copy Guide for LLM - For AI assistance */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 px-3 gap-2 rounded-sm transition-all duration-200 hidden sm:flex"
+              onClick={handleCopyGuide}
+              title="Copy format guide for LLM/AI chat"
+            >
+              {guideCopied ? (
+                <Check className="h-4 w-4 text-emerald-500" />
+              ) : (
+                <BookCopy className="h-4 w-4" />
+              )}
+              <span className="hidden sm:inline">
+                {guideCopied ? "Copied!" : "LLM Guide"}
+              </span>
             </Button>
 
             {/* Settings - Occasional */}

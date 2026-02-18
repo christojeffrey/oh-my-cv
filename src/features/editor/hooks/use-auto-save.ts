@@ -5,6 +5,14 @@ import { resumeAtom } from "@/features/editor/stores/cv-data";
 
 export type SaveStatus = "saved" | "saving" | "unsaved";
 
+// Module-level variable to track unsaved state for navigation blocking
+// This is safe because we only read/write to it, no React features needed
+let hasUnsavedChanges = false;
+
+export function hasUnsavedChangesSync(): boolean {
+  return hasUnsavedChanges;
+}
+
 export function useAutoSave() {
   const cvData = useAtomValue(resumeAtom);
   const { updateResume } = useResumes();
@@ -43,12 +51,14 @@ export function useAutoSave() {
       // This handles the case where the user types, then backspaces to original.
       if (status !== "saved" && status !== "saving") {
         setStatus("saved");
+        hasUnsavedChanges = false;
       }
       return;
     }
     // --- FIX ENDS HERE ---
 
     setStatus("unsaved");
+    hasUnsavedChanges = true;
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -60,9 +70,11 @@ export function useAutoSave() {
         await updateResume(cvData.resumeId!, currentData);
         lastSavedDataStr.current = currentDataStr;
         setStatus("saved");
+        hasUnsavedChanges = false;
       } catch (error) {
         console.error("Auto-save failed", error);
         setStatus("unsaved");
+        hasUnsavedChanges = true;
       }
     }, 2000);
 

@@ -27,8 +27,17 @@ export function ToolbarFile() {
   const handleRename = async () => {
     if (!cvData.resumeId || !newName.trim()) return;
 
-    setCvData((prev: Resume) => ({ ...prev, resumeName: newName.trim() }));
-    await updateResume(cvData.resumeId, { name: newName.trim() });
+    // Update local state immediately
+    const trimmedName = newName.trim();
+    setCvData((prev: Resume) => ({ ...prev, resumeName: trimmedName }));
+
+    // Save immediately to server (not waiting for auto-save)
+    await updateResume(cvData.resumeId, {
+      name: trimmedName,
+      markdown: cvData.markdown,
+      customCss: cvData.customCss,
+      configuration: cvData.configuration,
+    });
     setRenameDialogOpen(false);
   };
 
