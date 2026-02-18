@@ -14,10 +14,15 @@ export function Header({ children }: HeaderProps) {
 
   return (
     <header className="flex items-center justify-between px-3 sm:px-5 h-14 border-b border-border/60 bg-background/80 backdrop-elevated">
-      <Link to="/dashboard" className="flex items-center gap-2 sm:gap-3 h-full transition-opacity hover:opacity-80 min-w-0">
-        <Logo />
-        <span className="hidden sm:inline"><BrandName /></span>
-      </Link>
+      <div className="flex items-center gap-4 h-full">
+        <Link to="/dashboard" className="flex items-center gap-2 sm:gap-3 h-full transition-opacity hover:opacity-80 min-w-0">
+          <Logo />
+          <span className="hidden sm:inline"><BrandName /></span>
+        </Link>
+        <Link to="/guide" className="hidden sm:inline-flex items-center h-full text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60">
+          Guide
+        </Link>
+      </div>
 
       <div className="flex items-center gap-1 h-full">
         {children}
