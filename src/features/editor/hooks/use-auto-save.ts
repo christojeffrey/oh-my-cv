@@ -19,7 +19,7 @@ export function useAutoSave() {
   const [status, setStatus] = useState<SaveStatus>("saved");
 
   const lastSavedDataStr = useRef<string>("");
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFirstLoad = useRef(true);
 
   useEffect(() => {
