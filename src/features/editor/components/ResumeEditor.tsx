@@ -150,10 +150,10 @@ export function ResumeEditor({ id }: ResumeEditorProps) {
                   {resume.resumeName || "Untitled Resume"}
                 </button>
 
-                {/* Save Status - Hidden on very small mobile, shown on sm+ */}
+                {/* Save Status - Shown on all screens */}
                 <div
                   className={`
-                    hidden sm:block text-xs font-medium px-2 py-0.5 rounded-sm border select-none pointer-events-none transition-all duration-200 flex-shrink-0
+                    text-xs font-medium px-2 py-0.5 rounded-sm border select-none pointer-events-none transition-all duration-200 flex-shrink-0
                     ${saveStatus === "saved"
                       ? "bg-emerald-50/80 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-800/30"
                       : saveStatus === "saving"
