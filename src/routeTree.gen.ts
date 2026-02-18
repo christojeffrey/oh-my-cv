@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
 
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -32,35 +38,46 @@ const EditorIdRoute = EditorIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/guide': typeof GuideRoute
   '/editor/$id': typeof EditorIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/guide': typeof GuideRoute
   '/editor/$id': typeof EditorIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/guide': typeof GuideRoute
   '/editor/$id': typeof EditorIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/editor/$id'
+  fullPaths: '/' | '/dashboard' | '/guide' | '/editor/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/editor/$id'
-  id: '__root__' | '/' | '/dashboard' | '/editor/$id'
+  to: '/' | '/dashboard' | '/guide' | '/editor/$id'
+  id: '__root__' | '/' | '/dashboard' | '/guide' | '/editor/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  GuideRoute: typeof GuideRoute
   EditorIdRoute: typeof EditorIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  GuideRoute: GuideRoute,
   EditorIdRoute: EditorIdRoute,
 }
 export const routeTree = rootRouteImport
