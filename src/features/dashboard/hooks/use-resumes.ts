@@ -105,13 +105,59 @@ export function useResumes() {
     }
   };
 
-  const deleteResume = async (id: number | string) => {
+  const deleteResume = async (id: number | string): Promise<void> => {
     if (isAuthenticated) {
       try {
-        await deleteResumeMutation({id: id as Id<"resumes">});
+        await deleteResumeMutation({ id: id as Id<"resumes"> });
       } catch (error) {
         console.error("Failed to delete resume in Convex:", error);
+        throw error;
       }
+    } else {
+      throw new Error("Cannot delete local resume");
+    }
+  };
+
+  const duplicateResume = async (id: number | string) => {
+    const sourceResume = resumes.find(r => r.id === id);
+    if (!sourceResume) return;
+
+    if (isAuthenticated) {
+      const now = new Date();
+      const resumeToSave = {
+        name: `${sourceResume.name} (copy)`,
+        markdown: sourceResume.markdown,
+        customCss: sourceResume.customCss,
+        configuration: sourceResume.configuration,
+        created_at: now,
+        updated_at: now,
+      };
+
+      try {
+        const newId = await createResumeMutation({
+          title: resumeToSave.name,
+          markdown: resumeToSave.markdown,
+          customCss: resumeToSave.customCss,
+          configuration: JSON.stringify(resumeToSave.configuration),
+        });
+        return newId;
+      } catch (error) {
+        console.error("Failed to duplicate resume in Convex:", error);
+        alert(`Failed to duplicate resume: ${error}`);
+        throw error;
+      }
+    } else {
+      const newResume: DbResume = {
+        id: `local-${Date.now()}`,
+        name: `${sourceResume.name} (copy)`,
+        markdown: sourceResume.markdown,
+        customCss: sourceResume.customCss,
+        configuration: sourceResume.configuration,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+      setLocalResume(newResume);
+      return newResume.id;
     }
   };
 
@@ -121,5 +167,6 @@ export function useResumes() {
     createResume,
     updateResume,
     deleteResume,
+    duplicateResume,
   };
 }

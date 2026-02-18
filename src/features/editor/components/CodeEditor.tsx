@@ -16,6 +16,7 @@ const EDITOR_OPTIONS : any = {
   cursorBlinking: "smooth",
   fontFamily: "'JetBrains Mono', 'SF Mono', Consolas, monospace",
   fontLigatures: true,
+  wordWrap: "on",
 };
 
 interface CodeEditorProps {
