@@ -15,34 +15,27 @@ interface Token {
   hidden: boolean;
 }
 
+const ICON_MAP: Record<string, string> = {
+  ":email:": "✉️",
+  ":phone:": "📞",
+  ":website:": "🌐",
+  ":location:": "📍",
+  ":github:": "📦",
+  ":linkedin:": "💼",
+  ":twitter:": "🐦",
+  ":globe:": "🌍",
+  ":home:": "🏠",
+  ":calendar:": "📅",
+  ":download:": "⬇️",
+};
+
 export default function MarkdownItIconify(md: MarkdownIt) {
   // Simple icon renderer for common icons
   const iconifyRender = (tokens: Token[], idx: number) => {
     const token = tokens[idx];
     const content = token.attrGet("content") || "";
 
-    // Common shortcuts for resume icons
-    const iconMap: Record<string, string> = {
-      ":email:": "✉️",
-      ":phone:": "📞",
-      ":website:": "🌐",
-      ":location:": "📍",
-      ":github:": "📦",
-      ":linkedin:": "💼",
-      ":twitter:": "🐦",
-      ":globe:": "🌍",
-      ":home:": "🏠",
-      ":calendar:": "📅",
-      ":download:": "⬇️",
-    };
-
-    for (const [key, emoji] of Object.entries(iconMap)) {
-      if (content.includes(key)) {
-        return `${content.replace(key, emoji)}`;
-      }
-    }
-
-    return content;
+    return ICON_MAP[content] || content;
   };
 
   // Minimal state interface for what we need
