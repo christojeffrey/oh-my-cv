@@ -83,7 +83,7 @@ function EditorHeader({
         {isEditing ? (
           <div className="flex items-center gap-1 max-w-[200px]">
             <input
-              className="flex-1 h-8 px-2 text-sm bg-background border rounded focus:outline-none focus:ring-1"
+              className="flex-1 h-9 px-3 text-sm bg-background border rounded-sm focus:outline-none focus:ring-1 focus:ring-ring"
               value={tempName}
               onChange={(e) => setTempName(e.target.value)}
               onBlur={saveName}
@@ -115,7 +115,7 @@ function EditorHeader({
       {/* Right: Toolbar */}
       <div className="flex items-center gap-1">
         {/* Mode Toggle */}
-        <div className="flex bg-muted/30 rounded-md p-0.5 border border-border/40">
+        <div className="flex bg-muted/30 rounded-sm p-0.5 border border-border/40">
           <Button 
             variant="ghost" size="sm" 
             className={`h-7 px-2 text-xs ${editorMode === "markdown" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}

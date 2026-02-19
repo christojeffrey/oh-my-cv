@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 
 export function ToolbarPaper() {
@@ -16,7 +17,7 @@ export function ToolbarPaper() {
 
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium">Paper Size</div>
+      <Label>Paper Size</Label>
       <Select value={styles.paper} onValueChange={updatePaper}>
         <SelectTrigger className="w-full">
           <SelectValue />

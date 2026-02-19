@@ -49,7 +49,7 @@ export function NewResume() {
     return (
       <button
         onClick={handleCreate}
-        className="w-full p-4 border border-dashed border-border/40 rounded-sm bg-muted/10 hover:bg-muted/20 hover:border-border/60 transition-all duration-200 flex items-center justify-center gap-2"
+        className="w-full p-3 border border-dashed border-border/40 rounded-sm bg-muted/10 hover:bg-muted/20 hover:border-border/60 transition-all duration-200 flex items-center justify-center gap-2"
         data-umami-event="create-new-resume"
       >
         <Plus className="h-5 w-5 text-muted-foreground" />
@@ -66,7 +66,7 @@ export function NewResume() {
         className="w-full flex items-center justify-center p-3"
       >
         <button
-          className="group flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/40 border border-dashed border-border/40 hover:border-border/60 rounded-sm transition-all duration-300 focus:ring-2 focus:ring-ring focus:outline-none focus:border-border overflow-hidden cursor-pointer"
+          className="group flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/40 border border-dashed border-border/40 hover:border-border/60 rounded-sm shadow-subtle hover:shadow-elevated transition-all duration-300 focus:ring-1 focus:ring-ring focus:outline-none focus:border-border overflow-hidden cursor-pointer"
           style={{ width: `${cardWidth}px`, height: `${cardWidth * 297 / 210}px` }}
           aria-label="Create new resume"
           onClick={async () => {

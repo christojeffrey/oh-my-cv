@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { Download, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -47,7 +48,7 @@ export function ToolbarFile() {
 
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium mb-2">File</div>
+      <Label>File</Label>
 
       <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
         <DialogTrigger asChild>

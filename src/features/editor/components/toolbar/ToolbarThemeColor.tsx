@@ -13,7 +13,7 @@ export function ToolbarThemeColor() {
 
   return (
     <div className="space-y-3">
-      <Label className="text-sm font-medium">Theme Color</Label>
+      <Label>Theme Color</Label>
 
       {/* Color presets */}
       <div className="flex justify-between gap-2 flex-wrap">
@@ -23,7 +23,7 @@ export function ToolbarThemeColor() {
             onClick={() => updateThemeColor(color)}
             className={`w-8 h-8 rounded-sm flex items-center justify-center transition-all duration-200 hover:scale-105 ${
               styles.themeColor.toLowerCase() === color.toLowerCase()
-                ? "ring-2 ring-offset-2 ring-foreground"
+                ? "ring-1 ring-offset-2 ring-foreground"
                 : ""
             }`}
             style={{ backgroundColor: color }}
@@ -54,7 +54,7 @@ export function ToolbarThemeColor() {
           type="color"
           value={styles.themeColor}
           onChange={(e) => updateThemeColor(e.target.value)}
-          className="w-full h-10 cursor-pointer rounded-sm"
+          className="w-full h-9 cursor-pointer rounded-sm"
         />
         <Button
           type="button"
@@ -64,7 +64,7 @@ export function ToolbarThemeColor() {
             const input = document.querySelector('input[type="color"]') as HTMLInputElement;
             input?.click();
           }}
-          className="rounded-sm"
+          className="h-7"
         >
           Custom
         </Button>

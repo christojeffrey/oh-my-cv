@@ -127,7 +127,7 @@ function ColorSettings({ styles, onUpdate }: Readonly<SettingsProps>) {
             type="color"
             value={styles.themeColor}
             onChange={(e) => onUpdate("themeColor", e.target.value)}
-            className="mt-2 w-20 h-10"
+            className="mt-2 w-20 h-9"
           />
         </div>
       </CardContent>

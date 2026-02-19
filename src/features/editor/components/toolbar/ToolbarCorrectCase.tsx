@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import casePolice from "@/lib/case-police";
@@ -36,7 +37,7 @@ export function ToolbarCorrectCase() {
 
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium">Correct Case</div>
+      <Label>Correct Case</Label>
       <Button onClick={correctCase} className="w-full" disabled={result !== null}>
         Correct it!
       </Button>
