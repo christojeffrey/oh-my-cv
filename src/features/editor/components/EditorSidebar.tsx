@@ -19,20 +19,20 @@ export function EditorSidebar({ isOpen, embedded = false }: Readonly<EditorSideb
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const TOOLS = [
-      { id: "paper", component: ToolbarPaper },
-      { id: "theme", component: ToolbarThemeColor },
-      { id: "fonts", component: ToolbarFontFamily },
-      { id: "size", component: ToolbarFontSize },
-      { id: "margins", component: ToolbarMargins },
-      { id: "spacing", component: ToolbarParagraphSpace },
-      { id: "lineHeight", component: ToolbarLineHeight },
-      { id: "case", component: ToolbarCorrectCase },
-    ];
+    { id: "paper", component: ToolbarPaper },
+    { id: "theme", component: ToolbarThemeColor },
+    { id: "fonts", component: ToolbarFontFamily },
+    { id: "size", component: ToolbarFontSize },
+    { id: "margins", component: ToolbarMargins },
+    { id: "spacing", component: ToolbarParagraphSpace },
+    { id: "lineHeight", component: ToolbarLineHeight },
+    { id: "case", component: ToolbarCorrectCase },
+  ];
 
   // Embedded version (for dialog) - just content
   if (embedded) {
     return (
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 p-4 sm:p-5">
         {TOOLS.map((tool, index) => (
           <div key={tool.id}>
             <div id={`toolbar-section-${tool.id}`} className="mb-2">
@@ -47,24 +47,27 @@ export function EditorSidebar({ isOpen, embedded = false }: Readonly<EditorSideb
 
   // Standard sidebar version
   return (
-    <div className={`flex h-full transition-all duration-300 ease-out ${isOpen ? "w-64 sm:w-72" : "w-0"}`}>
+    <div
+      className={`flex h-full transition-all duration-300 ease-out ${isOpen ? "w-64 sm:w-72" : "w-0"} shrink-0`}
+    >
       {isOpen && (
-        <>
-          <div ref={toolbarRef} className="flex-1 overflow-hidden border-l border-border/40 bg-background">
-            <ScrollArea className="h-full">
-              <div className="p-4 sm:p-5 space-y-4 sm:space-y-6">
-                {TOOLS.map((tool, index) => (
-                  <div key={tool.id}>
-                    <div id={`toolbar-section-${tool.id}`} className="mb-2">
-                      <tool.component />
-                    </div>
-                    {index < TOOLS.length - 1 && <Separator className="bg-border/40" />}
+        <div
+          ref={toolbarRef}
+          className="flex-1 overflow-hidden border-l border-border/40 bg-background"
+        >
+          <ScrollArea className="h-full">
+            <div className="p-4 sm:p-5 space-y-4 sm:space-y-6">
+              {TOOLS.map((tool, index) => (
+                <div key={tool.id}>
+                  <div id={`toolbar-section-${tool.id}`} className="mb-2">
+                    <tool.component />
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
-        </>
+                  {index < TOOLS.length - 1 && <Separator className="bg-border/40" />}
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
       )}
     </div>
   );
