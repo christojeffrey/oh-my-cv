@@ -36,7 +36,7 @@ export function Preview({ fullscreen = false }: PreviewProps = {}) {
     const handlePrint = () => {
       if (hostRef.current) {
         import("@/utils/print-service").then(({ printResume }) => {
-          printResume(hostRef.current, cvData.resumeName || "Resume", configuration.paper);
+          printResume(hostRef.current, "FirstName_LastName_Role_Resume", configuration.paper);
         });
       }
     };

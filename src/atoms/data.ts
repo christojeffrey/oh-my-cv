@@ -12,3 +12,8 @@ export const languageAtom = atomWithStorage<string>(
   "oh-my-cv-language",
   "en"
 );
+
+export const editModeAtom = atomWithStorage<boolean>(
+  "oh-my-cv-edit-mode",
+  true
+);

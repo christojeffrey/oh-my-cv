@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAtom } from "jotai";
-import { 
-  Eye, Settings, FileCode, Download, Code2, BookCopy, 
-  Trash2, Loader2, MoreVertical, Check, X 
+import {
+  Eye, Settings, FileCode, Download, Code2, BookCopy,
+  Trash2, Loader2, MoreVertical, Check, X, Lock, Unlock
 } from "lucide-react";
 
 // Components
@@ -31,6 +31,7 @@ import { useAutoSave } from "@/features/editor/hooks/use-auto-save";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { copyLLMGuideToClipboard } from "@/constants/llm-guide";
 import { useResumes } from "@/features/dashboard";
+import { editModeAtom } from "@/atoms";
 
 // --- Sub-Components ---
 
@@ -51,20 +52,22 @@ function useIsMobile() {
 /**
  * The Top Bar. Handles Renaming, Status, and Action Buttons.
  */
-function EditorHeader({ 
-  resumeName, 
-  onRename, 
-  saveStatus, 
-  editorMode, 
-  setEditorMode, 
-  onPreview, 
+function EditorHeader({
+  resumeName,
+  onRename,
+  saveStatus,
+  editorMode,
+  setEditorMode,
+  onPreview,
   onSettings,
   onExport,
   onCopyGuide,
   onDelete,
   isPreviewOpen,
   isSettingsOpen,
-  guideCopied
+  guideCopied,
+  isEditingEnabled,
+  onToggleEditMode
 }: any) {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState(resumeName || "");
@@ -116,21 +119,31 @@ function EditorHeader({
       <div className="flex items-center gap-1">
         {/* Mode Toggle */}
         <div className="flex bg-muted/30 rounded-sm p-0.5 border border-border/40">
-          <Button 
-            variant="ghost" size="sm" 
+          <Button
+            variant="ghost" size="sm"
             className={`h-7 px-2 text-xs ${editorMode === "markdown" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}
             onClick={() => setEditorMode("markdown")}
           >
             <FileCode className="w-3.5 h-3.5 mr-1" /> <span className="hidden sm:inline">MD</span>
           </Button>
-          <Button 
-            variant="ghost" size="sm" 
+          <Button
+            variant="ghost" size="sm"
             className={`h-7 px-2 text-xs ${editorMode === "css" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}
             onClick={() => setEditorMode("css")}
           >
             <Code2 className="w-3.5 h-3.5 mr-1" /> <span className="hidden sm:inline">CSS</span>
           </Button>
         </div>
+
+        <Button
+          variant={isEditingEnabled ? "secondary" : "ghost"}
+          size="sm"
+          className="h-7 px-2"
+          onClick={onToggleEditMode}
+          title={isEditingEnabled ? "Disable editing" : "Enable editing"}
+        >
+          {isEditingEnabled ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+        </Button>
 
         <div className="h-4 w-px bg-border/40 mx-2" />
 
@@ -151,7 +164,13 @@ function EditorHeader({
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-1">
            <Button variant="ghost" size="sm" className="h-8" onClick={onCopyGuide}>
-            {guideCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <BookCopy className="w-4 h-4" />}
+            {guideCopied ? <Check className="w-4 h-4 text-emerald-500" /> : 
+            <>
+            <BookCopy className="w-4 h-4" />
+            <span className="hidden sm:inline">LLM Prompt</span>
+            </>
+
+            }
           </Button>
           <Button variant="ghost" size="sm" className="h-8" onClick={onExport}><Download className="w-4 h-4" /></Button>
           <div className="h-4 w-px bg-border/40 mx-1" />
@@ -168,7 +187,7 @@ function EditorHeader({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={onCopyGuide}>
-                <BookCopy className="w-4 h-4 mr-2" /> Copy LLM Guide
+                <BookCopy className="w-4 h-4 mr-2" /> LLM Prompt
               </DropdownMenuItem>
               <DropdownMenuItem onClick={onExport}>
                 <Download className="w-4 h-4 mr-2" /> Export PDF
@@ -193,7 +212,8 @@ export function ResumeEditor({ id }: { readonly id?: string }) {
   const { cvData, isLoading } = useEditorData(id);
   const saveStatus = useAutoSave();
   const [resume, setResume] = useAtom(resumeAtom);
-  
+  const [isEditingEnabled, setIsEditingEnabled] = useAtom(editModeAtom);
+
   // UI State
   const isMobile = useIsMobile();
   const [editorMode, setEditorMode] = useState<"markdown" | "css">("markdown");
@@ -240,7 +260,7 @@ export function ResumeEditor({ id }: { readonly id?: string }) {
   return (
     <ErrorBoundary>
       <div className="flex flex-col h-full bg-background">
-        <EditorHeader 
+        <EditorHeader
           resumeName={resume.resumeName}
           onRename={handleRename}
           saveStatus={saveStatus}
@@ -254,13 +274,15 @@ export function ResumeEditor({ id }: { readonly id?: string }) {
           onExport={handleExport}
           onCopyGuide={handleCopyGuide}
           onDelete={() => setShowDeleteDialog(true)}
+          isEditingEnabled={isEditingEnabled}
+          onToggleEditMode={() => setIsEditingEnabled(p => !p)}
         />
 
         <div className="flex flex-1 overflow-hidden relative">
           {/* Code Editor */}
           <div className={`h-full flex flex-col relative border-r border-border/40 ${showPreview && !isMobile ? 'w-1/2' : 'w-full'}`}>
             {!isMobile && <ResizeHandle direction="horizontal" />}
-            <CodeEditor mode={editorMode} />
+            <CodeEditor mode={editorMode} editingEnabled={isEditingEnabled} />
           </div>
 
           {/* Desktop Preview */}

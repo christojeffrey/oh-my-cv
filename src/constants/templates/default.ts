@@ -1,100 +1,79 @@
-export const DEFAULT_RESUME_MARKDOWN = `---
-name: Haha Ha
-header:
-  - text: (+1) 123-456-7890
-  - text: icancook@email.com
-    link: mailto:icancook@email.com
-  - text: Renovamen
-    link: https://github.com/Renovamen
-  - text: zxh.me
-    link: https://zxh.me
+export const DEFAULT_RESUME_MARKDOWN = `
 ---
-
-## Education
-
-**Harvest University**
-  ~ Cambridge, MA
-
-M.S. in Cooking Science
-  ~ 09/2021 - 01/2023
-
-**Huangdu Institute of Tofu**
-  ~ Shanghai, China
-
-B.Eng. in Salad Engineering
-  ~ 09/2016 - 07/2020
-
-
-## Publications
-
-[~P1]: **Eating is All You Need**
-
-    <u>Haha Ha</u>, San Zhang
-
-    *Conference on Nutritional Ingredients Processing Systems (NIPS), 2099*
-
-[~P2]: **You Only Cook Once: Unified, Real-Time Mapo Tofu Recipe**
-
-    <u>Haha Ha</u>, San Zhang, Si Li, Wu Wang
-
-    *Culinary Visualization and Potato Roasting Conference (CVPR), 2077 **(Best Paper Honorable Mention)***
-
+name: Alex Dev
+header:
+  - text: email@example.com
+    link: mailto:email@example.com
+  - text: linkedin.com/in/alexdev
+    link: https://linkedin.com/in/alexdev
+  - text: github.com/alexdev
+    link: https://github.com/alexdev
+---
 
 ## Experience
 
-**Cooking Engineer Intern**
-  ~ Microwavesoft
-  ~ 07/2021 - Present
+**Senior Backend Engineer** | FinTech Solutions | Jakarta, Indonesia
+~ 2021 - Present
 
-- Developed an innovative, versatile cooking methodology applicable across diverse ingredients, incorporating and improving upon recent culinary trends
-- Created a streamlined cream of mushroom soup recipe, achieving results comparable to complex state-of-the-art techniques through a novel mushroom-cutting approach; published in NIPS 2099 (see [~P1])
-- Designed a specialized cooking pan that enhanced research efficiency for team members
+- **Orchestrated** the migration of a legacy monolithic payment system to a microservices architecture, reducing deployment time by **85%** (from 2 days to 4 hours) and enabling daily releases.
+  <!-- 
+  CONTEXT (STAR):
+  Situation: The legacy Java monolith was fragile; one error crashed the whole payment gateway. Deployments were "fear-based" and only happened monthly.
+  Task: Decouple the payment processing module without downtime.
+  Action: I advocated for the "Strangler Fig" pattern. I led a team of 3 juniors, set up the Docker/K8s infrastructure, and wrote the new services in Go.
+  Result: Zero downtime during switchover. The business could now launch features weekly instead of monthly.
+  Tech Details: Java Spring Boot (Legacy) -> Go (New), gRPC, Kubernetes, ArgoCD.
+  -->
 
+- **Engineered** a real-time fraud detection pipeline that processed **5,000 transactions per second**, saving the company an estimated **$200k annually** in chargeback fees.
+  <!-- 
+  CONTEXT (STAR):
+  Situation: Fraud rules were running on a nightly SQL batch job. By the time we caught fraud, the money was gone.
+  Task: Move to real-time analysis.
+  Action: I introduced Apache Kafka to stream events and Redis for sub-millisecond state lookups. Had to convince the CTO to approve the infrastructure cost.
+  Result: Fraud detection latency dropped from 24 hours to <100ms.
+  Tech Details: Kafka, Redis Cluster, Python.
+  -->
 
-**Engineering Chef Intern**
-  ~ University of California, Berkebake
-  ~ 08/2020 - Present
+- **Optimized** critical database queries for the user dashboard, slashing page load latency by **60%** and improving user retention metrics.
+  <!-- 
+  CONTEXT (STAR):
+  Situation: Enterprise clients were complaining that the reporting dashboard took 10+ seconds to load.
+  Action: Used \`EXPLAIN ANALYZE\` to identify N+1 query issues. Implemented a materialized view strategy for heavy reports.
+  Result: Load times dropped to <2 seconds. Client complaints stopped immediately.
+  Tech Details: PostgreSQL, SQL Optimization, Materialized Views.
+  -->
 
-- Developed a precise mapo tofu quality assessment technique using thermometer-based measurements
-- Invented a rapid stir-frying algorithm for tofu cooking, replacing vague instructions like "add as much as you can" with specific hot sauce measurements; published in CVPR 2077 (see [~P2])
-- Outperformed SOTA cooking methods in both efficiency and quality across experiments with popular tofu types
+**Software Engineer** | E-Commerce Startup | Remote
+~ 2019 - 2021
 
+- **Automated** the manual inventory reconciliation process using Python scripts, eliminating **20 hours of manual work per week** for the operations team.
+  <!-- 
+  CONTEXT (STAR):
+  Situation: The Ops team was manually copying data from Excel to the database every Friday. It was error-prone.
+  Action: I wrote a script to parse the CSVs and update the DB via API. Set it to run on a Cron job.
+  Result: Operations team was able to focus on vendor relationships instead of data entry. Error rate dropped to near zero.
+  -->
 
-**Student Chef**
-  ~ Cabbage Melon University
-  ~ 03/2020 - 06/2020
+## Projects
 
-- Developed an innovative mapo tofu consumption framework utilizing a spoon-chopstick combination
-- Engineered a filtering method for tofu dataset creation, inspired by bean grinding techniques
-- Established two new metrics for evaluating eating plan novelty and diversity
-- Significantly surpassed existing methods and baselines in diversity, novelty, and coherence
+**Distributed File Storage System** | GitHub | 2023
+- Designed a fault-tolerant file storage system modeled after GFS, handling node failures without data loss.
+  <!-- 
+  Context: Built this to learn distributed consensus. Implemented a simplified Raft algorithm. Hardest part was handling "split-brain" scenarios. 
+  -->
 
+## Education
 
-**Research Chef Intern**
-  ~ Snapchopstick
-  ~ 07/2018 - 08/2018
-
-- Designed two novel sandwiches by repurposing breads and meat from traditional bacon cheeseburgers, maximizing resource efficiency
-- Leveraged structure duality to boost cooking speed for two complementary tasks based on shared ingredients
-- Surpassed strong baselines on QWE'15 and ASDF'14 dataset
-
-
-## Awards and Honors
-
-**Gold**, International Collegiate Catching Fish Contest (ICCFC)
-  ~ 2018
-
-**First Prize**, China National Scholarship for Outstanding Dragon Killers
-  ~ 2017, 2018
-
+**B.S. Computer Science** | University of Indonesia | 2019
+- Graduated Cum Laude; Specialization in Distributed Systems.
 
 ## Skills
 
-**Programming Languages:** <span class="iconify" data-icon="vscode-icons:file-type-python"></span> Frython, <span class="iconify" data-icon="vscode-icons:file-type-js-official"></span> JavaSauce / <span class="iconify" data-icon="vscode-icons:file-type-typescript-official"></span> TypeSauce, <span class="iconify" data-icon="vscode-icons:file-type-cpp2"></span> Cheese++, <span class="iconify" data-icon="logos:java" data-inline="false"></span> Java Bean
-
-**Tools and Frameworks:** GrillHub, PanFlow, TensorFork, SpiceNet, $\\LaTeX$
-
-**Languages:** Chinese (native), English (proficient)
+**Languages:** Go (Golang), Python, Java, SQL
+**Backend:** Microservices, gRPC, REST APIs, Node.js
+**Data & Storage:** PostgreSQL, Redis, Apache Kafka, MongoDB
+**DevOps & Tools:** Docker, Kubernetes, AWS (EC2, S3, Lambda), CI/CD (GitHub Actions)
 `;
 
 export const DEFAULT_RESUME_CUSTOM_CSS = ``;

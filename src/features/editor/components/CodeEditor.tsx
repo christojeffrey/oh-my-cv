@@ -21,9 +21,10 @@ const EDITOR_OPTIONS : any = {
 
 interface CodeEditorProps {
   mode?: "markdown" | "css";
+  editingEnabled?: boolean;
 }
 
-export function CodeEditor({ mode = "markdown" }: CodeEditorProps = {}) {
+export function CodeEditor({ mode = "markdown", editingEnabled = true }: CodeEditorProps = {}) {
   const [resume, setResume] = useAtom(resumeAtom);
   const [darkMode] = useAtom(darkModeAtom);
   const showAdvanced = mode === "css";
@@ -67,7 +68,7 @@ export function CodeEditor({ mode = "markdown" }: CodeEditorProps = {}) {
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
           theme={editorTheme}
-          options={EDITOR_OPTIONS}
+          options={{ ...EDITOR_OPTIONS, readOnly: !editingEnabled }}
         />
       </div>
     </div>
