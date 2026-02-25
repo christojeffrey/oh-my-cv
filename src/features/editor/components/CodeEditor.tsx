@@ -4,10 +4,11 @@ import { useAtom } from "jotai";
 import { useMemo } from "react";
 import type { editor } from "monaco-editor";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
+import { editorModeAtom } from "@/features/editor/stores/ui-state";
 import type { Resume } from "@/types/resume";
 import { darkModeAtom } from "@/atoms";
 
-const EDITOR_OPTIONS : any = {
+const EDITOR_OPTIONS: any = {
   minimap: { enabled: false },
   fontSize: 14,
   padding: { top: 16 },
@@ -26,8 +27,9 @@ interface CodeEditorProps {
 
 export function CodeEditor({ mode = "markdown", editingEnabled = true }: CodeEditorProps = {}) {
   const [resume, setResume] = useAtom(resumeAtom);
+  const [editorMode] = useAtom(editorModeAtom);
   const [darkMode] = useAtom(darkModeAtom);
-  const showAdvanced = mode === "css";
+  const showAdvanced = editorMode === "css";
 
   const editorTheme = useMemo(() => {
     if (darkMode === "system") {
