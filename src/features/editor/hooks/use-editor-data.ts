@@ -21,7 +21,7 @@ export function useEditorData(id?: string) {
 
     if (resume) {
       setCvData((prev) => {
-        if (prev.loaded && String(prev.resumeId) === String(resume.id) && prev.resumeName === resume.name && prev.markdown === resume.markdown) {
+        if (prev.loaded && String(prev.resumeId) === String(resume.id)) {
           return prev;
         }
 
