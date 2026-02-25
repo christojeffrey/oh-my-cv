@@ -18,6 +18,9 @@ const EDITOR_OPTIONS: any = {
   fontFamily: "'JetBrains Mono', 'SF Mono', Consolas, monospace",
   fontLigatures: true,
   wordWrap: "on",
+  automaticLayout: true,
+  wrappingStrategy: "advanced",
+  scrollBeyondLastColumn: 0,
 };
 
 export function CodeEditor() {
