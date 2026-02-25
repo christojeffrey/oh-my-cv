@@ -1,102 +1,96 @@
 import { useAtomValue } from "jotai";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useResumes } from "@/features/dashboard/hooks/use-resumes";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 
 export type SaveStatus = "saved" | "saving" | "unsaved";
 
-// Module-level variable to track unsaved state for navigation blocking
-// This is safe because we only read/write to it, no React features needed
 let hasUnsavedChanges = false;
+export const hasUnsavedChangesSync = () => hasUnsavedChanges;
 
-export function hasUnsavedChangesSync(): boolean {
-  return hasUnsavedChanges;
-}
+const DEBOUNCE_MS = 1000;
+
+const getSavePayload = (cv: ReturnType<typeof useAtomValue<typeof resumeAtom>>) => ({
+  name: cv.resumeName,
+  markdown: cv.markdown,
+  customCss: cv.customCss,
+  configuration: cv.configuration,
+});
 
 export function useAutoSave() {
   const cvData = useAtomValue(resumeAtom);
   const { updateResume } = useResumes();
   const [status, setStatus] = useState<SaveStatus>("saved");
 
-  const lastSavedDataStr = useRef<string>("");
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isFirstLoad = useRef(true);
+  const lastSaved = useRef("");
+  const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saving = useRef(false);
+  const latest = useRef({ data: getSavePayload(cvData), str: "" });
 
+  // Block tab close when unsaved
   useEffect(() => {
-    if (cvData.loaded && isFirstLoad.current) {
-      lastSavedDataStr.current = JSON.stringify({
-        name: cvData.resumeName,
-        markdown: cvData.markdown,
-        customCss: cvData.customCss,
-        configuration: cvData.configuration,
-      });
-      isFirstLoad.current = false;
-    }
-  }, [cvData.loaded, cvData.resumeName, cvData.markdown, cvData.customCss, cvData.configuration]);
-
-  useEffect(() => {
-    if (!cvData.loaded || !cvData.resumeId || isFirstLoad.current) return;
-
-    const currentData = {
-      name: cvData.resumeName,
-      markdown: cvData.markdown,
-      customCss: cvData.customCss,
-      configuration: cvData.configuration,
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!hasUnsavedChanges) return;
+      e.preventDefault();
+      e.returnValue = "";
     };
-    const currentDataStr = JSON.stringify(currentData);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, []);
 
-    // --- FIX STARTS HERE ---
-    if (currentDataStr === lastSavedDataStr.current) {
-      // If the data matches what we last saved, we are "saved".
-      // This handles the case where the user types, then backspaces to original.
-      if (status !== "saved" && status !== "saving") {
-        setStatus("saved");
-        hasUnsavedChanges = false;
-      }
+  const save = useCallback(async (resumeId: string, str: string) => {
+  if (saving.current) return;
+  saving.current = true;
+  setStatus("saving");
+  try {
+    await updateResume(resumeId, latest.current.data);
+    if (latest.current.str === str) {
+      lastSaved.current = str;
+      setStatus("saved");
+      hasUnsavedChanges = false;
+    } else {
+      // New changes arrived while saving — schedule a follow-up save
+      setStatus("unsaved");
+      if (pending.current) clearTimeout(pending.current);
+      pending.current = setTimeout(
+        () => save(resumeId, latest.current.str),
+        DEBOUNCE_MS
+      );
+    }
+  } catch {
+    setStatus("unsaved");
+    hasUnsavedChanges = true;
+  } finally {
+    saving.current = false;
+  }
+}, [updateResume]);
+
+  useEffect(() => {
+    if (!cvData.loaded || !cvData.resumeId) return;
+
+    const data = getSavePayload(cvData);
+    const str = JSON.stringify(data);
+    latest.current = { data, str };
+
+    // First load — just set baseline, don't save
+    if (!lastSaved.current) {
+      lastSaved.current = str;
       return;
     }
-    // --- FIX ENDS HERE ---
+
+    if (str === lastSaved.current) {
+      setStatus("saved");
+      hasUnsavedChanges = false;
+      return;
+    }
 
     setStatus("unsaved");
     hasUnsavedChanges = true;
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    timeoutRef.current = setTimeout(async () => {
-      setStatus("saving");
-      try {
-        await updateResume(cvData.resumeId!, currentData);
-        lastSavedDataStr.current = currentDataStr;
-        setStatus("saved");
-        hasUnsavedChanges = false;
-      } catch (error) {
-        console.error("Auto-save failed", error);
-        setStatus("unsaved");
-        hasUnsavedChanges = true;
-      }
-    }, 2000);
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [cvData, updateResume]); // Removed 'status' from dependency to prevent loops, though logic above handles it.
-
-  // ... handleBeforeUnload logic ... (unchanged)
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (status !== "saved") {
-        e.preventDefault();
-        e.returnValue = "";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [status]);
+    if (pending.current) clearTimeout(pending.current);
+    pending.current = setTimeout(() => save(cvData.resumeId!, str), DEBOUNCE_MS);
+    return () => { if (pending.current) clearTimeout(pending.current); };
+  }, [cvData, save]);
 
   return status;
 }

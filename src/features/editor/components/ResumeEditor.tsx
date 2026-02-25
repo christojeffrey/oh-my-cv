@@ -7,8 +7,8 @@ import {
 } from "lucide-react";
 
 // Components
-import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,7 @@ import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { copyLLMGuideToClipboard } from "@/constants/llm-guide";
 import { useResumes } from "@/features/dashboard";
 import { editModeAtom } from "@/atoms";
+import { ResumeConfiguration } from "./ResumeConfiguration";
 
 // --- Sub-Components ---
 
@@ -98,8 +99,8 @@ function EditorHeader({
           </div>
         ) : (
           <div className="flex items-center gap-3 min-w-0">
-            <button 
-              onClick={() => setIsEditing(true)} 
+            <button
+              onClick={() => setIsEditing(true)}
               className="font-medium hover:bg-accent/50 px-2 py-1 rounded truncate max-w-[150px] sm:max-w-md text-left"
             >
               {resumeName || "Untitled Resume"}
@@ -147,14 +148,14 @@ function EditorHeader({
 
         <div className="h-4 w-px bg-border/40 mx-2" />
 
-        <Button 
+        <Button
           variant={isPreviewOpen ? "secondary" : "ghost"} size="sm" className="h-8 w-8 sm:w-auto px-0 sm:px-3"
           onClick={onPreview} title="Preview"
         >
           <Eye className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Preview</span>
         </Button>
-        
-        <Button 
+
+        <Button
           variant={isSettingsOpen ? "secondary" : "ghost"} size="sm" className="h-8 w-8 sm:w-auto px-0 sm:px-3"
           onClick={onSettings} title="Settings"
         >
@@ -164,7 +165,7 @@ function EditorHeader({
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-1">
            <Button variant="ghost" size="sm" className="h-8" onClick={onCopyGuide}>
-            {guideCopied ? <Check className="w-4 h-4 text-emerald-500" /> : 
+            {guideCopied ? <Check className="w-4 h-4 text-emerald-500" /> :
             <>
             <BookCopy className="w-4 h-4" />
             <span className="hidden sm:inline">LLM Prompt</span>
@@ -230,9 +231,9 @@ export function ResumeEditor({ id }: { readonly id?: string }) {
 
   // Actions
   const handleRename = (name: string) => setResume(prev => ({ ...prev, resumeName: name }));
-  
+
   const handleExport = () => globalThis.dispatchEvent(new CustomEvent("resume:print"));
-  
+
   const handleCopyGuide = async () => {
     if (await copyLLMGuideToClipboard()) {
       setGuideCopied(true);
@@ -294,6 +295,9 @@ export function ResumeEditor({ id }: { readonly id?: string }) {
 
           {/* Settings Sidebar (Desktop Overlay or Side) */}
           {!isMobile && <EditorSidebar isOpen={showSettings} />}
+
+          {/* Resume Configuration Panel */}
+          <ResumeConfiguration />
         </div>
 
         {/* Mobile Modals */}
@@ -301,8 +305,8 @@ export function ResumeEditor({ id }: { readonly id?: string }) {
           <>
             <Dialog open={showPreview} onOpenChange={setShowPreview}>
               <DialogContent className="w-full h-full max-w-none p-0 border-0 bg-background">
-                <Button 
-                  size="icon" variant="ghost" className="absolute top-2 right-2 z-50 bg-background/50 backdrop-blur" 
+                <Button
+                  size="icon" variant="ghost" className="absolute top-2 right-2 z-50 bg-background/50 backdrop-blur"
                   onClick={() => setShowPreview(false)}
                 >
                   <X className="w-5 h-5" />

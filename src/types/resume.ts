@@ -21,7 +21,7 @@ export interface ResumeConfiguration {
 }
 
 export interface DbResume {
-    id: number | string;
+    id: string;
     name: string;
     markdown: string;
     customCss: string;
@@ -33,7 +33,7 @@ export interface DbResume {
 export interface Resume {
     markdown: string;
     customCss: string;
-    resumeId: number | string | null;
+    resumeId: string | null;
     resumeName: string;
     configuration: ResumeConfiguration;
     loaded: boolean;
