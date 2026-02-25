@@ -1,13 +1,12 @@
-/**
- * Handles printing of the resume content by creating a temporary iframe.
- * This ensures only the resume content is printed, not the entire editor UI.
- */
-export const printResume = (hostElement: HTMLElement, title: string, pageSize: string = "auto") => {
-  if (!hostElement?.shadowRoot) {
-    console.error("Cannot print: Host element or shadow root not found");
-    return;
-  }
+import type { Resume } from "@/types/resume";
+import { markdownService } from "@/utils/markdown";
+import { applyPagination, createStyledContainer, getResumeStyles } from "../utils/pagination";
 
+/**
+ * Handles printing of the resume by rendering data directly into a temporary iframe.
+ * Uses shared pagination utility with styled container for accurate measurements.
+ */
+export const printResume = (cvData: Resume, title: string) => {
   // Create a hidden iframe
   const iframe = document.createElement("iframe");
   iframe.style.position = "fixed";
@@ -33,14 +32,33 @@ export const printResume = (hostElement: HTMLElement, title: string, pageSize: s
   // Set the title for the print job
   contentDocument.title = title;
 
-  // Clone the shadow root content
-  // We need to verify if we can simply copy innerHTML or if we need deep cloning
-  // For styles and simple structure, innerHTML is usually sufficient and faster
-  const shadowContent = hostElement.shadowRoot.innerHTML;
+  // Render the resume HTML
+  const resumeHtml = markdownService.renderResume(cvData.markdown);
 
-  // Open the document to write
-  contentDocument.open();
-  contentDocument.write(`
+  // Generate CSS using shared utility
+  const css = getResumeStyles(cvData.configuration, cvData.customCss);
+
+  // Create a styled container with CSS applied (ensures measurements match Preview)
+  const { container: tempContainer } = createStyledContainer(
+    cvData.configuration,
+    cvData.customCss
+  );
+
+  // Add content wrapper for pagination
+  const contentWrapper = document.createElement("div");
+  tempContainer.appendChild(contentWrapper);
+
+  // Apply shared pagination logic
+  applyPagination(contentWrapper, resumeHtml, cvData.configuration);
+
+  // Get the paginated HTML
+  const paginatedHtml = contentWrapper.innerHTML;
+
+  // Clean up temp container
+  document.body.removeChild(tempContainer);
+
+  // Build the complete HTML document
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -48,7 +66,7 @@ export const printResume = (hostElement: HTMLElement, title: string, pageSize: s
         <style>
           @page {
             margin: 0;
-            size: ${pageSize};
+            size: ${cvData.configuration.paper};
           }
           html, body {
             margin: 0 !important;
@@ -63,13 +81,13 @@ export const printResume = (hostElement: HTMLElement, title: string, pageSize: s
             page-break-after: always;
             break-inside: avoid;
             page-break-inside: avoid;
-            
+
             /* Crucial for preventing blank pages */
             display: block !important;
-            overflow: hidden !important; 
+            overflow: hidden !important;
             height: 100% !important; /* Force exact fit */
             max-height: 100% !important;
-            
+
             margin: 0 !important;
             box-shadow: none !important;
             print-color-adjust: exact;
@@ -82,18 +100,20 @@ export const printResume = (hostElement: HTMLElement, title: string, pageSize: s
             margin-bottom: 0 !important;
           }
         </style>
+        <style>${css}</style>
       </head>
       <body>
-        ${shadowContent}
+        ${paginatedHtml}
       </body>
     </html>
-  `);
+  `;
+
+  // Open the document to write
+  contentDocument.open();
+  contentDocument.write(html);
   contentDocument.close();
 
-  // Wait for content (especially images/fonts) to load before printing
-  // Since we are copying raw HTML/CSS from an already rendered shadow DOM, 
-  // resources might be cached, but a small delay or load event is safer.
-
+  // Wait for content to load before printing
   const finish = () => {
     try {
       contentWindow.focus();
@@ -101,18 +121,13 @@ export const printResume = (hostElement: HTMLElement, title: string, pageSize: s
     } catch (e) {
       console.error("Print failed", e);
     } finally {
-      // Remove iframe after printing (or if user cancels)
-      // Note: Chrome removes the iframe immediately if we don't wait, 
-      // but 'onafterprint' is not reliably supported across all browsers for cleanup.
-      // A timeout is a simple workaround to allow the print dialog to open.
+      // Remove iframe after printing
       setTimeout(() => {
         iframe.remove();
       }, 1000);
     }
   };
 
-  // If there are images, we might want to wait for them. 
-  // For now, we assume styles are inline or text-based.
   if (contentDocument.readyState === 'complete') {
     finish();
   } else {
