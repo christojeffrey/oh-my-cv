@@ -15,7 +15,14 @@ export function CopyGuideButton() {
 
   return (
     <Button variant="ghost" size="sm" className="h-8" onClick={handleCopy}>
-      {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <BookCopy className="w-4 h-4" />}
+      {copied ? (
+        <Check className="w-4 h-4 text-emerald-500" />
+      ) : (
+        <>
+          <BookCopy className="w-4 h-4 mr-2" />
+          <span className="hidden sm:inline">LLM Prompt</span>
+        </>
+      )}
     </Button>
   );
 }

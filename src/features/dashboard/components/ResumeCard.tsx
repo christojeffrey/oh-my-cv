@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useRef, useEffect, useState } from "react";
-import { useResumePagination } from "@/hooks/use-resume-pagination";
+import { useResumePagination } from "@/features/editor";
 import type { DbResume } from "@/types/resume";
 import { markdownService } from "@/utils/markdown";
 import { FileText, MoreVertical, Copy, Pencil, Trash2 } from "lucide-react";

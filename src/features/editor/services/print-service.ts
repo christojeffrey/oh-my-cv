@@ -1,8 +1,6 @@
 import type { Resume } from "@/types/resume";
-import { markdownService } from "./markdown";
-import { coreStyles as coreCss } from "@/utils/styles/core-styles";
-import { generateConfigurationStyles as generateConfigCss } from "@/utils/styles/preview-styles";
-import { applyPagination, createStyledContainer } from "./pagination";
+import { markdownService } from "@/utils/markdown";
+import { applyPagination, createStyledContainer, getResumeStyles } from "../utils/pagination";
 
 /**
  * Handles printing of the resume by rendering data directly into a temporary iframe.
@@ -37,12 +35,8 @@ export const printResume = (cvData: Resume, title: string) => {
   // Render the resume HTML
   const resumeHtml = markdownService.renderResume(cvData.markdown);
 
-  // Generate CSS
-  const css = `
-    ${coreCss}
-    ${generateConfigCss(cvData.configuration)}
-    ${cvData.customCss || ""}
-  `;
+  // Generate CSS using shared utility
+  const css = getResumeStyles(cvData.configuration, cvData.customCss);
 
   // Create a styled container with CSS applied (ensures measurements match Preview)
   const { container: tempContainer } = createStyledContainer(
@@ -54,7 +48,7 @@ export const printResume = (cvData: Resume, title: string) => {
   const contentWrapper = document.createElement("div");
   tempContainer.appendChild(contentWrapper);
 
-  // Apply shared pagination logic (CSS is already applied via createStyledContainer)
+  // Apply shared pagination logic
   applyPagination(contentWrapper, resumeHtml, cvData.configuration);
 
   // Get the paginated HTML

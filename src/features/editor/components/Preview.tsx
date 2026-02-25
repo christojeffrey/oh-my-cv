@@ -3,7 +3,7 @@ import { useRef, useMemo, useEffect } from "react";
 import { X } from "lucide-react";
 import { Zoom } from "@/components/shared/Zoom";
 import { PreviewControls } from "@/features/editor/components/PreviewControls";
-import { useResumePagination } from "@/hooks/use-resume-pagination";
+import { useResumePagination } from "../hooks/use-resume-pagination";
 import { usePreviewZoom } from "@/features/editor/hooks/use-preview-zoom";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { isPreviewOpenAtom } from "@/features/editor/stores/ui-state";
@@ -14,6 +14,7 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import { printResume } from "../services/print-service";
 
 
 function PreviewContent({ cvData, zoomContainerRef }: {
@@ -38,9 +39,7 @@ function PreviewContent({ cvData, zoomContainerRef }: {
 
   useEffect(() => {
     const handlePrint = () => {
-      import("@/utils/print-service").then(({ printResume }) => {
-        printResume(cvData, cvData.resumeName || "Resume");
-      });
+      printResume(cvData, cvData.resumeName || "Resume");
     };
 
     globalThis.addEventListener("resume:print", handlePrint);

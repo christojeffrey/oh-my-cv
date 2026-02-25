@@ -9,6 +9,42 @@ export interface PaginationResult {
   heightPx: number;
 }
 
+export interface ResumeDimensions {
+  widthPx: number;
+  heightPx: number;
+  vMargin: number;
+  hMargin: number;
+}
+
+/**
+ * Calculates resume dimensions in pixels based on configuration.
+ */
+export function getResumeDimensions(config: ResumeConfiguration): ResumeDimensions {
+  const paper = PAPER_SIZES[config.paper] || PAPER_SIZES.A4;
+  return {
+    widthPx: paper.w * MM_TO_PX,
+    heightPx: paper.h * MM_TO_PX,
+    vMargin: config.marginV,
+    hMargin: config.marginH,
+  };
+}
+
+/**
+ * Generates the complete CSS string for the resume.
+ */
+export function getResumeStyles(
+  config: ResumeConfiguration,
+  customCss: string = "",
+  additionalCss: string = ""
+): string {
+  return `
+    ${coreCss}
+    ${generateConfigCss(config)}
+    ${customCss}
+    ${additionalCss}
+  `;
+}
+
 /**
  * Applies pagination to a container DOM element.
  * CSS must be applied to the container before calling this function.
@@ -19,12 +55,7 @@ export function applyPagination(
   html: string,
   config: ResumeConfiguration
 ): PaginationResult {
-  // Get dimensions
-  const paper = PAPER_SIZES[config.paper] || PAPER_SIZES.A4;
-  const widthPx = paper.w * MM_TO_PX;
-  const heightPx = paper.h * MM_TO_PX;
-  const vMargin = config.marginV;
-  const hMargin = config.marginH;
+  const { widthPx, heightPx, vMargin, hMargin } = getResumeDimensions(config);
   const maxHeight = heightPx - (vMargin * 2);
 
   // Clear container
@@ -115,14 +146,7 @@ export function createStyledContainer(
   const container = document.createElement("div");
   const styleEl = document.createElement("style");
 
-  const css = `
-    ${coreCss}
-    ${generateConfigCss(config)}
-    ${customCss}
-    ${additionalCss}
-  `;
-
-  styleEl.textContent = css;
+  styleEl.textContent = getResumeStyles(config, customCss, additionalCss);
   container.appendChild(styleEl);
 
   // Hide container

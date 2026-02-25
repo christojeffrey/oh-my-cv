@@ -6,7 +6,7 @@ import type { editor } from "monaco-editor";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
 import { editorModeAtom } from "@/features/editor/stores/ui-state";
 import type { Resume } from "@/types/resume";
-import { darkModeAtom } from "@/atoms";
+import { darkModeAtom, editModeAtom } from "@/atoms";
 
 const EDITOR_OPTIONS: any = {
   minimap: { enabled: false },
@@ -20,15 +20,11 @@ const EDITOR_OPTIONS: any = {
   wordWrap: "on",
 };
 
-interface CodeEditorProps {
-  mode?: "markdown" | "css";
-  editingEnabled?: boolean;
-}
-
-export function CodeEditor({ mode = "markdown", editingEnabled = true }: CodeEditorProps = {}) {
+export function CodeEditor() {
   const [resume, setResume] = useAtom(resumeAtom);
   const [editorMode] = useAtom(editorModeAtom);
   const [darkMode] = useAtom(darkModeAtom);
+  const [editingEnabled] = useAtom(editModeAtom);
   const showAdvanced = editorMode === "css";
 
   const editorTheme = useMemo(() => {

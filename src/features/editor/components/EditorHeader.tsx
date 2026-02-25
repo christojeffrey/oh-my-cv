@@ -16,20 +16,17 @@ import { copyLLMGuideToClipboard } from "@/constants/llm-guide";
 import { CopyGuideButton } from "./CopyGuideButton";
 import { useAutoSave } from "@/features/editor/hooks/use-auto-save";
 import { resumeAtom } from "../stores/cv-data";
-import { editorModeAtom, isPreviewOpenAtom, isSettingsOpenAtom } from "@/features/editor/stores/ui-state";
+import { editorModeAtom, isPreviewOpenAtom, isSettingsOpenAtom, isDeleteDialogOpenAtom } from "@/features/editor/stores/ui-state";
 import { editModeAtom } from "@/atoms";
-import { printResume } from "@/utils/print-service";
+import { printResume } from "../services/print-service";
 
-interface EditorHeaderProps {
-  onDelete: () => void;
-}
-
-export function EditorHeader({ onDelete }: EditorHeaderProps) {
+export function EditorHeader() {
   const [resume, setResume] = useAtom(resumeAtom);
   const [editorMode, setEditorMode] = useAtom(editorModeAtom);
   const [isPreviewOpen, setIsPreviewOpen] = useAtom(isPreviewOpenAtom);
   const [isSettingsOpen, setIsSettingsOpen] = useAtom(isSettingsOpenAtom);
   const [isEditingEnabled, setIsEditingEnabled] = useAtom(editModeAtom);
+  const [, setIsDeleteDialogOpen] = useAtom(isDeleteDialogOpenAtom);
 
   const saveStatus = useAutoSave();
   const [isEditing, setIsEditing] = useState(false);
@@ -135,7 +132,7 @@ export function EditorHeader({ onDelete }: EditorHeaderProps) {
           <CopyGuideButton />
           <Button variant="ghost" size="sm" className="h-8" onClick={handleExport}><Download className="w-4 h-4" /></Button>
           <div className="h-4 w-px bg-border/40 mx-1" />
-          <Button variant="ghost" size="sm" className="h-8 text-destructive hover:bg-destructive/10" onClick={onDelete}>
+          <Button variant="ghost" size="sm" className="h-8 text-destructive hover:bg-destructive/10" onClick={() => setIsDeleteDialogOpen(true)}>
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
@@ -154,7 +151,7 @@ export function EditorHeader({ onDelete }: EditorHeaderProps) {
                 <Download className="w-4 h-4 mr-2" /> Export PDF
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+              <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)} className="text-destructive focus:text-destructive">
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Resume
               </DropdownMenuItem>
             </DropdownMenuContent>
