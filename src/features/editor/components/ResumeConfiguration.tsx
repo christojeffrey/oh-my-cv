@@ -1,12 +1,8 @@
-import { useRef } from "react";
 import { useAtom } from "jotai";
+import { useRef } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { isSettingsOpenAtom } from "@/features/editor/stores/ui-state";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { ToolbarFontFamily } from "./toolbar/ToolbarFontFamily";
@@ -52,7 +48,9 @@ export function ResumeConfiguration() {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-sm p-0 gap-0">
-          <div className="px-6 py-4 border-b"><DialogTitle>Settings</DialogTitle></div>
+          <div className="px-6 py-4 border-b">
+            <DialogTitle>Settings</DialogTitle>
+          </div>
           <div className="p-0 max-h-[70vh] overflow-y-auto">
             <ConfigurationContent />
           </div>
@@ -63,9 +61,7 @@ export function ResumeConfiguration() {
 
   // Desktop sidebar
   return (
-    <div
-      className={`flex h-full ${isOpen ? "w-64 sm:w-72" : "w-0"} shrink-0`}
-    >
+    <div className={`flex h-full ${isOpen ? "w-64 sm:w-72" : "w-0"} shrink-0`}>
       {isOpen && (
         <div
           ref={toolbarRef}

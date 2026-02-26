@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 
 import { useUpdateResume } from "@/hooks/use-update-resume";
 import type { ResumeConfiguration } from "@/types/resume";
-import { resumeAtom } from "../stores/cv-data";
+import { resumeAtom } from "../stores/resume-data";
 
 /**
  * Hook to manage resume style changes and persistence

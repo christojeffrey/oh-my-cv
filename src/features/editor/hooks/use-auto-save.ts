@@ -1,20 +1,20 @@
 import { useBlocker } from "@tanstack/react-router";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef } from "react";
+import { resumeAtom, syncStatusAtom } from "@/features/editor/stores/resume-data";
 import { useUpdateResume } from "@/hooks/use-update-resume";
-import { resumeAtom, syncStatusAtom } from "@/features/editor/stores/cv-data";
 
 const DEBOUNCE_MS = 1000;
 
-const getSavePayload = (cv: ReturnType<typeof useAtomValue<typeof resumeAtom>>) => ({
-  name: cv.resumeName,
-  markdown: cv.markdown,
-  customCss: cv.customCss,
-  configuration: cv.configuration,
+const getSavePayload = (resume: ReturnType<typeof useAtomValue<typeof resumeAtom>>) => ({
+  name: resume.resumeName,
+  markdown: resume.markdown,
+  customCss: resume.customCss,
+  configuration: resume.configuration,
 });
 
 export function useAutoSave() {
-  const cvData = useAtomValue(resumeAtom);
+  const resumeData = useAtomValue(resumeAtom);
   const { updateResume } = useUpdateResume();
   const [status, setStatus] = useAtom(syncStatusAtom);
 
@@ -24,7 +24,7 @@ export function useAutoSave() {
   const lastSaved = useRef("");
   const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saving = useRef(false);
-  const latest = useRef({ data: getSavePayload(cvData), str: "" });
+  const latest = useRef({ data: getSavePayload(resumeData), str: "" });
 
   // Block navigation when there are unsaved changes
   useBlocker({
@@ -66,10 +66,10 @@ export function useAutoSave() {
   );
 
   useEffect(() => {
-    if (!cvData.loaded || !cvData.resumeId) return;
-    const resumeId = cvData.resumeId;
+    if (!resumeData.loaded || !resumeData.resumeId) return;
+    const resumeId = resumeData.resumeId;
 
-    const data = getSavePayload(cvData);
+    const data = getSavePayload(resumeData);
     const str = JSON.stringify(data);
     latest.current = { data, str };
 
@@ -96,7 +96,7 @@ export function useAutoSave() {
     return () => {
       if (pending.current) clearTimeout(pending.current);
     };
-  }, [cvData, save, setStatus]);
+  }, [resumeData, save, setStatus]);
 
   return status;
 }

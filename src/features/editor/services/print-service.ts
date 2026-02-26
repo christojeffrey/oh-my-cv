@@ -6,7 +6,7 @@ import { applyPagination, createStyledContainer, getResumeStyles } from "../util
  * Handles printing of the resume by rendering data directly into a temporary iframe.
  * Uses shared pagination utility with styled container for accurate measurements.
  */
-export const printResume = (cvData: Resume, title: string) => {
+export const printResume = (resumeData: Resume, title: string) => {
   // Create a hidden iframe
   const iframe = document.createElement("iframe");
   iframe.style.position = "fixed";
@@ -33,15 +33,15 @@ export const printResume = (cvData: Resume, title: string) => {
   contentDocument.title = title;
 
   // Render the resume HTML
-  const resumeHtml = markdownService.renderResume(cvData.markdown);
+  const resumeHtml = markdownService.renderResume(resumeData.markdown);
 
   // Generate CSS using shared utility
-  const css = getResumeStyles(cvData.configuration, cvData.customCss);
+  const css = getResumeStyles(resumeData.configuration, resumeData.customCss);
 
   // Create a styled container with CSS applied (ensures measurements match Preview)
   const { container: tempContainer } = createStyledContainer(
-    cvData.configuration,
-    cvData.customCss
+    resumeData.configuration,
+    resumeData.customCss
   );
 
   // Add content wrapper for pagination
@@ -49,7 +49,7 @@ export const printResume = (cvData: Resume, title: string) => {
   tempContainer.appendChild(contentWrapper);
 
   // Apply shared pagination logic
-  applyPagination(contentWrapper, resumeHtml, cvData.configuration);
+  applyPagination(contentWrapper, resumeHtml, resumeData.configuration);
 
   // Get the paginated HTML
   const paginatedHtml = contentWrapper.innerHTML;
@@ -66,7 +66,7 @@ export const printResume = (cvData: Resume, title: string) => {
         <style>
           @page {
             margin: 0;
-            size: ${cvData.configuration.paper};
+            size: ${resumeData.configuration.paper};
           }
           html, body {
             margin: 0 !important;
@@ -128,7 +128,7 @@ export const printResume = (cvData: Resume, title: string) => {
     }
   };
 
-  if (contentDocument.readyState === 'complete') {
+  if (contentDocument.readyState === "complete") {
     finish();
   } else {
     contentWindow.onload = finish;

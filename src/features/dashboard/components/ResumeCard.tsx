@@ -1,16 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useMemo, useRef, useEffect, useState } from "react";
-import { useResumePagination } from "@/features/editor";
-import type { DbResume } from "@/types/resume";
-import { markdownService } from "@/utils/markdown";
-import { FileText, MoreVertical, Copy, Pencil, Trash2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Copy, FileText, Loader2, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -19,12 +10,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useUpdateResume } from "@/hooks/use-update-resume";
+import { useResumePagination } from "@/features/editor";
 import { useDeleteResume } from "@/hooks/use-delete-resume";
 import { useDuplicateResume } from "@/hooks/use-duplicate-resume";
-import { Loader2 } from "lucide-react";
+import { useUpdateResume } from "@/hooks/use-update-resume";
+import type { DbResume } from "@/types/resume";
+import { markdownService } from "@/utils/markdown";
 
 const CARD_ONLY_CSS = `[data-part="page"]:not(:first-child) { display: none; }`;
 
@@ -46,7 +45,10 @@ export function ResumeCard({ resume }: ResumeCardProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
 
-  const html = useMemo(() => markdownService.renderResume(resume.markdown || ""), [resume.markdown]);
+  const html = useMemo(
+    () => markdownService.renderResume(resume.markdown || ""),
+    [resume.markdown]
+  );
 
   const { hostRef, dims } = useResumePagination(
     resume.configuration,
@@ -118,9 +120,9 @@ export function ResumeCard({ resume }: ResumeCardProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleRename();
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       setRenameValue(resume.name);
       setIsRenameOpen(false);
     }
@@ -185,14 +187,11 @@ export function ResumeCard({ resume }: ResumeCardProps) {
 
         {/* Desktop: Preview card - shown with CSS, not JS */}
         <div className="hidden sm:flex w-full flex-col items-center group">
-          <div
-            ref={containerRef}
-            className="w-full relative flex items-center justify-center p-3"
-          >
+          <div ref={containerRef} className="w-full relative flex items-center justify-center p-3">
             <div
               className="border border-border/40 rounded-sm overflow-hidden bg-white shadow-subtle hover:shadow-elevated transition-shadow duration-300 cursor-pointer"
               onClick={() => navigate({ to: `/editor/${resume.id}` })}
-              style={{ width: `${cardWidth}px`, height: `${cardWidth * 297 / 210}px` }}
+              style={{ width: `${cardWidth}px`, height: `${(cardWidth * 297) / 210}px` }}
             >
               <div
                 className="origin-top-left"
@@ -249,9 +248,7 @@ export function ResumeCard({ resume }: ResumeCardProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Rename Resume</DialogTitle>
-            <DialogDescription>
-              Enter a new name for this resume.
-            </DialogDescription>
+            <DialogDescription>Enter a new name for this resume.</DialogDescription>
           </DialogHeader>
           <Input
             value={renameValue}
@@ -294,11 +291,7 @@ export function ResumeCard({ resume }: ResumeCardProps) {
             >
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={confirmDelete}
-              disabled={isDeleting}
-            >
+            <Button variant="destructive" onClick={confirmDelete} disabled={isDeleting}>
               {isDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />

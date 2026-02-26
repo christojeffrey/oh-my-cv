@@ -1,24 +1,39 @@
-import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import {
-  Eye, Settings, FileCode, Download, Code2, BookCopy, Trash2, MoreVertical, Check, X, Lock, Unlock
+  BookCopy,
+  Check,
+  Code2,
+  Download,
+  Eye,
+  FileCode,
+  Lock,
+  MoreVertical,
+  Settings,
+  Trash2,
+  Unlock,
+  X,
 } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { editModeAtom } from "@/atoms";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { copyLLMGuideToClipboard } from "@/constants/llm-guide";
-import { CopyGuideButton } from "./CopyGuideButton";
 import { useAutoSave } from "@/features/editor/hooks/use-auto-save";
-import { resumeAtom } from "../stores/cv-data";
-import { editorModeAtom, isPreviewOpenAtom, isSettingsOpenAtom, isDeleteDialogOpenAtom } from "@/features/editor/stores/ui-state";
-import { editModeAtom } from "@/atoms";
+import {
+  editorModeAtom,
+  isDeleteDialogOpenAtom,
+  isPreviewOpenAtom,
+  isSettingsOpenAtom,
+} from "@/features/editor/stores/ui-state";
 import { printResume } from "../services/print-service";
+import { resumeAtom } from "../stores/resume-data";
+import { CopyGuideButton } from "./CopyGuideButton";
 
 export function EditorHeader() {
   const [resume, setResume] = useAtom(resumeAtom);
@@ -59,8 +74,17 @@ export function EditorHeader() {
               onKeyDown={(e) => e.key === "Enter" && saveName()}
               autoFocus
             />
-            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={saveName}><Check className="w-4 h-4" /></Button>
-            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setIsEditing(false)}><X className="w-4 h-4" /></Button>
+            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={saveName}>
+              <Check className="w-4 h-4" />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8"
+              onClick={() => setIsEditing(false)}
+            >
+              <X className="w-4 h-4" />
+            </Button>
           </div>
         ) : (
           <div className="flex items-center gap-3 min-w-0">
@@ -70,11 +94,15 @@ export function EditorHeader() {
             >
               {resume.resumeName || "Untitled Resume"}
             </button>
-            <span className={`text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded border ${
-              saveStatus === "saved" ? "bg-emerald-500/10 text-emerald-600 border-emerald-200" :
-              saveStatus === "saving" ? "bg-amber-500/10 text-amber-600 border-amber-200" :
-              "bg-muted text-muted-foreground"
-            }`}>
+            <span
+              className={`text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded border ${
+                saveStatus === "saved"
+                  ? "bg-emerald-500/10 text-emerald-600 border-emerald-200"
+                  : saveStatus === "saving"
+                    ? "bg-amber-500/10 text-amber-600 border-amber-200"
+                    : "bg-muted text-muted-foreground"
+              }`}
+            >
               {saveStatus === "saved" ? "Saved" : saveStatus === "saving" ? "Saving" : "Unsaved"}
             </span>
           </div>
@@ -86,14 +114,16 @@ export function EditorHeader() {
         {/* Mode Toggle */}
         <div className="flex bg-muted/30 rounded-sm p-0.5 border border-border/40">
           <Button
-            variant="ghost" size="sm"
+            variant="ghost"
+            size="sm"
             className={`h-7 px-2 text-xs ${editorMode === "markdown" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}
             onClick={() => setEditorMode("markdown")}
           >
             <FileCode className="w-3.5 h-3.5 mr-1" /> <span className="hidden sm:inline">MD</span>
           </Button>
           <Button
-            variant="ghost" size="sm"
+            variant="ghost"
+            size="sm"
             className={`h-7 px-2 text-xs ${editorMode === "css" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground"}`}
             onClick={() => setEditorMode("css")}
           >
@@ -114,25 +144,39 @@ export function EditorHeader() {
         <div className="h-4 w-px bg-border/40 mx-2" />
 
         <Button
-          variant={isPreviewOpen ? "secondary" : "ghost"} size="sm" className="h-8 w-8 sm:w-auto px-0 sm:px-3"
-          onClick={() => setIsPreviewOpen(p => !p)} title="Preview"
+          variant={isPreviewOpen ? "secondary" : "ghost"}
+          size="sm"
+          className="h-8 w-8 sm:w-auto px-0 sm:px-3"
+          onClick={() => setIsPreviewOpen((p) => !p)}
+          title="Preview"
         >
           <Eye className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Preview</span>
         </Button>
 
         <Button
-          variant={isSettingsOpen ? "secondary" : "ghost"} size="sm" className="h-8 w-8 sm:w-auto px-0 sm:px-3"
-          onClick={() => setIsSettingsOpen(p => !p)} title="Settings"
+          variant={isSettingsOpen ? "secondary" : "ghost"}
+          size="sm"
+          className="h-8 w-8 sm:w-auto px-0 sm:px-3"
+          onClick={() => setIsSettingsOpen((p) => !p)}
+          title="Settings"
         >
-          <Settings className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Settings</span>
+          <Settings className="w-4 h-4 sm:mr-2" />{" "}
+          <span className="hidden sm:inline">Settings</span>
         </Button>
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-1">
           <CopyGuideButton />
-          <Button variant="ghost" size="sm" className="h-8" onClick={handleExport}><Download className="w-4 h-4" /></Button>
+          <Button variant="ghost" size="sm" className="h-8" onClick={handleExport}>
+            <Download className="w-4 h-4" />
+          </Button>
           <div className="h-4 w-px bg-border/40 mx-1" />
-          <Button variant="ghost" size="sm" className="h-8 text-destructive hover:bg-destructive/10" onClick={() => setIsDeleteDialogOpen(true)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 text-destructive hover:bg-destructive/10"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
@@ -141,7 +185,9 @@ export function EditorHeader() {
         <div className="md:hidden ml-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreVertical className="w-4 h-4" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleCopyGuide}>
@@ -151,7 +197,10 @@ export function EditorHeader() {
                 <Download className="w-4 h-4 mr-2" /> Export PDF
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)} className="text-destructive focus:text-destructive">
+              <DropdownMenuItem
+                onClick={() => setIsDeleteDialogOpen(true)}
+                className="text-destructive focus:text-destructive"
+              >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Resume
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -1,12 +1,12 @@
 import Editor from "@monaco-editor/react";
-import * as monaco from "monaco-editor";
 import { useAtom } from "jotai";
-import { useMemo } from "react";
 import type { editor } from "monaco-editor";
-import { resumeAtom } from "@/features/editor/stores/cv-data";
+import * as monaco from "monaco-editor";
+import { useMemo } from "react";
+import { darkModeAtom, editModeAtom } from "@/atoms";
+import { resumeAtom } from "@/features/editor/stores/resume-data";
 import { editorModeAtom } from "@/features/editor/stores/ui-state";
 import type { Resume } from "@/types/resume";
-import { darkModeAtom, editModeAtom } from "@/atoms";
 
 const EDITOR_OPTIONS: any = {
   minimap: { enabled: false },

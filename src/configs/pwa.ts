@@ -6,22 +6,28 @@ export const pwa = VitePWA({
     globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
     maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB
   },
-  includeAssets: ["favicon.svg", "apple-touch-icon.png"],
+  includeAssets: ["logo.png"],
   manifest: {
-    name: "Oh My CV",
-    short_name: "OhMyCV",
+    name: "Oh My Resume",
+    short_name: "OhMyResume",
     description: "Create beautiful resumes with ease",
     theme_color: "#ffffff",
     icons: [
       {
-        src: "pwa-192x192.png",
+        src: "logo.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "pwa-512x512.png",
+        src: "logo.png",
         sizes: "512x512",
         type: "image/png",
+      },
+      {
+        src: "logo.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any maskable",
       },
     ],
   },

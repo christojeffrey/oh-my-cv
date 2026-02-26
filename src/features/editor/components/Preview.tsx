@@ -1,33 +1,32 @@
 import { useAtom } from "jotai";
-import { useRef, useMemo, useEffect } from "react";
 import { X } from "lucide-react";
+import { useEffect, useMemo, useRef } from "react";
 import { Zoom } from "@/components/shared/Zoom";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { PreviewControls } from "@/features/editor/components/PreviewControls";
-import { useResumePagination } from "../hooks/use-resume-pagination";
 import { usePreviewZoom } from "@/features/editor/hooks/use-preview-zoom";
-import { resumeAtom } from "@/features/editor/stores/cv-data";
+import { resumeAtom } from "@/features/editor/stores/resume-data";
 import { isPreviewOpenAtom } from "@/features/editor/stores/ui-state";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { markdownService } from "@/utils/markdown";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { useResumePagination } from "../hooks/use-resume-pagination";
 import { printResume } from "../services/print-service";
 
-
-function PreviewContent({ cvData, zoomContainerRef }: {
-  cvData: any;
+function PreviewContent({
+  resumeData,
+  zoomContainerRef,
+}: {
+  resumeData: any;
   zoomContainerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const html = useMemo(() => {
-    return markdownService.renderResume(cvData.markdown);
-  }, [cvData.markdown]);
+    return markdownService.renderResume(resumeData.markdown);
+  }, [resumeData.markdown]);
 
   const { hostRef, dims } = useResumePagination(
-    cvData.configuration,
-    cvData.customCss,
+    resumeData.configuration,
+    resumeData.customCss,
     html
   );
 
@@ -39,12 +38,12 @@ function PreviewContent({ cvData, zoomContainerRef }: {
 
   useEffect(() => {
     const handlePrint = () => {
-      printResume(cvData, cvData.resumeName || "Resume");
+      printResume(resumeData, resumeData.resumeName || "Resume");
     };
 
     globalThis.addEventListener("resume:print", handlePrint);
     return () => globalThis.removeEventListener("resume:print", handlePrint);
-  }, [cvData]);
+  }, [resumeData]);
 
   return (
     <>
@@ -67,7 +66,7 @@ function PreviewContent({ cvData, zoomContainerRef }: {
 }
 
 export function Preview() {
-  const [cvData] = useAtom(resumeAtom);
+  const [resumeData] = useAtom(resumeAtom);
   const [isPreviewOpen, setIsPreviewOpen] = useAtom(isPreviewOpenAtom);
   const isMobile = useIsMobile();
   const zoomContainerRef = useRef<HTMLDivElement>(null);
@@ -78,16 +77,15 @@ export function Preview() {
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <DialogContent className="w-full h-full max-w-none p-0 border-0 bg-background">
           <Button
-            size="icon" variant="ghost" className="absolute top-2 right-2 z-50 bg-background/50 backdrop-blur"
+            size="icon"
+            variant="ghost"
+            className="absolute top-2 right-2 z-50 bg-background/50 backdrop-blur"
             onClick={() => setIsPreviewOpen(false)}
           >
             <X className="w-5 h-5" />
           </Button>
           <div className="relative h-full bg-muted/30 overflow-hidden">
-            <PreviewContent
-              cvData={cvData}
-              zoomContainerRef={zoomContainerRef}
-            />
+            <PreviewContent resumeData={resumeData} zoomContainerRef={zoomContainerRef} />
           </div>
         </DialogContent>
       </Dialog>
@@ -102,10 +100,7 @@ export function Preview() {
   // Desktop / fullscreen preview
   return (
     <div className="w-[500px] h-full flex-shrink-0 relative bg-muted/30 overflow-hidden">
-      <PreviewContent
-        cvData={cvData}
-        zoomContainerRef={zoomContainerRef}
-      />
+      <PreviewContent resumeData={resumeData} zoomContainerRef={zoomContainerRef} />
     </div>
   );
 }

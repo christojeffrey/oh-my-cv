@@ -1,10 +1,10 @@
+import { ClerkProvider, useAuth } from "@clerk/clerk-react";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { ConvexReactClient } from "convex/react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
-import { ClerkProvider, useAuth } from "@clerk/clerk-react";
-import { ConvexReactClient } from "convex/react";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
 import i18n from "./configs/i18n";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
@@ -17,7 +17,6 @@ if (!PUBLISHABLE_KEY) {
 }
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
-
 
 const root = createRoot(document.getElementById("root")!, {
   onCaughtError: (error, errorInfo) => {

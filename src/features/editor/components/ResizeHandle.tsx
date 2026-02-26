@@ -57,8 +57,10 @@ export function ResizeHandle({ direction }: ResizeHandleProps) {
     };
   }, [direction]);
 
-  const horizontalClass = "absolute top-0 bottom-0 left-0 w-[3px] cursor-ew-resize hover:bg-foreground/20 transition-all duration-200 after:content-[''] after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-4 after:h-8 after:-ml-2 after:-mt-4 after:hover:bg-foreground/5 after:rounded-sm";
-  const verticalClass = "absolute top-0 bottom-0 left-0 right-0 h-[3px] cursor-ns-resize hover:bg-foreground/20 transition-all duration-200";
+  const horizontalClass =
+    "absolute top-0 bottom-0 left-0 w-[3px] cursor-ew-resize hover:bg-foreground/20 transition-all duration-200 after:content-[''] after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-4 after:h-8 after:-ml-2 after:-mt-4 after:hover:bg-foreground/5 after:rounded-sm";
+  const verticalClass =
+    "absolute top-0 bottom-0 left-0 right-0 h-[3px] cursor-ns-resize hover:bg-foreground/20 transition-all duration-200";
 
   return (
     <div

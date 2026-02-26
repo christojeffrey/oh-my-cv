@@ -116,7 +116,7 @@ export class MarkdownService {
     const content = this.resolveDeflist(this.renderMarkdown(body));
     const header = this.renderHeader(frontMatter);
 
-    return sanitizeHtml(header + content)
+    return sanitizeHtml(header + content);
   }
 }
 

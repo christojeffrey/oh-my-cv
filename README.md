@@ -1,6 +1,6 @@
-# Oh My CV!
+# Oh My Resume!
 
-Oh my CV
+Oh My Resume
 but saved in the cloud
 
 with updated UI following Dieter Rams design principles

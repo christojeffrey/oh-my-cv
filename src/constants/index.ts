@@ -10,13 +10,7 @@ export const PAPER_SIZES: Record<string, { w: number; h: number }> = {
 export const MM_TO_PX = 3.78;
 
 // ColorsImp
-export const PRESET_COLORS = [
-  "#000000",
-  "#377bb5",
-  "#0891b2",
-  "#16a34a",
-  "#e11d48",
-];
+export const PRESET_COLORS = ["#000000", "#377bb5", "#0891b2", "#16a34a", "#e11d48"];
 
 export const LOCAL_EN_FONTS: Font[] = [
   { name: "Arial", fontFamily: "Arial, sans-serif" },
@@ -36,7 +30,6 @@ export const LOCAL_CJK_FONTS: Font[] = [
   { name: "楷体", fontFamily: 'KaiTi, "楷体", serif' },
   { name: "黑体", fontFamily: 'SimHei, "黑体", sans-serif' },
 ];
-
 
 export const DEFAULT_RESUME_CONFIGURATION: ResumeConfiguration = {
   marginV: 30,

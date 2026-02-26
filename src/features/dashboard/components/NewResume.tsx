@@ -1,7 +1,7 @@
-import { Plus } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useCreateResume } from "@/hooks/use-create-resume";
-import { useState, useRef, useEffect } from "react";
 
 export function NewResume() {
   const navigate = useNavigate();
@@ -61,13 +61,10 @@ export function NewResume() {
   // Desktop: show preview-style card
   return (
     <div className="w-full flex flex-col items-center">
-      <div
-        ref={containerRef}
-        className="w-full flex items-center justify-center p-3"
-      >
+      <div ref={containerRef} className="w-full flex items-center justify-center p-3">
         <button
           className="group flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/40 border border-dashed border-border/40 hover:border-border/60 rounded-sm shadow-subtle hover:shadow-elevated transition-all duration-300 focus:ring-1 focus:ring-ring focus:outline-none focus:border-border overflow-hidden cursor-pointer"
-          style={{ width: `${cardWidth}px`, height: `${cardWidth * 297 / 210}px` }}
+          style={{ width: `${cardWidth}px`, height: `${(cardWidth * 297) / 210}px` }}
           aria-label="Create new resume"
           onClick={async () => {
             await handleCreate();

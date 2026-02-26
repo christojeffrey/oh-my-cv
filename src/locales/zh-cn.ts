@@ -4,7 +4,7 @@ export default {
   open_toolbar: "打开工具栏",
   close_toolbar: "关闭工具栏",
   head: {
-    title: "Oh My CV! - 免费的在线简历制作工具",
+    title: "Oh My Resume! - 免费的在线简历制作工具",
     desc: "免费的在线简历制作工具，使用 Markdown 来轻松制作您的简历！",
     keywords: "Markdown 简历, 简历制作, 在线简历",
   },
@@ -16,7 +16,7 @@ export default {
       {
         title: "简单且强大",
         items:
-          '创建并管理多份简历<br>实时预览<br>导出为 PDF 格式<br>可定制程度高<br>轻松切换字体和添加图标<br>以及<a href="https://github.com/Renovamen/oh-my-cv#features" target="_blank">更多特性</a>',
+          '创建并管理多份简历<br>实时预览<br>导出为 PDF 格式<br>可定制程度高<br>轻松切换字体和添加图标<br>以及<a href="https://github.com/Renovamen/oh-my-resume#features" target="_blank">更多特性</a>',
       },
       {
         title: "隐私优先",

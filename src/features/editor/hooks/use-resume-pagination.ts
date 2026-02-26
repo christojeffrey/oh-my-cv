@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useMemo, useEffect } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import type { ResumeConfiguration } from "@/types/resume";
 import { applyPagination, getResumeDimensions, getResumeStyles } from "../utils/pagination";
 

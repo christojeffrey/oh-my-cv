@@ -4,9 +4,9 @@ export default {
   open_toolbar: "Open toolbar",
   close_toolbar: "Close toolbar",
   head: {
-    title: "Oh My CV! - Free Online Resume Maker",
+    title: "Oh My Resume! - Free Online Resume Maker",
     desc: "Free online resume maker, allows you to create your resume in minutes with Markdown!",
-    keywords: "resume maker, cv maker, curriculum vitae maker, markdown resume",
+    keywords: "resume maker, curriculum vitae maker, markdown resume",
   },
   landing: {
     hero: "Write your <span text-primary>resumes</span> in Markdown!",
@@ -16,7 +16,7 @@ export default {
       {
         title: "Simple and Powerful",
         items:
-          'Manage multiple resumes<br>Real-time preview<br>Export to PDF<br>Fully customizable<br>Choose fonts and add icons<br>And <a href="https://github.com/Renovamen/oh-my-cv#features" target="_blank">more features</a>',
+          'Manage multiple resumes<br>Real-time preview<br>Export to PDF<br>Fully customizable<br>Choose fonts and add icons<br>And <a href="https://github.com/Renovamen/oh-my-resume#features" target="_blank">more features</a>',
       },
       {
         title: "Privacy First",

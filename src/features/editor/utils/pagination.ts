@@ -1,7 +1,7 @@
+import { MM_TO_PX, PAPER_SIZES } from "@/constants";
 import type { ResumeConfiguration } from "@/types/resume";
 import { coreStyles as coreCss } from "@/utils/styles/core-styles";
 import { generateConfigurationStyles as generateConfigCss } from "@/utils/styles/preview-styles";
-import { MM_TO_PX, PAPER_SIZES } from "@/constants";
 
 export interface PaginationResult {
   css: string;
@@ -56,7 +56,7 @@ export function applyPagination(
   config: ResumeConfiguration
 ): PaginationResult {
   const { widthPx, heightPx, vMargin, hMargin } = getResumeDimensions(config);
-  const maxHeight = heightPx - (vMargin * 2);
+  const maxHeight = heightPx - vMargin * 2;
 
   // Clear container
   container.innerHTML = "";
@@ -104,9 +104,8 @@ export function applyPagination(
     currentPage.appendChild(el);
 
     const style = globalThis.getComputedStyle(el);
-    const h = el.offsetHeight +
-      Number.parseFloat(style.marginTop) +
-      Number.parseFloat(style.marginBottom);
+    const h =
+      el.offsetHeight + Number.parseFloat(style.marginTop) + Number.parseFloat(style.marginBottom);
 
     const isManualBreak = el.classList.contains("md-it-newpage");
 
@@ -122,7 +121,8 @@ export function applyPagination(
 
       // Recalculate height in new context
       const newStyle = globalThis.getComputedStyle(el);
-      const newH = el.offsetHeight +
+      const newH =
+        el.offsetHeight +
         Number.parseFloat(newStyle.marginTop) +
         Number.parseFloat(newStyle.marginBottom);
       currentHeight = newH;

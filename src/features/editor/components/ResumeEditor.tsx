@@ -3,18 +3,24 @@ import { Loader2 } from "lucide-react";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import {
   CodeEditor,
+  DeleteResumeDialog,
   EditorHeader,
   Preview,
-  useEditorData,
   ResumeConfiguration,
-  DeleteResumeDialog,
+  useEditorData,
 } from "@/features/editor";
 
 export function ResumeEditor({ id }: { readonly id?: string }) {
-  const { cvData, isLoading } = useEditorData(id);
+  const { editorData, isLoading } = useEditorData(id);
 
-  if (isLoading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
-  if (!cvData.loaded || (!cvData.resumeId && id)) return <div className="h-screen flex items-center justify-center">Resume not found</div>;
+  if (isLoading)
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  if (!editorData.loaded || (!editorData.resumeId && id))
+    return <div className="h-screen flex items-center justify-center">Resume not found</div>;
 
   return (
     <ErrorBoundary>

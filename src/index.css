@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -68,21 +68,25 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'cv11' 1;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-feature-settings:
+      "cv02" 1,
+      "cv03" 1,
+      "cv04" 1,
+      "cv11" 1;
     letter-spacing: -0.01em;
   }
 
   /* Display typography with serif */
   .font-display {
-    font-family: 'Instrument Serif', Georgia, serif;
+    font-family: "Instrument Serif", Georgia, serif;
     font-weight: 400;
     letter-spacing: -0.02em;
   }
 
   /* Code/monospace */
   .font-mono {
-    font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
     font-feature-settings: normal;
     letter-spacing: -0.02em;
   }
@@ -157,12 +161,16 @@ header {
 
 /* ===== Resume Preview Styles ===== */
 .resume-card {
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.06),
+    0 1px 2px -1px rgb(0 0 0 / 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .resume-card:hover {
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
   transform: translateY(-2px);
 }
 
@@ -205,7 +213,8 @@ header {
 
   /* Subtle border glow */
   .border-glow-subtle {
-    box-shadow: 0 0 0 1px hsl(var(--border) / 0.5),
-                0 2px 8px -2px hsl(var(--foreground) / 0.1);
+    box-shadow:
+      0 0 0 1px hsl(var(--border) / 0.5),
+      0 2px 8px -2px hsl(var(--foreground) / 0.1);
   }
 }

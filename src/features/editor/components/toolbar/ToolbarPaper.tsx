@@ -1,3 +1,4 @@
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -5,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { useResumeStyles } from "@/features/editor/hooks/use-resume-styles";
 
 export function ToolbarPaper() {

@@ -20,7 +20,6 @@ function RootComponent() {
       </main>
       <Toaster />
       {import.meta.env.DEV && <TanStackRouterDevtools />}
-
     </div>
   );
 }

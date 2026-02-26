@@ -1,17 +1,17 @@
 import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { useResume } from "@/hooks/use-resume";
-import { resumeAtom, syncStatusAtom } from "../stores/cv-data";
+import { resumeAtom, syncStatusAtom } from "../stores/resume-data";
 
 export function useEditorData(id?: string) {
-  const [cvData, setCvData] = useAtom(resumeAtom);
+  const [editorData, setEditorData] = useAtom(resumeAtom);
   const syncStatus = useAtomValue(syncStatusAtom);
   const { resume, isLoading } = useResume(id);
 
   useEffect(() => {
     if (isLoading || !resume) return;
 
-    setCvData((prev) => {
+    setEditorData((prev) => {
       const isCurrentlyLoaded = prev.loaded && String(prev.resumeId) === String(resume.id);
 
       const isIdentical =
@@ -39,7 +39,7 @@ export function useEditorData(id?: string) {
         loaded: true,
       };
     }, true); // `true` = server push; atom won't flip syncStatus to "unsaved"
-  }, [resume, isLoading, setCvData, syncStatus]);
+  }, [resume, isLoading, setEditorData, syncStatus]);
 
-  return { cvData, isLoading };
+  return { editorData, isLoading };
 }

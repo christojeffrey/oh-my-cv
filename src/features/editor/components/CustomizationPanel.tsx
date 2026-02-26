@@ -16,7 +16,10 @@ import { SliderField } from "./settings/SliderField";
 export function CustomizationPanel() {
   const { styles, updateStyles } = useResumeStyles();
 
-  const updateStyle = async <K extends keyof ResumeConfiguration>(key: K, value: ResumeConfiguration[K]) => {
+  const updateStyle = async <K extends keyof ResumeConfiguration>(
+    key: K,
+    value: ResumeConfiguration[K]
+  ) => {
     updateStyles((prev) => ({ ...prev, [key]: value }));
   };
 

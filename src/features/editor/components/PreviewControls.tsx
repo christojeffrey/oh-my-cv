@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Maximize, Maximize2, ZoomIn, ZoomOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PreviewControlsProps {
   readonly onZoomIn: () => void;
@@ -9,11 +9,11 @@ interface PreviewControlsProps {
 }
 
 export function PreviewControls({
-                                  onZoomIn,
-                                  onZoomOut,
-                                  onFitWidth,
-                                  onFitHeight,
-                                }: PreviewControlsProps) {
+  onZoomIn,
+  onZoomOut,
+  onFitWidth,
+  onFitHeight,
+}: PreviewControlsProps) {
   const buttonBaseClass =
     "h-7 w-7 sm:h-8 sm:w-8 p-0 flex items-center justify-center rounded-sm text-foreground hover:bg-foreground/10 [&_svg]:w-3.5 [&_svg]:h-3.5 sm:[&_svg]:w-4 sm:[&_svg]:h-4";
 

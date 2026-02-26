@@ -4,10 +4,10 @@ export default {
   open_toolbar: "Abrir barra de herramientas",
   close_toolbar: "Cerrar barra de herramientas",
   head: {
-    title: "Oh My CV! - Generador de CV online GRATUITO!!",
+    title: "Oh My Resume! - Generador de Resume online GRATUITO!!",
     desc: "El creador de currículums vitae en línea gratuito le permite crear su currículum en minutos con Markdown!",
     keywords:
-      "generador curriculum, generador cv, generador curriculum vitae, curriculum markdown, markdown cv",
+      "generador curriculum, generador resume, generador curriculum vitae, curriculum markdown, markdown resume",
   },
   landing: {
     hero: "Escribe tu <span text-primary>curriculum vitae</span> en Markdown!",
@@ -17,7 +17,7 @@ export default {
       {
         title: "Simple y poderoso",
         items:
-          'Administra multiples curriculums con <br>Vista previa en tiempo real<br>Exportar a PDF format<br>Completamente configurable<br>Elige fuentes y agrega íconos<br>Y <a href="https://github.com/Renovamen/oh-my-cv#features" target="_blank">más funciones</a>',
+          'Administra multiples curriculums con <br>Vista previa en tiempo real<br>Exportar to PDF format<br>Completamente configurable<br>Elige fuentes y agrega íconos<br>Y <a href="https://github.com/Renovamen/oh-my-resume#features" target="_blank">más funciones</a>',
       },
       {
         title: "Primero tu privacidad",

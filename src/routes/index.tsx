@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
-import { useResumes } from "@/hooks/use-resumes";
-import { useCreateResume } from "@/hooks/use-create-resume";
-import { ResumeEditor } from "@/features/editor";
 import { useConvexAuth } from "convex/react";
+import { useEffect, useRef } from "react";
+import { ResumeEditor } from "@/features/editor";
+import { useCreateResume } from "@/hooks/use-create-resume";
+import { useResumes } from "@/hooks/use-resumes";
 
 export const Route = createFileRoute("/")({
   component: HomeRedirect,
@@ -30,7 +30,6 @@ function HomeRedirect() {
         creatingRef.current = false;
       });
     }
-
   }, [resumes, isLoading, isAuthLoading, isAuthenticated, navigate, createResume]);
 
   if (isLoading || isAuthLoading) {
