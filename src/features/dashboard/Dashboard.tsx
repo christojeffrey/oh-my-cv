@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { useResumes } from "./hooks/use-resumes";
+import { useResumes } from "@/hooks/use-resumes";
 import { NewResume } from "./components/NewResume";
 import { ResumeCard } from "./components/ResumeCard";
 

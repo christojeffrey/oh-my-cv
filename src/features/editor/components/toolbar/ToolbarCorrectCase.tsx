@@ -4,13 +4,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
-import { useResumes } from "@/features/dashboard/hooks/use-resumes";
+import { useUpdateResume } from "@/hooks/use-update-resume";
 import casePolice from "@/lib/case-police";
 import { toast } from "@/services/toast";
 import type { Resume } from "@/types/resume";
 
 export function ToolbarCorrectCase() {
-  const { updateResume } = useResumes();
+  const { updateResume } = useUpdateResume();
   const [cvData, setCvData] = useAtom(resumeAtom);
   const [result, setResult] = useState<{ num: number; text: string } | null>(null);
 

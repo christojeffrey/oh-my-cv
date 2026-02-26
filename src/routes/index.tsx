@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { useResumes } from "@/features/dashboard/hooks/use-resumes";
+import { useResumes } from "@/hooks/use-resumes";
+import { useCreateResume } from "@/hooks/use-create-resume";
 import { ResumeEditor } from "@/features/editor";
 import { useConvexAuth } from "convex/react";
 
@@ -9,7 +10,8 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeRedirect() {
-  const { resumes, isLoading, createResume } = useResumes();
+  const { resumes, isLoading } = useResumes();
+  const { createResume } = useCreateResume();
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
   const navigate = useNavigate();
   const creatingRef = useRef(false);

@@ -21,7 +21,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useResumes } from "../hooks/use-resumes";
+import { useUpdateResume } from "@/hooks/use-update-resume";
+import { useDeleteResume } from "@/hooks/use-delete-resume";
+import { useDuplicateResume } from "@/hooks/use-duplicate-resume";
 import { Loader2 } from "lucide-react";
 
 const CARD_ONLY_CSS = `[data-part="page"]:not(:first-child) { display: none; }`;
@@ -34,7 +36,9 @@ export function ResumeCard({ resume }: ResumeCardProps) {
   const navigate = useNavigate();
   const [cardWidth, setCardWidth] = useState(210);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { duplicateResume, deleteResume, updateResume } = useResumes();
+  const { updateResume } = useUpdateResume();
+  const { deleteResume } = useDeleteResume();
+  const { duplicateResume } = useDuplicateResume();
   const [isRenameOpen, setIsRenameOpen] = useState(false);
   const [renameValue, setRenameValue] = useState(resume.name);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -79,7 +83,7 @@ export function ResumeCard({ resume }: ResumeCardProps) {
   const handleDuplicate = async () => {
     setIsMobileMenuOpen(false);
     setIsDesktopMenuOpen(false);
-    await duplicateResume(resume.id);
+    await duplicateResume(resume);
   };
 
   const handleRename = async () => {
@@ -179,134 +183,134 @@ export function ResumeCard({ resume }: ResumeCardProps) {
           </div>
         </div>
 
-      {/* Desktop: Preview card - shown with CSS, not JS */}
-      <div className="hidden sm:flex w-full flex-col items-center group">
-        <div
-          ref={containerRef}
-          className="w-full relative flex items-center justify-center p-3"
-        >
+        {/* Desktop: Preview card - shown with CSS, not JS */}
+        <div className="hidden sm:flex w-full flex-col items-center group">
           <div
-            className="border border-border/40 rounded-sm overflow-hidden bg-white shadow-subtle hover:shadow-elevated transition-shadow duration-300 cursor-pointer"
-            onClick={() => navigate({ to: `/editor/${resume.id}` })}
-            style={{ width: `${cardWidth}px`, height: `${cardWidth * 297 / 210}px` }}
+            ref={containerRef}
+            className="w-full relative flex items-center justify-center p-3"
           >
             <div
-              className="origin-top-left"
-              style={{
-                width: `${dims.widthPx}px`,
-                height: `${dims.heightPx}px`,
-                transform: `scale(${scale})`,
-              }}
+              className="border border-border/40 rounded-sm overflow-hidden bg-white shadow-subtle hover:shadow-elevated transition-shadow duration-300 cursor-pointer"
+              onClick={() => navigate({ to: `/editor/${resume.id}` })}
+              style={{ width: `${cardWidth}px`, height: `${cardWidth * 297 / 210}px` }}
             >
-              <div ref={hostRef} />
+              <div
+                className="origin-top-left"
+                style={{
+                  width: `${dims.widthPx}px`,
+                  height: `${dims.heightPx}px`,
+                  transform: `scale(${scale})`,
+                }}
+              >
+                <div ref={hostRef} />
+              </div>
             </div>
+            {/* Actions menu - shown on hover */}
+            <DropdownMenu open={isDesktopMenuOpen} onOpenChange={setIsDesktopMenuOpen}>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="absolute top-5 right-5 p-1.5 rounded-sm bg-background/90 backdrop-blur-sm border border-border/60 shadow-subtle opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-accent"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem onClick={handleDuplicate}>
+                  <Copy className="h-4 w-4" />
+                  <span>Duplicate</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleRenameClick}>
+                  <Pencil className="h-4 w-4" />
+                  <span>Rename</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          {/* Actions menu - shown on hover */}
-          <DropdownMenu open={isDesktopMenuOpen} onOpenChange={setIsDesktopMenuOpen}>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="absolute top-5 right-5 p-1.5 rounded-sm bg-background/90 backdrop-blur-sm border border-border/60 shadow-subtle opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-accent"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreVertical className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-              <DropdownMenuItem onClick={handleDuplicate}>
-                <Copy className="h-4 w-4" />
-                <span>Duplicate</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleRenameClick}>
-                <Pencil className="h-4 w-4" />
-                <span>Rename</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleDelete}
-                className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-                <span>Delete</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="mt-3 text-center w-full px-2">
-          <p className="text-sm font-medium truncate text-foreground">{resume.name}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {new Date(resume.created_at || Date.now()).toLocaleDateString()}
-          </p>
+          <div className="mt-3 text-center w-full px-2">
+            <p className="text-sm font-medium truncate text-foreground">{resume.name}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {new Date(resume.created_at || Date.now()).toLocaleDateString()}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* Rename Dialog */}
-    <Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Rename Resume</DialogTitle>
-          <DialogDescription>
-            Enter a new name for this resume.
-          </DialogDescription>
-        </DialogHeader>
-        <Input
-          value={renameValue}
-          onChange={(e) => setRenameValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Resume name"
-          autoFocus
-        />
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setRenameValue(resume.name);
-              setIsRenameOpen(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button onClick={handleRename} disabled={!renameValue.trim()}>
-            Save
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      {/* Rename Dialog */}
+      <Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Resume</DialogTitle>
+            <DialogDescription>
+              Enter a new name for this resume.
+            </DialogDescription>
+          </DialogHeader>
+          <Input
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Resume name"
+            autoFocus
+          />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRenameValue(resume.name);
+                setIsRenameOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleRename} disabled={!renameValue.trim()}>
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-    {/* Delete Confirmation Dialog */}
-    <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete Resume</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete "{resume.name}"? This action cannot be undone.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setIsDeleteConfirmOpen(false)}
-            disabled={isDeleting}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={confirmDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Deleting...
-              </>
-            ) : (
-              "Delete"
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Resume</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{resume.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteConfirmOpen(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

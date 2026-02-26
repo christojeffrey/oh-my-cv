@@ -1,11 +1,11 @@
 import { Plus } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
-import { useResumes } from "@/features/dashboard";
+import { useCreateResume } from "@/hooks/use-create-resume";
 import { useState, useRef, useEffect } from "react";
 
 export function NewResume() {
   const navigate = useNavigate();
-  const { createResume } = useResumes();
+  const { createResume } = useCreateResume();
   const [cardWidth, setCardWidth] = useState(210);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

@@ -1,12 +1,8 @@
-import { useAtomValue } from "jotai";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useResumes } from "@/features/dashboard/hooks/use-resumes";
-import { resumeAtom } from "@/features/editor/stores/cv-data";
-
-export type SaveStatus = "saved" | "saving" | "unsaved";
-
-let hasUnsavedChanges = false;
-export const hasUnsavedChangesSync = () => hasUnsavedChanges;
+import { useBlocker } from "@tanstack/react-router";
+import { useAtom, useAtomValue } from "jotai";
+import { useCallback, useEffect, useRef } from "react";
+import { useUpdateResume } from "@/hooks/use-update-resume";
+import { resumeAtom, syncStatusAtom } from "@/features/editor/stores/cv-data";
 
 const DEBOUNCE_MS = 1000;
 
@@ -19,54 +15,59 @@ const getSavePayload = (cv: ReturnType<typeof useAtomValue<typeof resumeAtom>>) 
 
 export function useAutoSave() {
   const cvData = useAtomValue(resumeAtom);
-  const { updateResume } = useResumes();
-  const [status, setStatus] = useState<SaveStatus>("saved");
+  const { updateResume } = useUpdateResume();
+  const [status, setStatus] = useAtom(syncStatusAtom);
+
+  const statusRef = useRef(status);
+  statusRef.current = status;
 
   const lastSaved = useRef("");
   const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saving = useRef(false);
   const latest = useRef({ data: getSavePayload(cvData), str: "" });
 
-  // Block tab close when unsaved
-  useEffect(() => {
-    const onBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!hasUnsavedChanges) return;
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    window.addEventListener("beforeunload", onBeforeUnload);
-    return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, []);
+  // Block navigation when there are unsaved changes
+  useBlocker({
+    shouldBlockFn: () => {
+      // Block navigation if there are unsaved changes
+      if (status === "saved") return false;
 
-  const save = useCallback(async (resumeId: string, str: string) => {
-  if (saving.current) return;
-  saving.current = true;
-  setStatus("saving");
-  try {
-    await updateResume(resumeId, latest.current.data);
-    if (latest.current.str === str) {
-      lastSaved.current = str;
-      setStatus("saved");
-      hasUnsavedChanges = false;
-    } else {
-      // New changes arrived while saving — schedule a follow-up save
-      setStatus("unsaved");
-      if (pending.current) clearTimeout(pending.current);
-      pending.current = setTimeout(
-        () => save(resumeId, latest.current.str),
-        DEBOUNCE_MS
-      );
-    }
-  } catch {
-    setStatus("unsaved");
-    hasUnsavedChanges = true;
-  } finally {
-    saving.current = false;
-  }
-}, [updateResume]);
+      // Show confirmation dialog
+      const shouldLeave = confirm("You have unsaved changes. Are you sure you want to leave?");
+      return !shouldLeave; // Block if they don't want to leave
+    },
+    // Also block browser close/refresh via beforeunload
+    enableBeforeUnload: () => status !== "saved",
+  });
+
+  const save = useCallback(
+    async (resumeId: string, str: string) => {
+      if (saving.current) return;
+      saving.current = true;
+      setStatus("saving");
+      try {
+        await updateResume(resumeId, latest.current.data);
+        if (latest.current.str === str) {
+          lastSaved.current = str;
+          setStatus("saved");
+        } else {
+          // New changes arrived while saving — schedule a follow-up save
+          setStatus("unsaved");
+          if (pending.current) clearTimeout(pending.current);
+          pending.current = setTimeout(() => save(resumeId, latest.current.str), DEBOUNCE_MS);
+        }
+      } catch {
+        setStatus("unsaved");
+      } finally {
+        saving.current = false;
+      }
+    },
+    [updateResume, setStatus]
+  );
 
   useEffect(() => {
     if (!cvData.loaded || !cvData.resumeId) return;
+    const resumeId = cvData.resumeId;
 
     const data = getSavePayload(cvData);
     const str = JSON.stringify(data);
@@ -79,18 +80,23 @@ export function useAutoSave() {
     }
 
     if (str === lastSaved.current) {
-      setStatus("saved");
-      hasUnsavedChanges = false;
+      if (statusRef.current !== "saved") setStatus("saved");
       return;
     }
 
-    setStatus("unsaved");
-    hasUnsavedChanges = true;
+    // If change came from convex sync, it didn't trigger Jotai's unsaved flag!
+    if (statusRef.current === "saved") {
+      lastSaved.current = str;
+      return;
+    }
 
     if (pending.current) clearTimeout(pending.current);
-    pending.current = setTimeout(() => save(cvData.resumeId!, str), DEBOUNCE_MS);
-    return () => { if (pending.current) clearTimeout(pending.current); };
-  }, [cvData, save]);
+    pending.current = setTimeout(() => save(resumeId, str), DEBOUNCE_MS);
+
+    return () => {
+      if (pending.current) clearTimeout(pending.current);
+    };
+  }, [cvData, save, setStatus]);
 
   return status;
 }

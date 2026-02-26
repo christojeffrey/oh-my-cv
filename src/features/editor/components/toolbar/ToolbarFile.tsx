@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { resumeAtom } from "@/features/editor/stores/cv-data";
-import { useResumes } from "@/features/dashboard/hooks/use-resumes";
+import { useUpdateResume } from "@/hooks/use-update-resume";
 import type { Resume } from "@/types/resume";
 
 export function ToolbarFile() {
-  const { updateResume } = useResumes();
+  const { updateResume } = useUpdateResume();
   const [cvData, setCvData] = useAtom(resumeAtom);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [newName, setNewName] = useState("");

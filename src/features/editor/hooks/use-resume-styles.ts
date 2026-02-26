@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 
-import { useResumes } from "@/features/dashboard/hooks/use-resumes";
+import { useUpdateResume } from "@/hooks/use-update-resume";
 import type { ResumeConfiguration } from "@/types/resume";
 import { resumeAtom } from "../stores/cv-data";
 
@@ -9,7 +9,7 @@ import { resumeAtom } from "../stores/cv-data";
  */
 export function useResumeStyles() {
   const [cvData, setCvData] = useAtom(resumeAtom);
-  const { updateResume } = useResumes();
+  const { updateResume } = useUpdateResume();
 
   const updateStyles = async (updater: (prev: ResumeConfiguration) => ResumeConfiguration) => {
     const newConfiguration = updater(cvData.configuration);

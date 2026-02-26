@@ -1,41 +1,45 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useEffect } from "react";
-import { DEFAULT_RESUME_CONFIGURATION } from "@/constants";
-import { useResumes } from "@/features/dashboard/hooks/use-resumes";
-import { resumeAtom } from "../stores/cv-data";
+import { useResume } from "@/hooks/use-resume";
+import { resumeAtom, syncStatusAtom } from "../stores/cv-data";
 
 export function useEditorData(id?: string) {
   const [cvData, setCvData] = useAtom(resumeAtom);
-  const { resumes, isLoading: isResumesLoading } = useResumes();
+  const syncStatus = useAtomValue(syncStatusAtom);
+  const { resume, isLoading } = useResume(id);
 
   useEffect(() => {
-    if (isResumesLoading) return;
+    if (isLoading || !resume) return;
 
-    let resume = null;
+    setCvData((prev) => {
+      const isCurrentlyLoaded = prev.loaded && String(prev.resumeId) === String(resume.id);
 
-    if (id) {
-      resume = resumes.find(r => String(r.id) === id);
-    } else if (resumes.length > 0) {
-      resume = resumes[0];
-    }
+      const isIdentical =
+        prev.resumeName === resume.name &&
+        prev.markdown === resume.markdown &&
+        prev.customCss === resume.customCss &&
+        JSON.stringify(prev.configuration) === JSON.stringify(resume.configuration);
 
-    if (resume) {
-      setCvData((prev) => {
-        if (prev.loaded && String(prev.resumeId) === String(resume.id)) {
-          return prev;
-        }
+      if (isCurrentlyLoaded && isIdentical) {
+        // Data is identical (e.g. our own save bouncing back) — no update needed.
+        return prev;
+      }
 
-        return {
-          markdown: resume.markdown,
-          customCss: resume.customCss,
-          resumeId: resume.id,
-          resumeName: resume.name,
-          configuration: { ...DEFAULT_RESUME_CONFIGURATION, ...resume.configuration },
-          loaded: true,
-        };
-      });
-    }
-  }, [id, resumes, isResumesLoading, setCvData]);
+      if (isCurrentlyLoaded && (syncStatus === "unsaved" || syncStatus === "saving")) {
+        // We have unsaved local changes or are actively pushing — ignore server update to prevent clobbering.
+        return prev;
+      }
 
-  return { cvData, isLoading: isResumesLoading };
+      return {
+        markdown: resume.markdown,
+        customCss: resume.customCss,
+        resumeId: resume.id,
+        resumeName: resume.name,
+        configuration: resume.configuration, // already merged with defaults in useResume
+        loaded: true,
+      };
+    }, true); // `true` = server push; atom won't flip syncStatus to "unsaved"
+  }, [resume, isLoading, setCvData, syncStatus]);
+
+  return { cvData, isLoading };
 }

@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useResumes } from "@/features/dashboard";
+import { useDeleteResume } from "@/hooks/use-delete-resume";
 import { isDeleteDialogOpenAtom } from "../stores/ui-state";
 
 interface DeleteResumeDialogProps {
@@ -20,7 +20,7 @@ interface DeleteResumeDialogProps {
 
 export function DeleteResumeDialog({ resumeId }: DeleteResumeDialogProps) {
   const navigate = useNavigate();
-  const { deleteResume } = useResumes();
+  const { deleteResume } = useDeleteResume();
   const [isOpen, setIsOpen] = useAtom(isDeleteDialogOpenAtom);
   const [isDeleting, setIsDeleting] = useState(false);
 
