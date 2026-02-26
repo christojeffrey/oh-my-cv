@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { isSettingsOpenAtom } from "@/features/editor/stores/ui-state";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { ToolbarCorrectCase } from "./toolbar/ToolbarCorrectCase";
 import { ToolbarFontFamily } from "./toolbar/ToolbarFontFamily";
 import { ToolbarFontSize } from "./toolbar/ToolbarFontSize";
 import { ToolbarLineHeight } from "./toolbar/ToolbarLineHeight";
@@ -26,7 +25,6 @@ const TOOLS = [
   { id: "margins", component: ToolbarMargins },
   { id: "spacing", component: ToolbarParagraphSpace },
   { id: "lineHeight", component: ToolbarLineHeight },
-  { id: "case", component: ToolbarCorrectCase },
 ];
 
 function ConfigurationContent() {
