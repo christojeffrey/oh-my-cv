@@ -1,21 +1,20 @@
-# Oh My Resume!
 
-Oh My Resume
-but saved in the cloud
+how to run
 
-with updated UI following Dieter Rams design principles
-, and defaults that adhere to <insert resume standard>
-
-Microsoft Word and LaTeX are too overkill for a resume.
-
-So, why not write it in Markdown?
-
-## Credits
-
-- [Renovamen/oh-my-cv](https://github.com/Renovamen/oh-my-cv)
-- [billryan/resume](https://github.com/billryan/resume)
+```bash
+bun run dev
+```
 
 
-## License
+if you need to change the convex schema
 
-[GPL-3.0](LICENSE)
+```bash
+bun run convex dev
+```
+
+
+if you need to run tests
+
+```bash
+bun run test
+```
