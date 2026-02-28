@@ -115,10 +115,10 @@ export const updateResume = mutation({
         const now = Date.now();
 
         await ctx.db.patch(args.id, {
-            ...(args.title && { title: args.title }),
-            ...(args.markdown && { markdown: args.markdown }),
-            ...(args.customCss && { customCss: args.customCss }),
-            ...(args.configuration && { configuration: args.configuration }),
+            ...(args.title !== undefined && { title: args.title }),
+            ...(args.markdown !== undefined && { markdown: args.markdown }),
+            ...(args.customCss !== undefined && { customCss: args.customCss }),
+            ...(args.configuration !== undefined && { configuration: args.configuration }),
             lastUpdated: now,
         });
     },
